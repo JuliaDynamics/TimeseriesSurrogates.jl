@@ -1,5 +1,12 @@
-using TimeseriesSurrogates
 using Base.Test
+using TimeseriesSurrogates
 
-# write your own tests here
-@test 1 == 2
+ts = cumsum(randn(1000))
+@testset "Constrained surrogates" begin
+    @testset "Random shuffle" begin
+        surrogate = randomshuffle(ts)
+        @test length(ts) == length(surrogate)
+        @test all(ts .!= surrogate)
+        @test all(sort(ts) .== sort(surrogate))
+    end
+end
