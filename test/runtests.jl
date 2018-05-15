@@ -9,4 +9,11 @@ ts = cumsum(randn(1000))
         @test all(ts .!= surrogate)
         @test all(sort(ts) .== sort(surrogate))
     end
+
+    @testset "Random amplitudes" begin
+        surrogate = randomphases(ts)
+        @test length(ts) == length(surrogate)
+        @test all(ts .!= surrogate)
+        @test all(sort(ts) .== sort(surrogate))
+    end
 end
