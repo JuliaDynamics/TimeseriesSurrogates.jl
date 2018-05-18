@@ -7,6 +7,8 @@ using Documenter, TimeseriesSurrogates
 #            repo = "github.com/kahaaga/TimeseriesSurrogates.git",
 #            julia  = "0.6",
 #            osname = "linux")
+ENV["GKSwstype"] = "100"
+
 makedocs(format = :html,
         sitename = "TimeseriesSurrogates docs")
 

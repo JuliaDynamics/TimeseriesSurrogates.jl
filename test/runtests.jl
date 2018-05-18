@@ -1,5 +1,6 @@
 using Base.Test
 using TimeseriesSurrogates
+ENV["GKSwstype"] = "100"
 
 ts = cumsum(randn(1000))
 
