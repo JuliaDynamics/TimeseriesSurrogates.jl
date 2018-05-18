@@ -1,5 +1,5 @@
 site_name:           TimeseriesSurrogates.jl
-repo_url:            https://github.com/kahaaga/TimeseriesSurrogates.jl
+repo_url:            https://github.com/kahaaga/TimeseriesSurrogates.jl.git
 site_description:    "Documentation"
 site_author:         kahaaga
 theme:               readthedocs
