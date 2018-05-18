@@ -1,3 +1,8 @@
+"""
+Amplitude adjusted Fourier transform surrogates.
+
+From J. Theiler et al., Physica D *58* (1992) 77-94 (1992).
+"""
 function aaft(ts)
     n = length(ts)
 

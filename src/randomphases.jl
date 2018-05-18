@@ -16,7 +16,7 @@ function randomphases(ts)
     ϕ = angle.(ft)  # phase angles
 
     # Create random phases ϕ on the interval [0, 2π].
-    if n % 2 == 0 
+    if n % 2 == 0
         midpoint = round(Int, n / 2)
         random_ϕ = rand(Uniform(0, 2*pi), midpoint)
         new_ϕ = [random_ϕ; -reverse(random_ϕ)]
