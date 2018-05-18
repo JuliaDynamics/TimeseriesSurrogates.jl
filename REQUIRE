@@ -5,3 +5,5 @@ StatsBase
 DSP
 Interpolations
 Wavelets
+Requires
+Plots
