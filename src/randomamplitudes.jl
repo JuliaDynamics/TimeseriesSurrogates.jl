@@ -20,5 +20,5 @@ function randomamplitudes(ts)
     # To randomise phases, we multiply each complex amplitude by e^(iϕ), with ϕ picked
     # on the interval [0, 2π]. Here, we pick according to a uniform distribution.
     randomised_amplitudes = r .* rand(Uniform(0, 2*pi), n)
-    ifft(randomised_amplitudes .* exp.(ϕ .* 1im))
+    real.(ifft(randomised_amplitudes .* exp.(ϕ .* 1im)))
 end

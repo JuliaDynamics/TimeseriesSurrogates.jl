@@ -1,12 +1,11 @@
 include("interpolation.jl")
 
-
 """
-Generate an iteratively adjusted amplitude adjusted Fourier transform (IAAFT) [1]
+Generate an iteratively adjusted amplitude adjusted Fourier transform (IAAFT)
 surrogate series for `ts`.
 
-# References
-[1] T. Schreiber; A. Schmitz (1996). "Improved Surrogate Data for Nonlinearity
+
+From T. Schreiber; A. Schmitz (1996). "Improved Surrogate Data for Nonlinearity
 Tests". Phys. Rev. Lett. 77 (4): 635–638. doi:10.1103/PhysRevLett.77.635. PMID
 10062864.
 """
