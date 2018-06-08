@@ -3,7 +3,7 @@ repo_url:         https://github.com/kahaaga/TimeseriesSurrogates.jl
 site_description: Algorithms for generation of surrogate time series.
 site_author:      Kristian Agasøster Haaga
 
-theme: material
+theme: mkdocs
 
 extra:
   palette:
