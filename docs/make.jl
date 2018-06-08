@@ -5,16 +5,14 @@ makedocs(;
     format = :html,
     sitename = "TimeseriesSurrogates docs",
     modules = [TimeseriesSurrogates],
-    pages = [
-        "Home" => "index.md"
-    ]
+    pages = ["index.md"]
 )
 
 deploydocs(;
     repo   = "github.com/kahaaga/TimeseriesSurrogates.jl.git",
     julia  = "0.6",
     osname = "linux",
-    target="build",
-    target = "gh-pages",
+    target = "build",
+    branch = "gh-pages",
     latest = "master"
 )
