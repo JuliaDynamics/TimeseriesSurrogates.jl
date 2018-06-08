@@ -1,15 +1,16 @@
 using Documenter, TimeseriesSurrogates
 ENV["GKSwstype"] = "100"
 
-makedocs(format = :html,
-        sitename = "TimeseriesSurrogates docs",
-        pages = [
-            "Index" => "index.md"
-        ])
+makedocs(;
+    format = :html,
+    sitename = "TimeseriesSurrogates docs",
+    pages = [
+        "Home" => "index.md"
+    ])
 
-deploydocs(
-    deps   = Deps.pip("pygments", "mkdocs", "mkdocs-material", "python-markdown-math"),
+deploydocs(;
     repo   = "github.com/kahaaga/TimeseriesSurrogates.jl.git",
     julia  = "0.6",
-    osname = "linux"
+    osname = "linux",
+    target="build"
 )
