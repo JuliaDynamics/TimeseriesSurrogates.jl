@@ -4,7 +4,10 @@ ENV["GKSwstype"] = "100"
 makedocs(;
     format = :html,
     sitename = "TimeseriesSurrogates docs",
-    modules = [TimeseriesSurrogates]
+    modules = [TimeseriesSurrogates],
+    pages = [
+        "Home" => "index.md"
+    ]
 )
 
 deploydocs(;
