@@ -4,10 +4,8 @@ ENV["GKSwstype"] = "100"
 makedocs(;
     format = :html,
     sitename = "TimeseriesSurrogates docs",
-    modules = [TimeseriesSurrogates],
-    pages = [
-        "Home" => "index.md"
-    ])
+    modules = [TimeseriesSurrogates]
+)
 
 deploydocs(;
     repo   = "github.com/kahaaga/TimeseriesSurrogates.jl.git",
