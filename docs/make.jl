@@ -3,7 +3,7 @@ ENV["GKSwstype"] = "100"
 
 makedocs(
     format = :html,
-    sitename = "TimeseriesSurrogates docs",
+    sitename = "TimeseriesSurrogates.jl",
     modules = [TimeseriesSurrogates],
     pages = ["index.md"]
 )
