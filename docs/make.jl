@@ -11,6 +11,5 @@ makedocs(
 deploydocs(
     repo   = "github.com/kahaaga/TimeseriesSurrogates.jl.git",
     julia  = "0.6",
-    osname = "linux",
-    latest = "master"
+    osname = "linux"
 )
