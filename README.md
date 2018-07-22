@@ -4,7 +4,7 @@
 
 [![codecov](https://codecov.io/gh/kahaaga/TimeseriesSurrogates.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/kahaaga/TimeseriesSurrogates.jl)
 
-[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://kahaaga.github.io/TimeseriesSurrogates.jl/stable)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://kahaaga.github.io/TimeseriesSurrogates.jl/latest)
 
 
 A Julia library for generating surrogate data.

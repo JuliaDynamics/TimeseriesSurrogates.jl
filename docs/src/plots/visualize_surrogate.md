@@ -47,22 +47,23 @@ gif(anim)
 gif(anim, fps = 3) # specifying frame rate
 ```
 
-### Example gifs
+### Examples
 
-
+#### IAAFT realizations of an AR1 process
 ```julia
 iaaft_AR1_gif(n_iters = 20, fps = 2)
 ```
 
 ![20 IAAFT surrogate realizations for an AR(1) process.](../examples/iaaft_AR1.gif)
 
-
+#### IAAFT realizations of a NSAR2 process
 ```julia
 iaaft_NSAR2_gif(n_iters = 100, fps = 10)
 ```
 
 ![100 IAAFT surrogate realizations for a cyclostationary AR(2) process.](../examples/iaaft_NSAR.gif)
 
+#### Random phase realizations of a random walk
 
 ```julia
 randomphases_randomwalk_gif(n_iters = 10, fps = 1, new_realization_every_iter = true)
@@ -70,8 +71,10 @@ randomphases_randomwalk_gif(n_iters = 10, fps = 1, new_realization_every_iter = 
 
 ![10 random phase surrogate realizations for a random walk.](../examples/randomphases_randomwalk.gif)
 
+## Plot/animation/gif docs
 
-## Plot/animation/gif function documentation
+You can use any of the following functions to generate plots, animations and the animations as gif files.
+
 ```@docs
 TimeseriesSurrogates.randomshuffle_plot
 TimeseriesSurrogates.randomamplitudes_plot

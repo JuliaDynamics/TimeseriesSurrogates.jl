@@ -1,7 +1,8 @@
-# Fourier surrogates
-Create a constrained surrogate by taking the Fourier transform of the time series,
-then shuffling either the phase angles or the amplitudes of the complex numbers,
-before doing the inverse Fourier transform.
+# Fourier surrogates (FS)
+Fourier surrogates are a form of constrained surrogates created by taking the Fourier
+transform of a time series, then shuffling either the phase angles or the amplitudes of the
+resulting complex numbers. Then, we take the inverse Fourier transform, yielding a surrogate
+time series.
 
 
 ## Random amplitude surrogates
@@ -9,8 +10,6 @@ before doing the inverse Fourier transform.
 ```@docs
 TimeseriesSurrogates.randomamplitudes
 ```
-
-### Example of random amplitude surrogate
 
 ```@example
 using TimeseriesSurrogates
@@ -26,7 +25,7 @@ surrplot(ts, surrogate)
 randomamplitudes_NSAR2_gif(n_iters = 30, fps = 5)
 ```
 
-![30 random phase surrogates for a single realization of a cyclostationary AR(2) process](../../examples/randomamplitudes_NSAR2.gif)
+![30 random phase surrogates for a single realization of a cyclostationary AR(2) process](../examples/randomamplitudes_NSAR2.gif)
 
 
 ### Random amplitude surrogates on different initial time series
@@ -36,7 +35,7 @@ randomamplitudes_NSAR2_gif(n_iters = 30, fps = 5,
                         new_realization_every_iter = true)
 ```
 
-![30 realizations of a cyclostationary AR(2) process. One random phase surrogate per realization of the time series.](../../examples/randomamplitudes_NSAR2_newevery.gif)
+![30 realizations of a cyclostationary AR(2) process. One random phase surrogate per realization of the time series.](../examples/randomamplitudes_NSAR2_newevery.gif)
 
 
 
@@ -44,8 +43,6 @@ randomamplitudes_NSAR2_gif(n_iters = 30, fps = 5,
 ```@docs
 TimeseriesSurrogates.randomphases
 ```
-
-### Example of random phase surrogate
 
 ```@example
 using TimeseriesSurrogates
@@ -61,7 +58,7 @@ surrplot(ts, surrogate)
 randomphases_NSAR2_gif(n_iters = 30, fps = 5)
 ```
 
-![30 random phase surrogates for a single realization of a cyclostationary AR(2) process](../../examples/randomphases_NSAR2.gif)
+![30 random phase surrogates for a single realization of a cyclostationary AR(2) process](../examples/randomphases_NSAR2.gif)
 
 
 ### Random phase surrogates on different initial time series
@@ -71,4 +68,4 @@ randomphases_NSAR2_gif(n_iters = 30, fps = 5,
                         new_realization_every_iter = true)
 ```
 
-![30 realizations of a cyclostationary AR(2) process. One random phase surrogate per realization of the time series.](../../examples/randomphases_NSAR2_newevery.gif)
+![30 realizations of a cyclostationary AR(2) process. One random phase surrogate per realization of the time series.](../examples/randomphases_NSAR2_newevery.gif)

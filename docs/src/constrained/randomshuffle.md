@@ -1,6 +1,4 @@
-# Random shuffle surrogates
-
-## Shuffling time indices
+# Random shuffle surrogates (RS)
 
 The easiest way of constructing a constrained surrogate is just shuffling the time indices of the original time series.
 

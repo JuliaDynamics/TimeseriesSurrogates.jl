@@ -1,50 +1,30 @@
 # TimeseriesSurrogates.jl
 
-A Julia package for generating surrogate time series.
+A Julia package for generating [surrogate time series](https://en.wikipedia.org/wiki/Surrogate_data_testing).
 
 [](examples/iaaft_ex.png)
 
-## Visualizing surrogate realizations
+## I'm new to surrogate testing
 
-```@contents
-Pages = [
-    "plots/visualize_surrogate.md"
-    ]
-Depth = 2
-```
+Then you might want to check out
+1. [The method of surrogate testing](@ref)
+2. [What is a surrogate time series?](@ref)
+3. [Types of surrogate realizations](@ref)
 
-## Surrogate methods
+## I'm experienced with surrogate testing
 
-### Random shuffle surrogates
+Then you're probably want to check out what [Types of surrogate realizations](@ref) this package provides. You'll find:
 
-```@contents
-Pages = [
-    "constrained/randomshuffle/randomshuffle.md"
-    ]
-Depth = 2
-```
-
-### Fourier surrogates
-
-```@contents
-Pages = [
-    "constrained/fourier/fourier_surrogates.md"
-    ]
-Depth = 2
-```
-
-### Amplitude-adjusted Fourier surrogates
-
-```@contents
-Pages = [
-    "constrained/amplitude_adjusted/amplitude_adjusted.md"
-    ]
-Depth = 2
-```
+1. [Random shuffle surrogates (RS)](@ref), which are just random permutations of the time series.
+2. [Fourier surrogates (FS)](@ref), in the form of either [Random amplitude surrogates](@ref) or [Random phase surrogates](@ref).
+3. [Amplitude adjusted Fourier transform surrogates](@ref). Currently, the [Amplitude adjusted Fourier transform (AAFT)](@ref) and [Iterated AAFT (AAFT)](@ref) methods are implemented.
 
 
+## I want to visualize my surrogate realizations
 
-## Reference
+Then you might save some time by checking out the links below.
+TimeseriesSurrogates.jl provides some convenient plotting routines that'll make it easy to
+check if your surrogates are successfully capturing your target null hypothesis:
 
-```@index
-```
+1. [Autocorrelation / periodogram panels](@ref). Check out the [Examples](@ref) to get started.
+2. [Animate panels (and export to .gif)](@ref). This allows you to check properties of an ensemble of surrogate realizations.
