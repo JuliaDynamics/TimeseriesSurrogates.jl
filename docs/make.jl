@@ -16,10 +16,10 @@ makedocs(
             "Amplitude adjusted Fourier (AAFT)" => "constrained/amplitude_adjusted.md"
         ],
         "Visualising surrogate realizations and creating gifs" => "plots/visualize_surrogate.md"
-    ]#,
+    ],
     # Use clean URLs, unless built as a "local" build
-    #html_prettyurls = !("local" in ARGS),
-    #html_canonical = "https://kahaaga.github.io/TimeseriesSurrogates.jl/latest/"
+    html_prettyurls = !("local" in ARGS),
+    html_canonical = "https://kahaaga.github.io/TimeseriesSurrogates.jl/latest/"
 )
 
 deploydocs(
@@ -28,6 +28,6 @@ deploydocs(
     osname = "linux",
     branch = "gh-pages",
     latest = "master",
-    deps = nothing,
-    make = nothing,
+    #deps = nothing,
+    #make = nothing,
 )
