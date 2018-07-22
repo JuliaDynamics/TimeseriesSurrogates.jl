@@ -1,19 +1,16 @@
 using Documenter, TimeseriesSurrogates
 ENV["GKSwstype"] = "100"
 
-makedocs(;
+makedocs(
     format = :html,
-    sitename = "TimeseriesSurrogates docs",
+    sitename = "TimeseriesSurrogates.jl",
     modules = [TimeseriesSurrogates],
-    pages = [
-        "Home" => "index.md"
-    ]
+    pages = ["index.md"]
 )
 
-deploydocs(;
+deploydocs(
     repo   = "github.com/kahaaga/TimeseriesSurrogates.jl.git",
     julia  = "0.6",
     osname = "linux",
-    target = "gh-pages",
     latest = "master"
 )
