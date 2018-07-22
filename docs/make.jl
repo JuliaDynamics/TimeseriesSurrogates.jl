@@ -1,5 +1,5 @@
 using Documenter, TimeseriesSurrogates
-push!(LOAD_PATH,"../src/")
+#push!(LOAD_PATH,"../src/")
 ENV["GKSwstype"] = "100"
 
 makedocs(
@@ -16,15 +16,18 @@ makedocs(
             "Amplitude adjusted Fourier (AAFT)" => "constrained/amplitude_adjusted.md"
         ],
         "Visualising surrogate realizations and creating gifs" => "plots/visualize_surrogate.md"
-    ],
+    ]#,
     # Use clean URLs, unless built as a "local" build
-    html_prettyurls = !("local" in ARGS),
-    html_canonical = "https://kahaaga.github.io/TimeseriesSurrogates.jl/latest/",
+    #html_prettyurls = !("local" in ARGS),
+    #html_canonical = "https://kahaaga.github.io/TimeseriesSurrogates.jl/latest/"
 )
 
 deploydocs(
     repo   = "github.com/kahaaga/TimeseriesSurrogates.jl.git",
     julia  = "0.6",
     osname = "linux",
-    branch = "gh-pages"
+    branch = "gh-pages",
+    latest = "master",
+    deps = nothing,
+    make = nothing,
 )
