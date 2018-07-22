@@ -1,13 +1,12 @@
 using Documenter, TimeseriesSurrogates
-#```julia
-#push!(LOAD_PATH,"../src/")
-#```
+push!(LOAD_PATH,"../src/")
 ENV["GKSwstype"] = "100"
 
 makedocs(
+    modules = [TimeseriesSurrogates],
     format = :html,
     sitename = "TimeseriesSurrogates.jl",
-    modules = [TimeseriesSurrogates],
+    authors = "Kristian Agasøster Haaga",
     pages = [
         "Overview" => "index.md",
         "What is a surrogate?" => "man/whatisasurrogate.md",
@@ -20,11 +19,12 @@ makedocs(
     ],
     # Use clean URLs, unless built as a "local" build
     html_prettyurls = !("local" in ARGS),
-    html_canonical = "https://kahaaga.github.io/TimeseriesSurrogates.jl/latest/"
+    html_canonical = "https://kahaaga.github.io/TimeseriesSurrogates.jl/latest/",
 )
 
 deploydocs(
     repo   = "github.com/kahaaga/TimeseriesSurrogates.jl.git",
     julia  = "0.6",
-    osname = "linux"
+    osname = "linux",
+    branch = "gh-pages"
 )
