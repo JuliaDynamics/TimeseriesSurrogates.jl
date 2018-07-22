@@ -5,7 +5,10 @@ makedocs(
     format = :html,
     sitename = "TimeseriesSurrogates.jl",
     modules = [TimeseriesSurrogates],
-    pages = ["index.md"]
+    pages = ["Home" => "index.md"],
+    # Use clean URLs, unless built as a "local" build
+    html_prettyurls = !("local" in ARGS),
+    html_canonical = "https://juliadocs.github.io/Documenter.jl/stable/",
 )
 
 deploydocs(

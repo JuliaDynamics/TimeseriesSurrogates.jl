@@ -44,7 +44,7 @@ Depth = 2
 
 
 
-## All functions
+## Reference
 
 ```@index
 ```
