@@ -14,7 +14,6 @@ deploydocs(;
     repo   = "github.com/kahaaga/TimeseriesSurrogates.jl.git",
     julia  = "0.6",
     osname = "linux",
-    target="build",
     target = "gh-pages",
     latest = "master"
 )
