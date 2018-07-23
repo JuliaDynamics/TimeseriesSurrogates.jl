@@ -44,8 +44,7 @@ that, again, the phase surrogates accurately represents the autocorrelation of t
 different initial time series.
 
 ```julia
-randomphases_NSAR2_gif(n_iters = 30, fps = 5,
-                        new_realization_every_iter = true)
+randomphases_NSAR2_gif(n_iters = 30, fps = 5, new_realization_every_iter = true)
 ```
 
 ![30 realizations of a cyclostationary AR(2) process. One random phase surrogate per realization of the time series.](../examples/randomphases_NSAR2_newevery.gif)
@@ -61,6 +60,8 @@ TimeseriesSurrogates.randomamplitudes
 This is how you would generate a random amplitude surrogate realization of a time series.
 
 ```@example
+using TimeseriesSurrogates
+
 # Generate a time series. Again, we'll use a NSAR2() process.
 ts = NSAR2()
 

@@ -1,7 +1,7 @@
 """
     aaft(ts)
 
-Generate a realization of an amplitude adjusted Fourier transform (AAFT) surrogate.
+Generate a realization of an amplitude adjusted Fourier transform (AAFT) surrogate [1].
 
 **`ts`** Is the time series for which to generate an AAFT surrogate realization.
 

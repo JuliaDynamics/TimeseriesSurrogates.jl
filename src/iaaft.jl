@@ -1,13 +1,22 @@
 include("interpolation.jl")
 
 """
-Generate an iteratively adjusted amplitude adjusted Fourier transform (IAAFT)
-surrogate series for `ts`.
+    iaaft(ts; [n_maxiter = 200, tol = 1e-6, n_window = 50 ])
 
+Generate an iteratively adjusted amplitude adjusted Fourier transform (IAAFT) [1] surrogate realization of `ts`.
 
-From T. Schreiber; A. Schmitz (1996). "Improved Surrogate Data for Nonlinearity
-Tests". Phys. Rev. Lett. 77 (4): 635–638. doi:10.1103/PhysRevLett.77.635. PMID
-10062864.
+# Keywords
+
+**`ts`** is the time series for which to generate an AAFT surrogate realization.
+
+**`n_maxiter`** sets the maximum number of iterations to allow before ending the algorithm (if convergence is slow).
+
+**`tol`** is the relative tolerance for deciding if convergence is achieved.
+
+**`n_window`** is the number is windows used when binning the periodogram (used for determining convergence).
+
+# Literature references
+1. T. Schreiber; A. Schmitz (1996). "Improved Surrogate Data for Nonlinearity Tests". Phys. Rev. Lett. 77 (4): 635–638. doi:10.1103/PhysRevLett.77.635. PMID 10062864.
 """
 function iaaft(ts; n_maxiter = 200, tol = 1e-6, n_windows = 50)
 
@@ -78,12 +87,14 @@ end
 
 
 """
+    iaaft_iters(ts; n_maxiter = 100, tol = 1e-5, n_windows = 50)
+
 Generate an iteratively adjusted amplitude adjusted Fourier transform (IAAFT) [1]
 surrogate series for `ts` and return a vector containing the surrogate series
 from each iteration. The last vector contains the final surrogate.
 
-# References
-[1] T. Schreiber; A. Schmitz (1996). "Improved Surrogate Data for Nonlinearity
+# Literature references
+1. T. Schreiber; A. Schmitz (1996). "Improved Surrogate Data for Nonlinearity
 Tests". Phys. Rev. Lett. 77 (4): 635–638. doi:10.1103/PhysRevLett.77.635. PMID
 10062864.
 """

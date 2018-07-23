@@ -1,12 +1,15 @@
 """
-A nonlinear, nonstationary process given by the stochastic model
+    NLNS(n_steps, x₀)
+
+A nonlinear, nonstationary process given by the following stochastic model [1]:
 
 ``x_t = x_{t-1} + a_t a_{t-1} ``
 
 with ``a_t ~ N(0,1)`` being stationary. The nonlinearity lies in the ``a_t a_{t-1}`` term.
-This is, in essence, a nonlinear random walk.
+This is, in essence, a nonlinear random walk. `x₀` sets the initial condition.
 
-From Lucio et al., Phys. Rev. E *85*, 056202 (2012).
+# Literature references
+1. Lucio et al., Phys. Rev. E *85*, 056202 (2012).
 """
 function NLNS(n_steps, x₀)
     a = rand(Uniform(0, 1), n_steps)
@@ -21,13 +24,17 @@ function NLNS(n_steps, x₀)
 end
 
 """
-Simple AR(1) model with no static transformation given by
+    AR1(n_steps, x₀, k)
+
+Simple AR(1) model with no static transformation given by the following map [1]:
 
 `` x[i] = k*x[i-1] + a[i] ``,
 
-where a[i] is a draw from a normal distribution with zero mean and unit variance.
+where a[i] is a draw from a normal distribution with zero mean and unit variance. `x₀` sets
+the initial condition and `k` is the tunable parameter in the map.
 
-From Lucio et al., Phys. Rev. E *85*, 056202 (2012).
+# Literature references
+1. Lucio et al., Phys. Rev. E *85*, 056202 (2012).
 """
 function AR1(n_steps, x₀, k)
     a = rand(Normal(), n_steps)
@@ -40,20 +47,24 @@ function AR1(n_steps, x₀, k)
 end
 
 """
-Cyclostationary AR(2) process.
+    NSAR2(n_steps, x₀, x₁)
+
+Cyclostationary AR(2) process given by the following map [2]
 
 `` x_t = a₁(t) * x_{t-1} + a₋ x_{t-2} + ϵ\_t ``.
 
 where
 
-`` a₁(t) = 2 cos[2\pi / T(t)] \cdot exp(-1 / τ)``,
+`` a₁(t) = 2 cos[2\pi / T(t)] * exp(-1 / τ)``,
 
 `` T(t)  = T_0 + M * sin(2 \pi t / T_{mod}) ``,
 
-`` a₂    = exp(-2 / \tau) ``
+`` a₂    = exp(-2 / \tau) ``,
 
+and `x₀` and `x₁` sets the initial conditions.
 
-From Lucio et al., Phys. Rev. E *85*, 056202 (2012), after J. Timmer, Phys. Rev. E *58*, 5153
+# Literature references
+1. Lucio et al., Phys. Rev. E *85*, 056202 (2012), after J. Timmer, Phys. Rev. E *58*, 5153
 (1998).
 """
 function NSAR2(n_steps, x₀, x₁)
@@ -81,12 +92,14 @@ end
 
 
 """
-Linear random walk (AR(1) process with a unit root)
+    randomwalk(n_steps, x₀)
 
-Example of a nonstationary linear process.
+Linear random walk (AR(1) process with a unit root) [1]
 
+This is an example of a nonstationary linear process.
 
-From Lucio et al., Phys. Rev. E *85*, 056202 (2012).
+# Literature references
+1. Lucio et al., Phys. Rev. E *85*, 056202 (2012).
 """
 function randomwalk(n_steps, x₀)
     a = rand(Normal(), n_steps)
@@ -101,12 +114,17 @@ end
 
 
 """
+    SNLST(n_steps, x₀, k)
+
 Dynamically linear process transformed by a strongly nonlinear static transformation
-(SNLST), given by
+(SNLST), given by the following map [1]:
 
 `` x(t) = k*x(t-1) + a(t) ``
 
 with the transformation ``s(t) = x(t)^3``.
+
+# Literature references
+1. Lucio et al., Phys. Rev. E *85*, 056202 (2012).
 """
 function SNLST(n_steps, x₀, k)
     a = rand(Normal(), n_steps)

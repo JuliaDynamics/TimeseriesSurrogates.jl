@@ -10,7 +10,8 @@ PAGES = [
         "Fourier transform (FT)" => "constrained/fourier_surrogates.md",
         "Amplitude adjusted Fourier (AAFT)" => "constrained/amplitude_adjusted.md"
     ],
-    "Visualising surrogate realizations and creating gifs" => "plots/visualize_surrogate.md"
+    "Visualising surrogate realizations and creating gifs" => "plots/visualize_surrogate.md",
+    "Example systems" => "man/exampleprocesses.md"
 ]
 
 makedocs(

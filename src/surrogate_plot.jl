@@ -1,4 +1,18 @@
+"""
+    surrplot(ts, surrogate; n_windows_periodogram = 100, gfs = 8, lfs = 6)
 
+Plot a time series along with its surrogate realization.
+
+# Keywords
+
+**`ts`** is the time series.
+
+**`surrogate`** is the surrogate realization of the time series.
+
+**`n_windows_periodogram`** sets the number of windows for binning the periodogram.
+
+**`gfs`** and **`lfs`** are the fontsize of the guides and legends, respectively.
+"""
 function surrplot(ts, surrogate; n_windows_periodogram = 100, gfs = 8, lfs = 6)
     p1 = Plots.plot(ts, label = ""); asurr = surrogate
     Plots.plot!(p1, surrogate, label = "")

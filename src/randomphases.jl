@@ -1,9 +1,13 @@
 """
     randomphases(ts)
 
-Create a random phases surrogate for `ts`.
+Create a random phases surrogate for `ts` [1]. Surrogate realizations using the phase
+surrogates have the same linear correlation, or periodogram, as the original data.
 
-From J. Theiler et al., Physica D *58* (1992) 77-94 (1992).
+**`ts`** Is the time series for which to generate an AAFT surrogate realization.
+
+# Literature references
+1. J. Theiler et al., Physica D *58* (1992) 77-94 (1992).
 """
 function randomphases(ts)
     n = length(ts)

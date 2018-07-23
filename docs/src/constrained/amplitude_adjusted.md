@@ -2,9 +2,7 @@
 
 Different variants of the AAFT and iterated AAFT algorithms.
 
-
 ## Amplitude adjusted Fourier transform (AAFT)
-
 ```@docs
 TimeseriesSurrogates.aaft
 ```
@@ -21,13 +19,11 @@ surrplot(ts, surrogate)
 
 
 ## Iterated AAFT (AAFT)
-
-The IAAFT surrogates add an iterative step to the AAFT algorithm improve convergence.
-
 ```@docs
 TimeseriesSurrogates.iaaft
 ```
 
+The IAAFT surrogates add an iterative step to the AAFT algorithm improve convergence.
 
 ### Example of IAAFT
 
