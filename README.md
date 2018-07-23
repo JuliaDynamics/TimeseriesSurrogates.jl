@@ -7,4 +7,6 @@
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://kahaaga.github.io/TimeseriesSurrogates.jl/latest)
 
 
-A Julia library for generating surrogate data.
+A Julia library for generating surrogate data. Check out the
+[documentation](https://kahaaga.github.io/TimeseriesSurrogates.jl/latest) for information
+on how to use it.
