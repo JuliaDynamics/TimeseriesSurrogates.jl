@@ -28,5 +28,7 @@ deploydocs(
     repo   = "github.com/kahaaga/TimeseriesSurrogates.jl.git",
     julia  = "0.6",
     target = "build",
+    deps = nothing,
+    make = nothing,
     osname = "linux"
 )

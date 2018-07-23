@@ -1,7 +1,7 @@
 # Visualizing surrogates
 
 ## Autocorrelation / periodogram panels
-Visualizing a surrogate realization is easy. The surrogate functions (`randomphases`, `randomamplitudes`, `aaft`, `iaaft`) come with corresponding plot functions (`randomphases_plot`, `randomamplitudes_plot`, `aaft_plot`, `iaaft_plot`).
+Visualizing a surrogate realization is easy.
 
 Let's say we want to generate an IAAFT surrogate and visualize the time series and surrogate time series, together with the corresponding periodograms,  autocorrelation functions and histograms. This can be done as follows:
 
@@ -12,6 +12,14 @@ iaaft_plot(ts)
 ```
 
 Here, the blue lines correspond to the original time series, while orange lines correspond to the surrogate time series. In this particular case, it seems that the IAAFT surrogate well reproduced the autocorrelation of the original time series.
+
+All surrogate functions come have a complementary functions that also plots a panel
+showing the autocorrelation function and periodogram of the time series and its surrogate
+realization:
+- `randomphases` has `randomphases_plot`
+- `randomamplitudes` has `randomamplitudes_plot`
+- `aaft` has `aaft_plot`
+- `iaaft` has `iaaft_plot`
 
 ## Animate panels (and export to .gif)
 
