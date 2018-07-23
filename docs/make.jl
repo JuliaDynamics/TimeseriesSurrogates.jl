@@ -1,6 +1,6 @@
 using Documenter, TimeseriesSurrogates
 ENV["GKSwstype"] = "100"
-
+push!(LOAD_PATH,"../src/")
 
 PAGES = [
     "Overview" => "index.md",
@@ -27,7 +27,6 @@ makedocs(
 deploydocs(
     repo   = "github.com/kahaaga/TimeseriesSurrogates.jl.git",
     julia  = "0.6",
-    osname = "linux",
-    deps = nothing,
-    make = nothing,
+    target = "build",
+    osname = "linux"
 )
