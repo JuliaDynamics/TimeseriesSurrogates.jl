@@ -1,0 +1,35 @@
+site_name:        TimeseriesSurrogates.jl
+repo_url:         https://github.com/kahaaga/TimeseriesSurrogates.jl
+site_description: Algorithms for generating surrogate realizations of time series.
+site_author:      kahaaga
+
+theme: mkdocs
+
+extra:
+  palette:
+    primary: 'indigo'
+    accent:  'blue'
+
+extra_css:
+  - assets/Documenter.css
+
+markdown_extensions:
+  - codehilite
+  - extra
+  - tables
+  - fenced_code
+
+extra_javascript:
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML
+  - assets/mathjaxhelper.js
+
+docs_dir: 'build'
+
+pages:
+- Overview: index.md
+- What is a surrogate?: man/whatisasurrogate.md
+- Surrogate algorithms:
+  - Random shuffle (RS): constrained/randomshuffle.md
+  - Fourier transform (FT): constrained/fourier_surrogates.md
+  - Amplitude adjusted Fourier (AAFT): constrained/amplitude_adjusted.md
+Visualising surrogate realizations and creating gifs: plots/visualize_surrogate.md

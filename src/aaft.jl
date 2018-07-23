@@ -1,7 +1,13 @@
 """
-Amplitude adjusted Fourier transform surrogates.
+    aaft(ts)
 
-From J. Theiler et al., Physica D *58* (1992) 77-94 (1992).
+Generate a realization of an amplitude adjusted Fourier transform (AAFT) surrogate.
+
+**`ts`** Is the time series for which to generate an AAFT surrogate realization.
+
+# Literature references
+1. J. Theiler et al., Physica D *58* (1992) 77-94 (1992).
+
 """
 function aaft(ts)
     n = length(ts)

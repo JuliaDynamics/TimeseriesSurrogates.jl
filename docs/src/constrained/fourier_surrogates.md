@@ -28,7 +28,7 @@ surrplot(ts, surrogate)
 ```
 
 ### How do random phase surrogates vary across realizations?
-Below is a plot showing different phase surrogate realization over the same time series.
+Below is a plot showing different phase surrogate realizations (orange) over the same time series (blue).
 Each frame in the animation is a different surrogate realization. Note that the autocorrelations
 are roughly similar across realizations.
 
@@ -38,8 +38,8 @@ randomphases_NSAR2_gif(n_iters = 30, fps = 5)
 
 ![30 random phase surrogates for a single realization of a cyclostationary AR(2) process](../examples/randomphases_NSAR2.gif)
 
-In the next animation, the time series for which we generate surrogates change between
-frames. One phase surrogate realization is generated for each of the time series. Notice
+In the next animation, the time series (blue) for which we generate surrogates change between
+frames. One phase surrogate realization (orange) is generated for each of the time series. Notice
 that, again, the phase surrogates accurately represents the autocorrelation of the
 different initial time series.
 
@@ -74,7 +74,7 @@ surrplot(ts, surrogate)
 
 ### How do random amplitude surrogates vary across realizations?
 
-Below is a plot showing different phase surrogate realization over the same time series.
+Below is a plot showing different phase surrogate realizations (orange) over the same time series (blue).
 
 ```julia
 randomamplitudes_NSAR2_gif(n_iters = 30, fps = 5)
@@ -82,8 +82,8 @@ randomamplitudes_NSAR2_gif(n_iters = 30, fps = 5)
 
 ![30 random phase surrogates for a single realization of a cyclostationary AR(2) process](../examples/randomamplitudes_NSAR2.gif)
 
-In the next animation, as above, each frame shows a new time series (a unique realization of the NSAR2
-process) and one surrogate realization of the time series.
+In the next animation, as above, each frame shows a new time series (blue), which every frame is another unique realization of the NSAR2
+process, and one surrogate realization of the time series (orange).
 
 
 ```julia
