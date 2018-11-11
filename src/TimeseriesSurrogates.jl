@@ -1,15 +1,14 @@
 module TimeseriesSurrogates
 
-# package code goes here
 using Distributions
 using StatsBase
 using InplaceOps
+using AbstractFFTs
 using DSP
 using Interpolations
 using Wavelets
 using Requires
 using Plots
-
 
 # Example systems
 include("testsystems.jl")

@@ -1,4 +1,4 @@
-using Base.Test
+using Test
 using TimeseriesSurrogates
 ENV["GKSwstype"] = "100"
 
