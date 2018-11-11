@@ -65,15 +65,15 @@ function wiaaft(ts; n_maxiter = 100, tol = 1e-5, n_windows = 50)
 
         # Invert the DWT on original
         inverted =  idwt(coeff_surrogates[dyadic_scale], wt, dyadic_scale)
-        inverted_surrogate =  idwt(selected_coeffs, wt, dyadic_scale)
+        inverted_surrogate = idwt(selected_coeffs, wt, dyadic_scale)
 
         surrogate[sortperm(inverted_surrogate)] = sort(inverted)
         surrogate[sortperm(inverted)] = sort(ts)
+        
         push!(surrogates, (dyadic_scale, inverted, inverted_surrogate, surrogate[:]))
-        @show surrogate[1:5]
     end
 
-    surrogates
+    return surrogates
 end
 
 export wiaaft
