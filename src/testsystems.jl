@@ -46,27 +46,7 @@ function AR1(n_steps, x₀, k)
     x
 end
 
-"""
-    NSAR2(n_steps, x₀, x₁)
 
-Cyclostationary AR(2) process given by the following map [2]
-
-`` x_t = a₁(t) * x_{t-1} + a₋ x_{t-2} + ϵ\_t ``.
-
-where
-
-`` a₁(t) = 2 cos[2\pi / T(t)] * exp(-1 / τ)``,
-
-`` T(t)  = T_0 + M * sin(2 \pi t / T_{mod}) ``,
-
-`` a₂    = exp(-2 / \tau) ``,
-
-and `x₀` and `x₁` sets the initial conditions.
-
-# Literature references
-1. Lucio et al., Phys. Rev. E *85*, 056202 (2012), after J. Timmer, Phys. Rev. E *58*, 5153
-(1998).
-"""
 function NSAR2(n_steps, x₀, x₁)
     T₀ = 50.0
     τ = 10.0

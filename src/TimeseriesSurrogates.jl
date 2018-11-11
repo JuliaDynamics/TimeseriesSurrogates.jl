@@ -1,9 +1,9 @@
 module TimeseriesSurrogates
 
-# package code goes here
 using Distributions
 using StatsBase
 using InplaceOps
+using AbstractFFTs
 using DSP
 using Interpolations
 using Wavelets
