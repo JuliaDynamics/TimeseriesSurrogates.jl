@@ -10,7 +10,6 @@ using Wavelets
 using Requires
 using Plots
 
-
 # Example systems
 include("testsystems.jl")
 

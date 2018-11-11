@@ -26,19 +26,21 @@ function wiaaft(ts; n_maxiter = 100, tol = 1e-5, n_windows = 50)
     mirror_surrogates = [reverse(x) for x in coeff_surrogates]
 
     n = length(ts)
-    surrogate_coeffs = Vector{Float64}(n)
-    mirror_coeffs = Vector{Float64}(n)
-    selected_coeffs = Vector{Float64}(n)
-    surrogate = Vector{Float64}(n)
-    surrogates = Vector{Tuple{Int, Vector{Float64}, Vector{Float64}, Vector{Float64}}}(0)
+    surrogate_coeffs = Vector{Float64}(undef, n)
+    mirror_coeffs = Vector{Float64}(undef, n)
+    selected_coeffs = Vector{Float64}(undef, n)
+    surrogate = Vector{Float64}(undef, n)
+    surrogates = Vector{Tuple{Int, Vector{Float64}, Vector{Float64}, Vector{Float64}}}(undef, 0)
     for dyadic_scale = 1:L
         surrogate_coeffs[:] = iaaft(coeff_surrogates[dyadic_scale])
         mirror_coeffs[:] = reverse(surrogate_coeffs)
 
         # Circularly rotate to minimize error function
-        min_errors = Vector{Float64}(2); [min_errors[i] = Inf for i in 1:2]
-        errors = Vector{Float64}(2)
-        shift_minimising_errfunc = Vector{Int}(2)
+        min_errors = Vector{Float64}(undef, 2)
+        [min_errors[i] = Inf for i in 1:2]
+
+        errors = Vector{Float64}(undef, 2)
+        shift_minimising_errfunc = Vector{Int}(undef, 2)
         for i in 0:n-1
             errors[1] = rmsd(coeff_surrogates[dyadic_scale],
                             circshift(surrogate_coeffs, i))
