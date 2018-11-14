@@ -1,15 +1,22 @@
 """
     NLNS(n_steps, x₀)
 
-A nonlinear, nonstationary process given by the following stochastic model [1]:
+A nonlinear, nonstationary process given by the following stochastic model:
 
-``x_t = x_{t-1} + a_t a_{t-1} ``
+```math
+x(t+1) = x(t) + a(t) a(t-1)
+```
 
-with ``a_t ~ N(0,1)`` being stationary. The nonlinearity lies in the ``a_t a_{t-1}`` term.
+with ``a(t) \textasciitilde N(0,1)`` being stationary. The nonlinearity lies in
+the ``a(t) a(t-1)`` term.
 This is, in essence, a nonlinear random walk. `x₀` sets the initial condition.
 
+This example is from [Lucio et al. (2012)](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202).
+
 # Literature references
-1. Lucio et al., Phys. Rev. E *85*, 056202 (2012).
+Lucio et al., Phys. Rev. E *85*, 056202 (2012), after J. Timmer,
+Phys. Rev. E *58*, 5153 (1998). [https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202)
+
 """
 function NLNS(n_steps, x₀)
     a = rand(Uniform(0, 1), n_steps)
@@ -28,10 +35,13 @@ end
 
 Simple AR(1) model with no static transformation given by the following map [1]:
 
-`` x[i] = k*x[i-1] + a[i] ``,
+```math
+x(t+1) = k x(t) + a(t),
+```
 
-where a[i] is a draw from a normal distribution with zero mean and unit variance. `x₀` sets
-the initial condition and `k` is the tunable parameter in the map.
+where ``a(t)`` is a draw from a normal distribution with zero mean and unit
+variance. `x₀` sets the initial condition and `k` is the tunable parameter in
+the map.
 
 # Literature references
 1. Lucio et al., Phys. Rev. E *85*, 056202 (2012).
@@ -46,7 +56,16 @@ function AR1(n_steps, x₀, k)
     x
 end
 
+"""
+    NSAR2(n_steps, x₀, x₁)
 
+Cyclostationary AR(2) process from [Lucio et al. (2012)](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202).
+
+# References
+Lucio et al., Phys. Rev. E *85*, 056202 (2012), after J. Timmer,
+Phys. Rev. E *58*, 5153 (1998). [https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202)
+
+"""
 function NSAR2(n_steps, x₀, x₁)
     T₀ = 50.0
     τ = 10.0
@@ -96,10 +115,13 @@ end
 """
     SNLST(n_steps, x₀, k)
 
-Dynamically linear process transformed by a strongly nonlinear static transformation
+Dynamically linear process transformed by a strongly nonlinear static
+transformation
 (SNLST), given by the following map [1]:
 
-`` x(t) = k*x(t-1) + a(t) ``
+```math
+x(t) = k x(t-1) + a(t)
+```
 
 with the transformation ``s(t) = x(t)^3``.
 

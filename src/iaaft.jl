@@ -1,29 +1,32 @@
 include("interpolation.jl")
 
 """
-    iaaft(ts; [n_maxiter = 200, tol = 1e-6, n_window = 50 ])
+    iaaft(ts::AbstractArray{T, 1} where T;
+            n_maxiter = 200, tol = 1e-6, n_windows = 50)
 
 Generate an iteratively adjusted amplitude adjusted Fourier transform (IAAFT)
 [1] surrogate realization of `ts`.
 
-# Keywords
+# Arguments
 
-**`ts`** is the time series for which to generate an AAFT surrogate realization.
+- **`ts`** is the time series for which to generate an AAFT surrogate realization.
 
-**`n_maxiter`** sets the maximum number of iterations to allow before ending
+- **`n_maxiter`** sets the maximum number of iterations to allow before ending
     the algorithm (if convergence is slow).
 
-**`tol`** is the relative tolerance for deciding if convergence is achieved.
+- **`tol`** is the relative tolerance for deciding if convergence is achieved.
 
-**`n_window`** is the number is windows used when binning the periodogram (used
+- **`n_window`** is the number is windows used when binning the periodogram (used
     for determining convergence).
 
 # Literature references
 1. T. Schreiber; A. Schmitz (1996). "Improved Surrogate Data for Nonlinearity
 Tests". Phys. Rev. Lett. 77 (4): 635–638. doi:10.1103/PhysRevLett.77.635.
 PMID 10062864.
+
 """
-function iaaft(ts; n_maxiter = 200, tol = 1e-6, n_windows = 50)
+function iaaft(ts::AbstractVector{T} where T;
+                n_maxiter = 200, tol = 1e-6, n_windows = 50)
 
     # Sorted version of the original time series
     original_sorted = sort(ts)
@@ -102,7 +105,8 @@ end
 
 
 """
-    iaaft_iters(ts; n_maxiter = 100, tol = 1e-5, n_windows = 50)
+    iaaft_iters(ts::AbstractArray{T, 1} where T;
+                n_maxiter = 100, tol = 1e-5, n_windows = 50)
 
 Generate an iteratively adjusted amplitude adjusted Fourier transform (IAAFT) [1]
 surrogate series for `ts` and return a vector containing the surrogate series
@@ -113,7 +117,8 @@ from each iteration. The last vector contains the final surrogate.
 Tests". Phys. Rev. Lett. 77 (4): 635–638. doi:10.1103/PhysRevLett.77.635. PMID
 10062864.
 """
-function iaaft_iters(ts; n_maxiter = 100, tol = 1e-5, n_windows = 50)
+function iaaft_iters(ts::AbstractArray{T, 1} where T;
+                        n_maxiter = 100, tol = 1e-5, n_windows = 50)
 
     # Sorted version of the original time series
     original_sorted = sort(ts)

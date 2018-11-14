@@ -1,5 +1,5 @@
 """
-    randomamplitudes(ts)
+    randomamplitudes(ts::AbstractArray{T, 1} where T)
 
 Create a random amplitude surrogate for `ts`.
 
@@ -11,7 +11,7 @@ of the phases after taking the Fourier transform.
 # Literature references
 1. J. Theiler et al., Physica D *58* (1992) 77-94 (1992))
 """
-function randomamplitudes(ts)
+function randomamplitudes(ts::AbstractArray{T, 1} where T)
     n = length(ts)
 
     # Fourier transform
