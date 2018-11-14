@@ -1,7 +1,7 @@
 include("interpolation.jl")
 
 """
-    iaaft(ts::AbstractVector{Number};
+    iaaft(ts::AbstractArray{T, 1} where T;
             n_maxiter = 200, tol = 1e-6, n_windows = 50)
 
 Generate an iteratively adjusted amplitude adjusted Fourier transform (IAAFT)
@@ -25,7 +25,7 @@ Tests". Phys. Rev. Lett. 77 (4): 635–638. doi:10.1103/PhysRevLett.77.635.
 PMID 10062864.
 
 """
-function iaaft(ts::AbstractVector{Number};
+function iaaft(ts::AbstractVector{T} where T;
                 n_maxiter = 200, tol = 1e-6, n_windows = 50)
 
     # Sorted version of the original time series
@@ -105,7 +105,7 @@ end
 
 
 """
-    iaaft_iters(ts::AbstractVector{Number};
+    iaaft_iters(ts::AbstractArray{T, 1} where T;
                 n_maxiter = 100, tol = 1e-5, n_windows = 50)
 
 Generate an iteratively adjusted amplitude adjusted Fourier transform (IAAFT) [1]
@@ -117,7 +117,7 @@ from each iteration. The last vector contains the final surrogate.
 Tests". Phys. Rev. Lett. 77 (4): 635–638. doi:10.1103/PhysRevLett.77.635. PMID
 10062864.
 """
-function iaaft_iters(ts::AbstractVector{Number};
+function iaaft_iters(ts::AbstractArray{T, 1} where T;
                         n_maxiter = 100, tol = 1e-5, n_windows = 50)
 
     # Sorted version of the original time series

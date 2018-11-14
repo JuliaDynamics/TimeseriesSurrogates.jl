@@ -1,5 +1,5 @@
 """
-    aaft(ts::AbstractVector{Number})
+    aaft(ts::AbstractArray{T, 1} where T)
 
 Generate a realization of an amplitude adjusted Fourier transform (AAFT) surrogate [1].
 
@@ -9,7 +9,7 @@ Generate a realization of an amplitude adjusted Fourier transform (AAFT) surroga
 1. J. Theiler et al., Physica D *58* (1992) 77-94 (1992).
 
 """
-function aaft(ts::AbstractVector{Number})
+function aaft(ts::AbstractArray{T, 1} where T)
     n = length(ts)
 
     # Indices that would sort `ts` in ascending order

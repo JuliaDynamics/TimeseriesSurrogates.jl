@@ -1,5 +1,5 @@
 """
-    randomphases(ts::AbstractVector{Number})
+    randomphases(ts::AbstractArray{T, 1} where T)
 
 Create a random phases surrogate for `ts` [1]. Surrogate realizations using the phase
 surrogates have the same linear correlation, or periodogram, as the original data.
@@ -9,7 +9,7 @@ surrogates have the same linear correlation, or periodogram, as the original dat
 # Literature references
 1. J. Theiler et al., Physica D *58* (1992) 77-94 (1992).
 """
-function randomphases(ts::AbstractVector{Number})
+function randomphases(ts::AbstractArray{T, 1} where T)
     n = length(ts)
 
     # Fourier transform
