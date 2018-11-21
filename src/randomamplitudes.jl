@@ -3,13 +3,19 @@
 
 Create a random amplitude surrogate for `ts`.
 
-A modification of the random phases surrogates [1] where amplitudes are adjusted instead
-of the phases after taking the Fourier transform.
+A modification of the random phases surrogates from
+[Theiler et al., 1992](https://www.sciencedirect.com/science/article/pii/016727899290102S)
+, where amplitudes are adjusted instead of the phases after taking the Fourier
+transform.
 
-**`ts`** Is the time series for which to generate an AAFT surrogate realization.
+## Arguments
+- ts`**: the time series for which to generate the surrogate realization.
 
-# Literature references
-1. J. Theiler et al., Physica D *58* (1992) 77-94 (1992))
+## References
+
+J. Theiler et al., Physica D *58* (1992) 77-94 (1992).
+[https://www.sciencedirect.com/science/article/pii/016727899290102S](https://www.sciencedirect.com/science/article/pii/016727899290102S)
+
 """
 function randomamplitudes(ts::AbstractArray{T, 1} where T)
     n = length(ts)

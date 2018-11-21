@@ -1,17 +1,19 @@
 """
     surrplot(ts, surrogate; n_windows_periodogram = 100, gfs = 8, lfs = 6)
 
-Plot a time series along with its surrogate realization.
+Plot a time series along with its surrogate realization, and compares the
+periodogram and histogram of the two series.
 
-# Keywords
+## Keywords
 
-**`ts`** is the time series.
+- **`ts`**: the time series for which to generate a surrogate.
 
-**`surrogate`** is the surrogate realization of the time series.
+- **`surrogate`** is the surrogate realization of the time series.
 
-**`n_windows_periodogram`** sets the number of windows for binning the periodogram.
+- **`n_windows_periodogram`**: sets the number of windows for binning the
+    periodogram.
 
-**`gfs`** and **`lfs`** are the fontsize of the guides and legends, respectively.
+- **`gfs`** and **`lfs`**: fontsizes of the guides and legends, respectively.
 """
 function surrplot(ts, surrogate; n_windows_periodogram = 100, gfs = 8, lfs = 6)
     p1 = Plots.plot(ts, label = ""); asurr = surrogate
@@ -21,8 +23,8 @@ function surrplot(ts, surrogate; n_windows_periodogram = 100, gfs = 8, lfs = 6)
     Plots.plot!(p2, autocor(surrogate), label = "")
     p, psurr = DSP.mt_pgram(ts), DSP.mt_pgram(surrogate)
 
-    p3 = Plots.plot(intp([x for x in p.freq], p.power, n_windows_periodogram), label = "")
-    Plots.plot!(p3, intp([x for x in psurr.freq], psurr.power, n_windows_periodogram), label = "")
+    p3 = Plots.plot(interp([x for x in p.freq], p.power, n_windows_periodogram), label = "")
+    Plots.plot!(p3, interp([x for x in psurr.freq], psurr.power, n_windows_periodogram), label = "")
 
     p4 = Plots.histogram(ts, label = "Original")
     Plots.histogram!(p4, surrogate, label = "Surrogate")

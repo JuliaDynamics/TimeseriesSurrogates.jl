@@ -5,24 +5,26 @@ include("interpolation.jl")
             n_maxiter = 200, tol = 1e-6, n_windows = 50)
 
 Generate an iteratively adjusted amplitude adjusted Fourier transform (IAAFT)
-[1] surrogate realization of `ts`.
+([Schreiber & Schmitz, 1996](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.77.635))
+surrogate realization of `ts`.
 
-# Arguments
+## Arguments
 
-- **`ts`** is the time series for which to generate an AAFT surrogate realization.
+- **`ts`**: the time series for which to generate an AAFT surrogate realization.
 
-- **`n_maxiter`** sets the maximum number of iterations to allow before ending
+- **`n_maxiter`**: sets the maximum number of iterations to allow before ending
     the algorithm (if convergence is slow).
 
-- **`tol`** is the relative tolerance for deciding if convergence is achieved.
+- **`tol`**: the relative tolerance for deciding if convergence is achieved.
 
-- **`n_window`** is the number is windows used when binning the periodogram (used
+- **`n_window`**: the number is windows used when binning the periodogram (used
     for determining convergence).
 
-# Literature references
-1. T. Schreiber; A. Schmitz (1996). "Improved Surrogate Data for Nonlinearity
+## References
+
+T. Schreiber; A. Schmitz (1996). "Improved Surrogate Data for Nonlinearity
 Tests". Phys. Rev. Lett. 77 (4): 635–638. doi:10.1103/PhysRevLett.77.635.
-PMID 10062864.
+PMID 10062864. [https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.77.635](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.77.635)
 
 """
 function iaaft(ts::AbstractVector{T} where T;
@@ -78,11 +80,11 @@ function iaaft(ts::AbstractVector{T} where T;
         periodogram = DSP.mt_pgram(ts)
         periodogram_surr = DSP.mt_pgram(surrogate)
 
-        power_binned = intp([x for x in periodogram.freq],
+        power_binned = interp([x for x in periodogram.freq],
                             periodogram.power,
                             n_windows)
 
-        power_binned_surr = intp([x for x in periodogram_surr.freq],
+        power_binned_surr = interp([x for x in periodogram_surr.freq],
                             periodogram_surr.power,
                             n_windows)
 
@@ -169,11 +171,11 @@ function iaaft_iters(ts::AbstractArray{T, 1} where T;
         periodogram = DSP.mt_pgram(ts)
         periodogram_surr = DSP.mt_pgram(surrogate)
 
-        power_binned = intp([x for x in periodogram.freq],
+        power_binned = interp([x for x in periodogram.freq],
                                 periodogram.power,
                                 n_windows)
 
-        power_binned_surr = intp([x for x in periodogram_surr.freq],
+        power_binned_surr = interp([x for x in periodogram_surr.freq],
                                     periodogram_surr.power,
                                     n_windows)
 
