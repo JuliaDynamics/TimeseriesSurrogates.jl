@@ -1,5 +1,3 @@
-include("interpolation.jl")
-
 """
     iaaft(ts::AbstractArray{T, 1} where T;
             n_maxiter = 200, tol = 1e-6, n_windows = 50)
