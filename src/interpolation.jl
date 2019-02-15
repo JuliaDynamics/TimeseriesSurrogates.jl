@@ -1,7 +1,7 @@
 """
 Linearly interpolates two vector x and y on a linear grid consisting of `nsteps`.
 """
-function intp(x::Vector, y::Vector, nsteps::Int)
+function interp(x::Vector, y::Vector, nsteps::Int)
     # Interpolate
     itp = interpolate((x,), y, Gridded(Linear()))
     # Interpolate at the given resolution
@@ -11,4 +11,4 @@ function intp(x::Vector, y::Vector, nsteps::Int)
     return collect(x_fills), y_fills
 end
 
-export intp
+export interp
