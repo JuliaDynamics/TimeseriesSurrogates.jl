@@ -34,6 +34,7 @@ processes = (:AR1, :NSAR2, :NLNS, :randomwalk, :SNLST)
 surrogate_methods = (:randomshuffle, :randomphases, :randomamplitudes, :aaft, :iaaft)
 include("plots_and_anim.jl")
 
+include("uncertaindatasets.jl")
 
 export NLNS, NSAR2, AR1, randomwalk, SNLST,
         randomshuffle, randomamplitudes, randomphases, aaft, iaaft, wiaaft
