@@ -14,7 +14,7 @@ J. Theiler et al., Physica D *58* (1992) 77-94 (1992).
 
 """
 function aaft(ts::AbstractArray{T, 1} where T)
-    any(isnan.(ts)) && error("The input must not contain NaN values.")
+    any(isnan.(ts)) && throw(DomainError(NaN, "The input must not contain NaN values"))
     n = length(ts)
 
     # Indices that would sort `ts` in ascending order
