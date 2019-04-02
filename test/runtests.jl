@@ -3,6 +3,8 @@ using TimeseriesSurrogates
 ENV["GKSwstype"] = "100"
 
 ts = cumsum(randn(1000))
+ts_nan =cumsum(randn(100)) 
+ts_nan[1] = NaN
 
 @testset "Constrained surrogates" begin
     @testset "Random shuffle" begin
@@ -29,6 +31,7 @@ ts = cumsum(randn(1000))
         @test length(ts) == length(surrogate)
         #@test all(ts .!= surrogate)
         @test all(sort(ts) .== sort(surrogate))
+	@test_throws DomainError aaft(ts_nan)
     end
 
     @testset "IAAFT" begin
@@ -44,6 +47,7 @@ ts = cumsum(randn(1000))
         @test length(ts) == length(surrogates[1])
         #@test all(ts .!= surrogates[end])
         @test all(sort(ts) .== sort(surrogates[end]))
+	@test_throws DomainError iaaft(ts_nan)
     end
 
     @testset "WIAAFT" begin

@@ -27,7 +27,8 @@ PMID 10062864. [https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.77.635
 """
 function iaaft(ts::AbstractVector{T} where T;
                 n_maxiter = 200, tol = 1e-6, n_windows = 50)
-
+    any(isnan.(ts)) && throw(DomainError(NaN,"The input must not contain NaN values."))
+	
     # Sorted version of the original time series
     original_sorted = sort(ts)
 
