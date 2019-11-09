@@ -3,10 +3,8 @@ os:
   - linux
 julia:
   - nightly
-  - 1.0
+  - 1.1
+  - 1.2
 matrix:
 allow_failures:
 - julia: nightly
-
-script:
-  - julia -e 'using Pkg; Pkg.test()'
