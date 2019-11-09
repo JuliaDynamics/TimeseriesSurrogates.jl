@@ -2,7 +2,7 @@ name = "TimeseriesSurrogates"
 uuid = "c804724b-8c18-5caa-8579-6025a0767c70"
 authors = ["Kristian Agasøster Haaga <kahaaga@gmail.com>"]
 repo = "https://github.com/kahaaga/TimeseriesSurrogates.jl.git"
-version = "0.3.2"
+version = "0.4.0"
 
 [deps]
 AbstractFFTs = "621f4979-c628-5d54-868e-fcf4e3e8185c"
@@ -17,6 +17,7 @@ UncertainData = "dcd9ba68-c27b-5cea-ae21-829cd07325bf"
 Wavelets = "29a6e085-ba6d-5f35-a997-948ac2efa89a"
 
 [compat]
+julia = "^1.1"
 AbstractFFTs = "= 0.4.1"
 DSP = "^0.5.2, ^1"
 Distributions = "0.21, 1"
