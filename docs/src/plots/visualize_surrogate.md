@@ -1,12 +1,13 @@
 # Visualizing surrogates
+Notice that the functionality of this page only becomes available once you do `using Plots`.
 
 ## Autocorrelation / periodogram panels
-Visualizing a surrogate realization is easy.
+Visualizing a surrogate realization is easy, and it is based on the Plots.jl ecosystem.
 
 Let's say we want to generate an IAAFT surrogate and visualize the time series and surrogate time series, together with the corresponding periodograms,  autocorrelation functions and histograms. This can be done as follows:
 
 ```@example
-using TimeseriesSurrogates
+using TimeseriesSurrogates, Plots
 ts = diff(rand(300))
 iaaft_plot(ts)
 ```

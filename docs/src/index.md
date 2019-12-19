@@ -22,9 +22,10 @@ Then you're probably want to check out what [Types of surrogate realizations](@r
 
 ## I want to visualize my surrogate realizations
 
-Then you might save some time by checking out the links below.
 TimeseriesSurrogates.jl provides some convenient plotting routines that'll make it easy to
-check if your surrogates are successfully capturing your target null hypothesis:
+check if your surrogates are successfully capturing your target null hypothesis.
+To use the plotting functionality you need to install `Plots` (and a plotting backend).
+Once you load it, via `using Plots`, the following two links are relevant for you:
 
 1. [Autocorrelation / periodogram panels](@ref). Check out the [Examples](@ref) to get started.
 2. [Animate panels (and export to .gif)](@ref). This allows you to check properties of an ensemble of surrogate realizations.
