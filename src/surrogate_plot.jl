@@ -41,7 +41,7 @@ function surrplot(ts, surrogate; n_windows_periodogram = 100, gfs = 8, lfs = 6)
     Plots.xlabel!(p4, "Binned value")
     Plots.ylabel!(p4, "Frequency")
 
-    l = @layout [a{0.3h}; b{0.25h}; c{0.25h}; d{0.2h}]
+    l = Plots.@layout [a{0.3h}; b{0.25h}; c{0.25h}; d{0.2h}]
     Plots.plot(p1, p2, p3, p4,
                 layout = l,
                 guidefont = (gfs, gfs, gfs, gfs),
