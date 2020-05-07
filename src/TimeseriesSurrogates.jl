@@ -1,5 +1,6 @@
 module TimeseriesSurrogates
-"supertype of all surrogate methods"
+
+""" Supertype of all surrogate methods """
 abstract type Surrogate end
 
 """
