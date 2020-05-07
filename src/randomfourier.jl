@@ -25,9 +25,9 @@ function RandomFourier(s::AbstractVector, x::Bool=true)
     return RandomFourier(forward, inverse, x)
 end
 
-function surrogate(x::AbstractVector{T}, method::RandomFourier) where T
-    n = length(ts)
-    m = mean(x)
+function surrogate(s::AbstractVector{T}, method::RandomFourier) where T
+    m = mean(s)
+    𝓕 = isnothing(method.forward) ? rfft(s .- m) : method.forward*(s .- m)
     𝓕 = isnothing(method.forward) ? rfft(x .- m) : method.forward*(x .- m)
 
     # Polar coordinate representation of the Fourier transform
