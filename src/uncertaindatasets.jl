@@ -17,3 +17,7 @@ randomphases(x::UncertainIndexDataset) = randomphases(resample(x))
 randomamplitudes(x::UncertainIndexDataset) = randomamplitudes(resample(x))
 aaft(x::UncertainIndexDataset) = aaft(resample(x))
 iaaft(x::UncertainIndexDataset, args...; kwargs...) = iaaft(resample(x), args...; kwargs...)
+
+surrogate(x::UncertainDataset, method::Surrogate) = surrogate(resample(x))
+surrogate(x::UncertainValueDataset, method::Surrogate) = surrogate(resample(x))
+surrogate(x::UncertainIndexDataset, method::Surrogate) = surrogate(resample(x))

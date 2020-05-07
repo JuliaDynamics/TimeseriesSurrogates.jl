@@ -54,7 +54,7 @@ end
 
 @testset "New API" begin
     @testset "Random shuffle" begin
-        method = RandomShuffle(ts)
+        method = RandomShuffle()
         surr = surrogate(ts, method)
         @test length(ts) == length(surr)
         @test all(sort(ts) .== sort(surr))
@@ -92,11 +92,16 @@ end
 
     @testset "AAFT" begin
         # With pre-planning
-        method = AAFT(ts, true)
+        method = AAFT(ts)
         surr = surrogate(ts, method)
         @test length(ts) == length(surr)
         @test all(sort(ts) .== sort(surr))
-	    @test_throws DomainError aaft(ts_nan)
+        
+        # Without pre-planning
+        method = AAFT()
+        surr = surrogate(ts, method)
+        @test length(ts) == length(surr)
+        @test all(sort(ts) .== sort(surr))
     end
 
     @testset "IAAFT" begin
@@ -106,11 +111,11 @@ end
         @test length(ts) == length(surr)
         @test all(sort(ts) .== sort(surr))
 
-         # Without pre-planning
-         method = IAAFT()
-         surr = surrogate(ts, method)
-         @test length(ts) == length(surr)
-         @test all(sort(ts) .== sort(surr))
+        # Without pre-planning
+        method = IAAFT()
+        surr = surrogate(ts, method)
+        @test length(ts) == length(surr)
+        @test all(sort(ts) .== sort(surr))
     end
 
     @testset "WIAAFT" begin
