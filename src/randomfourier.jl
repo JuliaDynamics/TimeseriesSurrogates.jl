@@ -17,7 +17,8 @@ struct RandomFourier{F, I} <: Surrogate
     inverse::I
     phases::Bool
 end
-RandomFourier(x::Bool=true) = RandomFourier(nothing, nothing, x)
+
+RandomFourier(phases::Bool=true) = RandomFourier(nothing, nothing, phases)
 function RandomFourier(s::AbstractVector, x::Bool=true)
     forward = plan_rfft(s)
     inverse = plan_irfft(forward*s, length(s))
