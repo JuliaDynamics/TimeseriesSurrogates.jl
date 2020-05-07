@@ -35,7 +35,10 @@ include("iaaft.jl")
 include("wiaaft.jl")
 
 export NLNS, NSAR2, AR1, randomwalk, SNLST,
-        randomshuffle, randomamplitudes, randomphases, aaft, iaaft, wiaaft
+        randomshuffle, randomamplitudes, randomphases, aaft, iaaft, wiaaft,
+        # New API
+        Surrogate,
+        RandomShuffle, RandomFourier, AAFT, IAAFT
 
 # Visualization routine for time series + surrogate + periodogram/acf/histogram
 using Requires
