@@ -3,10 +3,14 @@
 
 An iteratively adjusted amplitude-adjusted-fourier-transform surrogate[^SchreiberSchmitz1996].
 
+IAAFT surrogate have the same linear correlation, or periodogram, and also 
+preserves the amplitude distribution of the original data, but are improved relative 
+to AAFT through iterative adjustment.
+
 If the timeseries `x` is provided, fourier transforms are planned, enabling more efficient
 use of the same method for many surrogates of a signal with same length and eltype as `x`.
 
-## References 
+## References
 
 [^SchreiberSchmitz1996]: T. Schreiber; A. Schmitz (1996). "Improved Surrogate Data for Nonlinearity 
     Tests". Phys. Rev. Lett. 77 (4): 635–638. doi:10.1103/PhysRevLett.77.635.
@@ -109,9 +113,8 @@ end
     iaaft(ts::AbstractArray{T, 1} where T;
             n_maxiter = 200, tol = 1e-6, n_windows = 50)
 
-Generate an iteratively adjusted amplitude adjusted Fourier transform (IAAFT)
-([Schreiber & Schmitz, 1996](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.77.635))
-surrogate realization of `ts`.
+Generate an iteratively adjusted amplitude adjusted Fourier transform 
+(IAAFT)[^SchreiberSchmitz1996] surrogate realization of `ts`.
 
 ## Arguments
 
@@ -127,10 +130,9 @@ surrogate realization of `ts`.
 
 ## References
 
-T. Schreiber; A. Schmitz (1996). "Improved Surrogate Data for Nonlinearity
-Tests". Phys. Rev. Lett. 77 (4): 635–638. doi:10.1103/PhysRevLett.77.635.
-PMID 10062864. [https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.77.635](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.77.635)
-
+[^SchreiberSchmitz1996]: T. Schreiber; A. Schmitz (1996). "Improved Surrogate Data for Nonlinearity 
+    Tests". Phys. Rev. Lett. 77 (4): 635–638. doi:10.1103/PhysRevLett.77.635.
+    PMID 10062864. [https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.77.635](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.77.635)
 """
 function iaaft(ts::AbstractVector{T} where T;
                 n_maxiter::Int = 100, tol::Real = 1e-6, n_windows::Int = 50)
