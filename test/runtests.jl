@@ -29,24 +29,21 @@ ts_nan[1] = NaN
     @testset "AAFT" begin
         surrogate = aaft(ts)
         @test length(ts) == length(surrogate)
-        #@test all(ts .!= surrogate)
         @test all(sort(ts) .== sort(surrogate))
 	@test_throws DomainError aaft(ts_nan)
     end
 
     @testset "IAAFT" begin
         # Single realization
-        surrogate = iaaft(ts)
-        @test length(ts) == length(surrogate)
-        #@test all(ts .!= surrogate)
-        @test all(sort(ts) .== sort(surrogate))
+        surr = iaaft(ts)
+        @test length(ts) == length(surr)
+        @test all(sort(ts) .== sort(surr))
 
         # Storing all realizations during iterations (the last vector contains the final
         # surrogate).
-        surrogates = iaaft_iters(ts)
-        @test length(ts) == length(surrogates[1])
-        #@test all(ts .!= surrogates[end])
-        @test all(sort(ts) .== sort(surrogates[end]))
+        surrs = iaaft_iters(ts)
+        @test length(ts) == length(surrs[1])
+        @test all(sort(ts) .== sort(surrs[end]))
 	@test_throws DomainError iaaft(ts_nan)
     end
 
