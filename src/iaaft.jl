@@ -28,7 +28,7 @@ PMID 10062864. [https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.77.635
 function iaaft(ts::AbstractVector{T} where T;
                 n_maxiter = 200, tol = 1e-6, n_windows = 50)
     any(isnan.(ts)) && throw(DomainError(NaN,"The input must not contain NaN values."))
-	
+
     # Sorted version of the original time series
     original_sorted = sort(ts)
 
@@ -62,6 +62,9 @@ function iaaft(ts::AbstractVector{T} where T;
         # the original time series, but randomises the phases (because the
         # phases are derived from the *randomly sorted* version of the original
         # time series).
+
+        # TODO: This is bad practice. You shouldn't write spectrum[:], but
+        # write spectrum .= ... instead. Then everything is fused in 1 loop.
         spectrum[:] = original_fft_amplitudes .* exp.(phase_angles .* 1im)
 
         # Now, let the surrogate time series be the values of the original time
@@ -118,6 +121,9 @@ from each iteration. The last vector contains the final surrogate.
 Tests". Phys. Rev. Lett. 77 (4): 635–638. doi:10.1103/PhysRevLett.77.635. PMID
 10062864.
 """
+
+
+# TODO: Why does this exist? seems like a tremendous amount of code duplication...
 function iaaft_iters(ts::AbstractArray{T, 1} where T;
                         n_maxiter = 100, tol = 1e-5, n_windows = 50)
 

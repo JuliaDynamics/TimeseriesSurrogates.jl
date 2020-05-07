@@ -1,14 +1,14 @@
 """
     RandomFourier([x,] phases = true) <: Surrogate
 
-Create a random phases surrogate[^Theiler1992] that randomizes the Fourier components
+A surrogate[^Theiler1992] that randomizes the Fourier components
 of the signal in some manner. If `phases==true`, the phases are randomized,
 otherwise the amplitudes.
 
 The resulting signal has same linear correlation, or periodogram, as the original data.
 
 If the timeseries `x` is provided, fourier transforms are planned, enabling more efficient
-use of the same method for many surrogates of a signal with same length and eltype.
+use of the same method for many surrogates of a signal with same length and eltype as `x`.
 
 [^Theiler1992]: [J. Theiler et al., Physica D *58* (1992) 77-94 (1992)](https://www.sciencedirect.com/science/article/pii/016727899290102S)
 """

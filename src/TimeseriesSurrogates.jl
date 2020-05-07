@@ -28,8 +28,7 @@ include("uncertaindatasets.jl")
 
 # The different surrogate routines
 include("randomshuffle.jl")
-include("randomphases.jl")
-include("randomamplitudes.jl")
+include("randomfourier.jl")
 include("aaft.jl")
 include("iaaft.jl")
 include("wiaaft.jl")

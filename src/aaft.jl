@@ -1,29 +1,30 @@
 """
-    aaft(ts::AbstractArray{T, 1} where T)
+    AAFT([x,])
+An amplitude-adjusted-fourier-transform surrogate[^Theiler1992].
 
-Generate a realization of an amplitude adjusted Fourier transform (AAFT)
-surrogate ([Theiler et al., 1992](https://www.sciencedirect.com/science/article/pii/016727899290102S)).
+If the timeseries `x` is provided, fourier transforms are planned, enabling more efficient
+use of the same method for many surrogates of a signal with same length and eltype as `x`.
 
-# Arguments
- - **`ts`**: the time series for which to generate the surrogate realization.
+TODO: Write what properties are kept constant here.
 
-# References
-
-J. Theiler et al., Physica D *58* (1992) 77-94 (1992).
-[https://www.sciencedirect.com/science/article/pii/016727899290102S](https://www.sciencedirect.com/science/article/pii/016727899290102S)
-
+[^Theiler1992]: [J. Theiler et al., Physica D *58* (1992) 77-94 (1992)](https://www.sciencedirect.com/science/article/pii/016727899290102S)
 """
-function aaft(ts::AbstractArray{T, 1} where T)
-    any(isnan.(ts)) && throw(DomainError(NaN, "The input must not contain NaN values"))
-    n = length(ts)
+struct AAFT{F, I} <: Surrogate
+    forward::F
+    inverse::I
+end
+AAFT(x) = RandomFourier(nothing, nothing)
 
-    # Indices that would sort `ts` in ascending order
-    ts_sorted = sort(ts)
+function AAFT(s::AbstractVector)
+    forward = plan_rfft(s)
+    inverse = plan_irfft(forward*s, length(s))
+    return AAFT(forward, inverse)
+end
 
-    # Phase surrogate
-    phasesurr = randomphases(ts)
-
+function surrogate(x::AbstractVector, method::AAFT)
+    xs = sort(x)
+    s = surrogate(x, RandomFourier(method.forward, method.inverse, true))
     # Rescale amplitudes according to original time series
-    phasesurr[sortperm(phasesurr)] = ts_sorted
-    return phasesurr
+    s[sortperm(s)] .= xs
+    return s
 end
