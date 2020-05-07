@@ -1,5 +1,5 @@
 """
-Linearly interpolates two vector x and y on a linear grid consisting of `nsteps`.
+Linearly interpolates two vectors x and y on a linear grid consisting of `nsteps`.
 """
 function interp(x::Vector, y::Vector, nsteps::Int)
     # Interpolate

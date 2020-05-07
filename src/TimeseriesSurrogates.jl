@@ -1,4 +1,13 @@
 module TimeseriesSurrogates
+"supertype of all surrogate methods"
+abstract type Surrogate end
+
+"""
+    surrogate(x, method::Surrogate) → s
+Create a surrogate timeseries/signal from input signal `x` and given `method`.
+"""
+function surrogate end
+
 
 using Distributions
 using StatsBase
