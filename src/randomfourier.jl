@@ -22,15 +22,15 @@ struct RandomFourier{F, I} <: Surrogate
 end
 
 RandomFourier(phases::Bool=true) = RandomFourier(nothing, nothing, phases)
-function RandomFourier(s::AbstractVector, phases::Bool=true)
-    forward = plan_rfft(s)
-    inverse = plan_irfft(forward*s, length(s))
+function RandomFourier(x::AbstractVector, phases::Bool=true)
+    forward = plan_rfft(x)
+    inverse = plan_irfft(forward*x, length(x))
     return RandomFourier(forward, inverse, phases)
 end
 
-function surrogate(s::AbstractVector{T}, method::RandomFourier) where T
-    m = mean(s)
-    𝓕 = isnothing(method.forward) ? rfft(s .- m) : method.forward*(s .- m)
+function surrogate(x::AbstractVector{T}, method::RandomFourier) where T
+    m = mean(x)
+    𝓕 = isnothing(method.forward) ? rfft(x .- m) : method.forward*(x .- m)
     n = length(𝓕)
  
     # Polar coordinate representation of the Fourier transform
@@ -45,5 +45,5 @@ function surrogate(s::AbstractVector{T}, method::RandomFourier) where T
         new_𝓕 = randomised_r .* exp.(ϕ .* 1im)
     end
     
-    isnothing(method.inverse) ? irfft(new_𝓕, length(s)) : method.inverse*new_𝓕
+    isnothing(method.inverse) ? irfft(new_𝓕, length(x)) : method.inverse*new_𝓕
  end

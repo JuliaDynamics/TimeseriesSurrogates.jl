@@ -17,9 +17,9 @@ struct AAFT{F, I} <: Surrogate
 end
 AAFT() = AAFT(nothing, nothing)
 
-function AAFT(s::AbstractVector)
-    forward = plan_rfft(s)
-    inverse = plan_irfft(forward*s, length(s))
+function AAFT(x::AbstractVector)
+    forward = plan_rfft(x)
+    inverse = plan_irfft(forward*x, length(x))
     return AAFT(forward, inverse)
 end
 
