@@ -7,7 +7,7 @@ abstract type Surrogate end
 Create a surrogate timeseries/signal from input signal `x` and given `method`.
 """
 function surrogate end
-
+export Surrogate, surrogate
 
 using Distributions
 using StatsBase

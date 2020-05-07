@@ -1,5 +1,5 @@
 """
-    RandomShuffle <: Surrogate
+    RandomShuffle() <: Surrogate
 
 Generate a random constrained surrogate by shifting values around.
 

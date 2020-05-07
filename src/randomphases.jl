@@ -1,41 +1,54 @@
 """
-    randomphases(ts::AbstractArray{T, 1} where T)
+    RandomFourier([x,] phases = true) <: Surrogate
 
-Create a random phases surrogate for `ts`
-    ([Theiler et al., 1992](https://www.sciencedirect.com/science/article/pii/016727899290102S)).
-Surrogate realizations using the phase
-surrogates have the same linear correlation, or periodogram, as the original data.
+Create a random phases surrogate[^Theiler1992] that randomizes the Fourier components
+of the signal in some manner. If `phases==true`, the phases are randomized,
+otherwise the amplitudes.
 
-## Arguments
-- **`ts`**: the time series for which to generate the surrogate realization.
+The resulting signal has same linear correlation, or periodogram, as the original data.
 
-## References
+If the timeseries `x` is provided, fourier transforms are planned, enabling more efficient
+use of the same method for many surrogates of a signal with same length and eltype.
 
-J. Theiler et al., Physica D *58* (1992) 77-94 (1992).
-[https://www.sciencedirect.com/science/article/pii/016727899290102S](https://www.sciencedirect.com/science/article/pii/016727899290102S)
-
+[^Theiler1992]: [J. Theiler et al., Physica D *58* (1992) 77-94 (1992)](https://www.sciencedirect.com/science/article/pii/016727899290102S)
 """
-function randomphases(ts::AbstractArray{T, 1} where T)
-    n = length(ts)
+struct RandomFourier{F, I} <: Surrogate
+    forward::F
+    inverse::I
+    phases::Bool
+end
+RandomFourier(x::Bool=true) = RandomFourier(nothing, nothing, x)
+function RandomFourier(s::AbstractVector, x::Bool=true)
+    forward = plan_rfft(s)
+    inverse = plan_irfft(forward*s, length(s))
+    return RandomFourier(forward, inverse, x)
+end
 
-    # Fourier transform
-    ft = fft(ts)
+function surrogate(x::AbstractVector{T}, method::RandomFourier) where T
+    n = length(ts)
+    m = mean(x)
+    𝓕 = isnothing(method.forward) ? rfft(x .- m) : method.forward*(s .- m)
 
     # Polar coordinate representation of the Fourier transform
-    r = abs.(ft)    # amplitudes
-    ϕ = angle.(ft)  # phase angles
+    r = abs.(𝓕)
+    ϕ = angle.(𝓕)
 
-    # Create random phases ϕ on the interval [0, 2π].
-    if n % 2 == 0
-        midpoint = round(Int, n / 2)
-        random_ϕ = rand(Uniform(0, 2*pi), midpoint)
-        new_ϕ = [random_ϕ; -reverse(random_ϕ)]
+    if method.phases
+        # Create random phases ϕ on the interval [0, 2π].
+        if n % 2 == 0
+            midpoint = round(Int, n / 2)
+            random_ϕ = rand(Uniform(0, 2*pi), midpoint)
+            new_ϕ = [random_ϕ; -reverse(random_ϕ)]
+        else
+            midpoint = floor(Int, n / 2)
+            random_ϕ = rand(Uniform(0, 2*pi), midpoint)
+            new_ϕ = [random_ϕ; random_ϕ[end]; -reverse(random_ϕ)]
+        end
+        # Inverse Fourier transform of the original amplitudes, but with randomised phases.
+        new_𝓕 = r .* exp.(new_ϕ .* 1im)
     else
-        midpoint = floor(Int, n / 2)
-        random_ϕ = rand(Uniform(0, 2*pi), midpoint)
-        new_ϕ = [random_ϕ; random_ϕ[end]; -reverse(random_ϕ)]
+        randomised_amplitudes = r .* rand(Uniform(0, 2*pi), n)
+        new_𝓕 = randomised_amplitudes .* exp.(ϕ .* 1im)
     end
-
-    # Inverse Fourier transform of the original amplitudes, but with randomised phases.
-    real.(ifft(r .* exp.(new_ϕ .* 1im)))
+    return isnothing(method.inverse) ? irfft(new_𝓕, length(s)) : method.inverse*new_𝓕
 end
