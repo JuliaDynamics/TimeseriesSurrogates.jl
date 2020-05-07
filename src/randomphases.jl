@@ -27,7 +27,7 @@ end
 function surrogate(x::AbstractVector{T}, method::RandomFourier) where T
     n = length(ts)
     m = mean(x)
-    𝓕 = isnothing(method.forward) ? rfft(x .- m) : method.forward*(s .- m)
+    𝓕 = isnothing(method.forward) ? rfft(x .- m) : method.forward*(x .- m)
 
     # Polar coordinate representation of the Fourier transform
     r = abs.(𝓕)
@@ -50,5 +50,5 @@ function surrogate(x::AbstractVector{T}, method::RandomFourier) where T
         randomised_amplitudes = r .* rand(Uniform(0, 2*pi), n)
         new_𝓕 = randomised_amplitudes .* exp.(ϕ .* 1im)
     end
-    return isnothing(method.inverse) ? irfft(new_𝓕, length(s)) : method.inverse*new_𝓕
+    s = isnothing(method.inverse) ? irfft(new_𝓕, length(x)) : method.inverse*new_𝓕
 end
