@@ -41,7 +41,7 @@ ts_nan[1] = NaN
 
         # Storing all realizations during iterations (the last vector contains the final
         # surrogate).
-        surrs = iaaft_iters(ts)
+        surrs = TimeseriesSurrogates.iaaft_iters(ts)
         @test length(ts) == length(surrs[1])
         @test all(sort(ts) .== sort(surrs[end]))
 	@test_throws DomainError iaaft(ts_nan)
