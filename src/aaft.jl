@@ -15,7 +15,7 @@ struct AAFT{F, I} <: Surrogate
     forward::F
     inverse::I
 end
-AAFT(x) = RandomFourier(nothing, nothing)
+AAFT() = AAFT(nothing, nothing)
 
 function AAFT(s::AbstractVector)
     forward = plan_rfft(s)
