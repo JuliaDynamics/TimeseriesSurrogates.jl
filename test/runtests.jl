@@ -8,28 +8,28 @@ ts_nan[1] = NaN
 
 @testset "Constrained surrogates" begin
     @testset "Random shuffle" begin
-        surrogate = randomshuffle(ts)
-        @test length(ts) == length(surrogate)
-        @test all(sort(ts) .== sort(surrogate))
-        @test !all(ts .== surrogate)
+        surr = randomshuffle(ts)
+        @test length(ts) == length(surr)
+        @test all(sort(ts) .== sort(surr))
+        @test !all(ts .== surr)
     end
 
     @testset "Random phases" begin
-        surrogate = randomphases(ts)
-        @test length(ts) == length(surrogate)
-        @test !all(ts .== surrogate)
+        surr = randomphases(ts)
+        @test length(ts) == length(surr)
+        @test !all(ts .== surr)
     end
 
     @testset "Random amplitudes" begin
-        surrogate = randomphases(ts)
-        @test length(ts) == length(surrogate)
-        @test all(ts .!= surrogate)
+        surr = randomphases(ts)
+        @test length(ts) == length(surr)
+        @test all(ts .!= surr)
     end
 
     @testset "AAFT" begin
-        surrogate = aaft(ts)
-        @test length(ts) == length(surrogate)
-        @test all(sort(ts) .== sort(surrogate))
+        surr = aaft(ts)
+        @test length(ts) == length(surr)
+        @test all(sort(ts) .== sort(surr))
 	@test_throws DomainError aaft(ts_nan)
     end
 
