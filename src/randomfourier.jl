@@ -28,28 +28,19 @@ end
 function surrogate(s::AbstractVector{T}, method::RandomFourier) where T
     m = mean(s)
     𝓕 = isnothing(method.forward) ? rfft(s .- m) : method.forward*(s .- m)
-    𝓕 = isnothing(method.forward) ? rfft(x .- m) : method.forward*(x .- m)
-
+    n = length(𝓕)
+ 
     # Polar coordinate representation of the Fourier transform
     r = abs.(𝓕)
     ϕ = angle.(𝓕)
-
+    
     if method.phases
-        # Create random phases ϕ on the interval [0, 2π].
-        if n % 2 == 0
-            midpoint = round(Int, n / 2)
-            random_ϕ = rand(Uniform(0, 2*pi), midpoint)
-            new_ϕ = [random_ϕ; -reverse(random_ϕ)]
-        else
-            midpoint = floor(Int, n / 2)
-            random_ϕ = rand(Uniform(0, 2*pi), midpoint)
-            new_ϕ = [random_ϕ; random_ϕ[end]; -reverse(random_ϕ)]
-        end
-        # Inverse Fourier transform of the original amplitudes, but with randomised phases.
-        new_𝓕 = r .* exp.(new_ϕ .* 1im)
+        randomised_ϕ = rand(Uniform(0, 2*pi), n)
+        new_𝓕 = r .* exp.(randomised_ϕ .* 1im)
     else
-        randomised_amplitudes = r .* rand(Uniform(0, 2*pi), n)
-        new_𝓕 = randomised_amplitudes .* exp.(ϕ .* 1im)
+        randomised_r = r .* rand(Uniform(0, 2*pi), n)
+        new_𝓕 = randomised_r .* exp.(ϕ .* 1im)
     end
-    s = isnothing(method.inverse) ? irfft(new_𝓕, length(x)) : method.inverse*new_𝓕
-end
+    
+    isnothing(method.inverse) ? irfft(new_𝓕, length(s)) : method.inverse*new_𝓕
+ end
