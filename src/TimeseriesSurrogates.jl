@@ -1,15 +1,8 @@
 module TimeseriesSurrogates
 
-""" Supertype of all surrogate methods """
-abstract type Surrogate end
-
-"""
-    surrogate(x, method::Surrogate) → s
-Create a surrogate timeseries/signal from input signal `x` and given `method`.
-"""
-function surrogate end
-export Surrogate, surrogate
-
+# TODO: I think it is more clear when each file uses the packages it needs instead of
+# the global usage here. It makes it easier to understand how each algorithm works
+# and what it needs
 using Distributions
 using StatsBase
 using InplaceOps
@@ -19,23 +12,28 @@ using Interpolations
 using Wavelets
 using Requires
 
-# Example systems
-include("testsystems.jl")
+include("api.jl")
+
+include("utils/testsystems.jl")
 
 # Periodogram interpolation
-include("interpolation.jl")
+include("utils/interpolation.jl")
 
-include("uncertaindatasets.jl")
+include("utils/uncertaindatasets.jl")
 
 # The different surrogate routines
-include("randomshuffle.jl")
-include("randomfourier.jl")
-include("randomphases.jl")
-include("randomamplitudes.jl")
-include("aaft.jl")
-include("iaaft.jl")
-include("wiaaft.jl")
+include("methods/randomshuffle.jl")
+include("methods/randomfourier.jl")
+include("methods/randomphases.jl")
+include("methods/randomamplitudes.jl")
+include("methods/aaft.jl")
+include("methods/iaaft.jl")
+include("methods/wiaaft.jl")
+include("methods/pseudoperiodic.jl")
 
+# TODO: I think its more clear when each file exports the names it defines.
+# The Julia function Base.names() can give you all exported names, so no reason to
+# group them at the source.
 export NLNS, NSAR2, AR1, randomwalk, SNLST,
         randomshuffle, randomamplitudes, randomphases, aaft, iaaft, wiaaft,
         # New API
@@ -50,8 +48,8 @@ function __init__()
         # types
         processes = (:AR1, :NSAR2, :NLNS, :randomwalk, :SNLST)
         surrogate_methods = (:randomshuffle, :randomphases, :randomamplitudes, :aaft, :iaaft)
-        include("surrogate_plot.jl")
-        include("plots_and_anim.jl")
+        include("plotting/surrogate_plot.jl")
+        include("plotting/plots_and_anim.jl")
     end
 end
 

@@ -5,7 +5,7 @@ A surrogate[^Theiler1992] that randomizes the Fourier components
 of the signal in some manner. If `phases==true`, the phases are randomized,
 otherwise the amplitudes are randomized.
 
-If `phases==true`, then the resulting signal has same linear correlation, or periodogram, 
+If `phases==true`, then the resulting signal has same linear correlation, or periodogram,
 as the original data.
 
 If the timeseries `x` is provided, fourier transforms are planned, enabling more efficient
@@ -32,11 +32,11 @@ function surrogate(x::AbstractVector{T}, method::RandomFourier) where T
     m = mean(x)
     𝓕 = isnothing(method.forward) ? rfft(x .- m) : method.forward*(x .- m)
     n = length(𝓕)
- 
+
     # Polar coordinate representation of the Fourier transform
     r = abs.(𝓕)
     ϕ = angle.(𝓕)
-    
+
     if method.phases
         randomised_ϕ = rand(Uniform(0, 2*pi), n)
         new_𝓕 = r .* exp.(randomised_ϕ .* 1im)
@@ -44,6 +44,7 @@ function surrogate(x::AbstractVector{T}, method::RandomFourier) where T
         randomised_r = r .* rand(Uniform(0, 2*pi), n)
         new_𝓕 = randomised_r .* exp.(ϕ .* 1im)
     end
-    
+
+    # TODO: I Think here the mean `m` has to be re-addded to the signal.
     isnothing(method.inverse) ? irfft(new_𝓕, length(x)) : method.inverse*new_𝓕
  end
