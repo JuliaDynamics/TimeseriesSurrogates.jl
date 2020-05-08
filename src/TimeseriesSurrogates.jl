@@ -1,6 +1,6 @@
 module TimeseriesSurrogates
 
-""" Supertype of all surrogate methods """
+"""Supertype of all surrogate methods."""
 abstract type Surrogate end
 
 """
@@ -35,6 +35,7 @@ include("randomamplitudes.jl")
 include("aaft.jl")
 include("iaaft.jl")
 include("wiaaft.jl")
+include("pseudoperiodic.jl")
 
 export NLNS, NSAR2, AR1, randomwalk, SNLST,
         randomshuffle, randomamplitudes, randomphases, aaft, iaaft, wiaaft,
