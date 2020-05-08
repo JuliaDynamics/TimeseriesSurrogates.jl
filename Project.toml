@@ -18,7 +18,7 @@ Wavelets = "29a6e085-ba6d-5f35-a997-948ac2efa89a"
 [compat]
 AbstractFFTs = "= 0.4.1, 0.5"
 DSP = "^0.5.2, 0.6, ^1"
-Distributions = "0.21, 1"
+Distributions = "0.21, 1, 0.23"
 InplaceOps = "^0.3.0, ^1"
 Interpolations = "^0.12, ^1"
 Requires = "^0.5.2, ^1"
