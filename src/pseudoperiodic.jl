@@ -39,7 +39,7 @@ function surrogate(x, method::Surrogate)
     sg()
 end
 
-
+using DelayEmbeddings, StatsBase, LinearAlgebra
 export PseudoPeriodic
 """
     PseudoPeriodic(d, τ, ρ, shift=true) <: Surrogate
@@ -83,10 +83,10 @@ end
 function (sg::SurrogateGenerator{<:PseudoPeriodic})()
     y, z, w = getfield.(Ref(sg.init), (:y, :z, :w))
     ρ, shift = getfield.(Ref(sg.method), (:ρ, :shift))
-    pseudoperiodic!(y, z, w, ρ, shift)
+    pseudoperiodic!(y, sg.x, z, w, ρ, shift)
 end
 # Low-level method, also used in `noiseradius`
-function pseudoperiodic!(y, z, w, ρ, shift)
+function pseudoperiodic!(y, x, z, w, ρ, shift)
     N, Ñ = length.((x, z))
     y[1] = shift ? rand(z.data) : z[1]
     @inbounds for i in 1:N-1
