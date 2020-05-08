@@ -16,16 +16,16 @@ UncertainData = "dcd9ba68-c27b-5cea-ae21-829cd07325bf"
 Wavelets = "29a6e085-ba6d-5f35-a997-948ac2efa89a"
 
 [compat]
-julia = "^1.1"
 AbstractFFTs = "= 0.4.1, 0.5"
 DSP = "^0.5.2, 0.6, ^1"
-Distributions = "0.21, 1"
+Distributions = "0.21, 1, 0.23"
 InplaceOps = "^0.3.0, ^1"
 Interpolations = "^0.12, ^1"
 Requires = "^0.5.2, ^1"
 StatsBase = "^0.32.0, ^1"
 UncertainData = "^0"
 Wavelets = "^0.8.0, ^1"
+julia = "^1.1"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
