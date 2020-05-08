@@ -24,3 +24,23 @@ I = UncertainIndexDataset([UncertainValue(Normal, rand(), rand()) for i = 1:L])
 @test iaaft(D) isa Vector{Float64}
 @test iaaft(V) isa Vector{Float64}
 @test iaaft(I) isa Vector{Float64}
+
+method_AAFT = AAFT()
+method_IAAFT = IAAFT()
+method_RandomShuffle = RandomShuffle()
+method_RandomFourier = RandomFourier()
+
+@test surrogate(D, method_AAFT) isa Vector{Float64}
+@test surrogate(D, method_IAAFT) isa Vector{Float64}
+@test surrogate(D, method_RandomShuffle) isa Vector{Float64}
+@test surrogate(D, method_RandomFourier) isa Vector{Float64}
+
+@test surrogate(V, method_AAFT) isa Vector{Float64}
+@test surrogate(V, method_IAAFT) isa Vector{Float64}
+@test surrogate(V, method_RandomShuffle) isa Vector{Float64}
+@test surrogate(V, method_RandomFourier) isa Vector{Float64}
+
+@test surrogate(I, method_AAFT) isa Vector{Float64}
+@test surrogate(I, method_IAAFT) isa Vector{Float64}
+@test surrogate(I, method_RandomShuffle) isa Vector{Float64}
+@test surrogate(I, method_RandomFourier) isa Vector{Float64}
