@@ -104,7 +104,7 @@ function noiseradius(sg::SurrogateGenerator{<:PseudoPeriodic}, ρs, n = 1)
     y, z, w = getfield.(Ref(sg.init), (:y, :z, :w))
     @inbounds for _ in 1:n
         for (ℓ, ρ) in enumerate(ρs)
-            s = pseudoperiodic!(y, z, w, ρ, shift)
+            s = pseudoperiodic!(y, sg.x, z, w, ρ, sg.method.shift)
             for i in 1:N-1
                 # TODO: This can be optimized heavily: checking x[i+2] already tells us
                 # that we shouldn't check x[i+1] on the next iteration.
