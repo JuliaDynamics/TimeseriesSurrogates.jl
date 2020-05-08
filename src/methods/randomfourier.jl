@@ -36,5 +36,5 @@ function (rf::SurrogateGenerator{<:RandomFourier})()
         randomised_r = r .* rand(Uniform(0, 2*pi), n)
         new_𝓕 = randomised_r .* exp.(ϕ .* 1im)
     end
-    return irfft(new_𝓕, n) .+ m
+    return inverse*new_𝓕 .+ m
  end
