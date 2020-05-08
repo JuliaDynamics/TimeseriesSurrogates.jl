@@ -1,5 +1,5 @@
 """
-Linearly interpolates two vector x and y on a linear grid consisting of `nsteps`.
+Linearly interpolates two vectors x and y on a linear grid consisting of `nsteps`.
 """
 function interp(x::Vector, y::Vector, nsteps::Int)
     # Interpolate
@@ -11,4 +11,12 @@ function interp(x::Vector, y::Vector, nsteps::Int)
     return collect(x_fills), y_fills
 end
 
-export interp
+"""
+Linearly interpolates two vector x and y on a linear grid consisting of `nsteps`.
+"""
+function interp(x, y, range::LinRange)
+    itp = interpolate((x,), y, Gridded(Linear()))
+    
+    # Interpolate at the given resolution
+    return itp(range)
+end

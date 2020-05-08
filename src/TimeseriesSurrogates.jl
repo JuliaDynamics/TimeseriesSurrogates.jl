@@ -1,5 +1,15 @@
 module TimeseriesSurrogates
 
+""" Supertype of all surrogate methods """
+abstract type Surrogate end
+
+"""
+    surrogate(x, method::Surrogate) → s
+Create a surrogate timeseries/signal from input signal `x` and given `method`.
+"""
+function surrogate end
+export Surrogate, surrogate
+
 using Distributions
 using StatsBase
 using InplaceOps
@@ -19,6 +29,7 @@ include("uncertaindatasets.jl")
 
 # The different surrogate routines
 include("randomshuffle.jl")
+include("randomfourier.jl")
 include("randomphases.jl")
 include("randomamplitudes.jl")
 include("aaft.jl")
@@ -26,7 +37,10 @@ include("iaaft.jl")
 include("wiaaft.jl")
 
 export NLNS, NSAR2, AR1, randomwalk, SNLST,
-        randomshuffle, randomamplitudes, randomphases, aaft, iaaft, wiaaft
+        randomshuffle, randomamplitudes, randomphases, aaft, iaaft, wiaaft,
+        # New API
+        Surrogate,
+        RandomShuffle, RandomFourier, AAFT, IAAFT
 
 # Visualization routine for time series + surrogate + periodogram/acf/histogram
 using Requires

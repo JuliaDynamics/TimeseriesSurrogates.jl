@@ -1,19 +1,17 @@
 """
     randomphases(ts::AbstractArray{T, 1} where T)
 
-Create a random phases surrogate for `ts`
-    ([Theiler et al., 1992](https://www.sciencedirect.com/science/article/pii/016727899290102S)).
-Surrogate realizations using the phase
-surrogates have the same linear correlation, or periodogram, as the original data.
+Create a random phases surrogate for `ts`[^Theiler1992].
+
+Phase surrogates have the same linear correlation, or periodogram, as the original data.
 
 ## Arguments
+
 - **`ts`**: the time series for which to generate the surrogate realization.
 
 ## References
 
-J. Theiler et al., Physica D *58* (1992) 77-94 (1992).
-[https://www.sciencedirect.com/science/article/pii/016727899290102S](https://www.sciencedirect.com/science/article/pii/016727899290102S)
-
+[^Theiler1992]: [J. Theiler et al., Physica D *58* (1992) 77-94 (1992)](https://www.sciencedirect.com/science/article/pii/016727899290102S](https://www.sciencedirect.com/science/article/pii/016727899290102S)
 """
 function randomphases(ts::AbstractArray{T, 1} where T)
     n = length(ts)
