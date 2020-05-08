@@ -7,7 +7,7 @@ struct SurrogateGenerator{S<:Surrogate, X, A}
 end
 
 """
-    surrogenerator(x, method::Surrogate, n::Int) → sg::SurrogateGenerator
+    surrogenerator(x, method::Surrogate) → sg::SurrogateGenerator
 Initialize a generator that creates surrogates of `x` on demand, based on given `method`.
 This is efficient, because for most methods some things can be initialized and reused
 for every surrogate.
@@ -112,5 +112,6 @@ function noiseradius(sg::SurrogateGenerator{<:PseudoPeriodic}, ρs, n = 1)
             end
         end
     end
+    # TODO: here we can directly find maximum and return it as a single number
     return l2n
 end
