@@ -2,9 +2,22 @@ using Test
 using TimeseriesSurrogates
 ENV["GKSwstype"] = "100"
 
-ts = cumsum(randn(1000))
-ts_nan =cumsum(randn(100)) 
+N = 1000
+ts = cumsum(randn(N))
+ts_nan = cumsum(randn(N))
 ts_nan[1] = NaN
+x = cos.(range(0, 20π, length = N)) .+ randn(N)*0.05
+
+@testset "Periodic" begin
+	pp = PseudoPeriodic(3, 25, 0.05)
+	s = surrogate(x, pp)
+	@test length(s) == length(ts)
+	@test all(s[i] ∈ x for i in 1:N)
+	# Perhaps a more advanced test, e.g. that both components have Fourier peak at
+	# the same frequency, should be considered.
+
+	#TODO: Test for noiseradius
+end
 
 @testset "Constrained surrogates" begin
     @testset "Random shuffle" begin
@@ -96,7 +109,7 @@ end
         surr = surrogate(ts, method)
         @test length(ts) == length(surr)
         @test all(sort(ts) .== sort(surr))
-        
+
         # Without pre-planning
         method = AAFT()
         surr = surrogate(ts, method)

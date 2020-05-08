@@ -26,6 +26,7 @@ struct PseudoPeriodic{T<:Real} <: Surrogate
     ρ::T
     shift::Bool
 end
+PseudoPeriodic(d, t, r) = PseudoPeriodic(d, t, r, true)
 
 function surrogenerator(x::AbstractVector, pp::PseudoPeriodic)
     # in the following symbol `y` stands for `s` of the paper
