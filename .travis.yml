@@ -2,16 +2,12 @@ language: julia
 os:
   - linux
   - windows
-#  - osx
+  # - osx
 
 julia:
   - 1
-  - 1.1
-  # - nightly # commented to save energy and time
-
-before_script:
-  - git config --global user.name "GitUser"
-  - git config --global user.email "git@us.er"
+  - 1.0
+  # - nightly
 
 before_script:
   - git config --global user.name "GitUser"
