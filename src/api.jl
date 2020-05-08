@@ -35,7 +35,7 @@ end
 """
     surrogate(x, method::Surrogate) → s
 Create a single surrogate timeseries `s` from `x` based on the given `method`.
-If you want to generate more than one surrogates, you should use [`surrogenerator`](@ref).
+If you want to generate more than one surrogates from `x`, you should use [`surrogenerator`](@ref).
 """
 function surrogate(x, method::Surrogate)
     sg = surrogenerator(x, method)
