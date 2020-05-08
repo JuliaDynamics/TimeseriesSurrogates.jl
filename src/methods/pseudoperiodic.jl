@@ -8,7 +8,7 @@ noise are destroyed (for appropriate `ρ` choice).
 Therefore these surrogates are suitable to test the null hypothesis
 that the signal is periodic with uncorrelated noise[^Small2001].
 
-Argumensts `d, τ, ρ` are as in the paper, the embedding dimension, delay time and
+Arguments `d, τ, ρ` are as in the paper, the embedding dimension, delay time and
 noise radius. The method works by performing a delay coordinates ambedding via the
 library [DynamicalSystems.jl](https://juliadynamics.github.io/DynamicalSystems.jl/dev/embedding/reconstruction/).
 See its documentation for choosing appropriate values for `d, τ`. For `ρ`, we have implemented
