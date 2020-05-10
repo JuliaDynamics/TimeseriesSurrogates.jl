@@ -12,7 +12,7 @@ as the original data.
 
 [^Theiler1992]: J. Theiler et al., [Physica D *58* (1992) 77-94 (1992)](https://www.sciencedirect.com/science/article/pii/016727899290102S)
 """
-struct RandomFourier{F, I} <: Surrogate
+struct RandomFourier <: Surrogate
     phases::Bool
 end
 RandomFourier() = RandomFourier(true)
@@ -21,7 +21,7 @@ function surrogenerator(x::AbstractVector, rf::RandomFourier)
     forward = plan_rfft(x)
     inverse = plan_irfft(forward*x, length(x))
     m = mean(x)
-    𝓕 = method.forward*(x .- m)
+    𝓕 = forward*(x .- m)
     init = (inverse = inverse, m = m, 𝓕 = 𝓕)
     return SurrogateGenerator(rf, x, init)
 end
@@ -29,6 +29,8 @@ end
 function (rf::SurrogateGenerator{<:RandomFourier})()
     inverse, m, 𝓕 = getfield.(Ref(rf.init), (:inverse, :m, :𝓕))
     n = length(𝓕)
+    r = abs.(𝓕)
+    ϕ = abs.(𝓕)
     if rf.method.phases
         randomised_ϕ = rand(Uniform(0, 2*pi), n)
         new_𝓕 = r .* exp.(randomised_ϕ .* 1im)
