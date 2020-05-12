@@ -1,5 +1,5 @@
 """   
-    IAAFT([x,])
+    IAAFT(M = 100, tol = 1e-6, W = 75)
 
 An iteratively adjusted amplitude-adjusted-fourier-transform surrogate[^SchreiberSchmitz1996].
 
