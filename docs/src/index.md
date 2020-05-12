@@ -19,9 +19,11 @@ surrogenerator
 ## Surrogate methods
 
 ```@docs
-RandolShuffle
+RandomShuffle
+BlockShuffle
 RandomFourier
 AAFT
+IAAFT
 PseudoPeriodic
 ```
 
