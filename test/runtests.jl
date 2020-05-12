@@ -47,6 +47,14 @@ end
     @test all([s[i] ∈ x for i = 1:N])
 end
 
+@testset "IAAFT" begin 
+    iaaft = IAAFT()    
+    s = surrogate(x, iaaft)
+
+    @test length(s) == length(x)
+    @test all([s[i] ∈ x for i = 1:N])
+end
+
 
 @testset "RandomFourier" begin 
     @testset "random phases" begin

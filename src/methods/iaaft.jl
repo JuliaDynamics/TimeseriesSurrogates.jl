@@ -11,52 +11,68 @@ surrogate are coarse-grained and the powers are averaged over `W` equal-width
 frequency bins. The iteration procedure ends when the relative deviation 
 between the periodograms is less than `tol` (or when `M` is reached).
 
-If the timeseries `x` is provided, fourier transforms are planned, enabling more efficient
-use of the same method for many surrogates of a signal with same length and eltype as `x`.
-
 ## References
 
 [^SchreiberSchmitz1996]: T. Schreiber; A. Schmitz (1996). "Improved Surrogate Data for Nonlinearity 
     Tests". Phys. Rev. Lett. 77 (4): 635–638. doi:10.1103/PhysRevLett.77.635.
     PMID 10062864. [https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.77.635](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.77.635)
 """
-struct IAAFT{F, I} <: Surrogate
-    forward::F
-    inverse::I
+struct IAAFT <: Surrogate
     M::Int
     tol::Real
     W::Int
+
+    function IAAFT(;M::Int = 100, tol::Real = 1e-6, W::Int = 75)
+        new(M, tol, W)
+    end
 end
 
-IAAFT(;M::Int = 100, tol::Real = 1e-6, W::Int = 75) = 
-    IAAFT(nothing, nothing, M, tol, W)
+Base.show(io::IO, x::IAAFT) = print(io, "IAAFT(M=$(x.M), tol=$(x.tol), W=$(x.W))")
 
-function IAAFT(x::AbstractVector; M::Int = 100, tol::Real = 1e-6, W::Int = 75)
+function surrogenerator(x, method::IAAFT)
+    # Pre-plan Fourier transforms
     forward = plan_rfft(x)
     inverse = plan_irfft(forward*x, length(x))
-    return IAAFT(forward, inverse, M, tol, W)
-end
 
-function surrogate(x, method::IAAFT) 
-    isnothing(method.forward) ? forward = plan_rfft(x) : forward = method.forward
-    isnothing(method.inverse) ? inverse = plan_irfft(forward*x, length(x)) : inverse = method.inverse
-        
+    # Pre-compute stuff that can be used for different surrogate realizations
+    m = mean(x)
+    x_sorted = sort(x)
+    𝓕 = forward*(x .- m)
+    r_original = abs.(𝓕)
+
     # Coarse-grain the periodograms when comparing them between iterations.
     px = DSP.periodogram(x)
     range = LinRange(0.0, 0.5, method.W)
     px_binned = interp(px.freq, px.power, range)
 
+    # These are updated during iteration procedure
+    𝓕new = Vector{Complex{Float64}}(undef, length(𝓕))
+    𝓕sorted = Vector{Complex{Float64}}(undef, length(𝓕))
+    ϕsorted = Vector{Complex{Float64}}(undef, length(𝓕))
+
+    init = (forward = forward, inverse = inverse, m = m, 𝓕 = 𝓕, r_original = r_original,
+            px_binned = px_binned, range = range, x_sorted = x_sorted,
+            𝓕new = 𝓕new, 𝓕sorted =  𝓕sorted, ϕsorted = ϕsorted)
+
+    return SurrogateGenerator(method, x, init)
+end
+
+function (sg::SurrogateGenerator{<:IAAFT})()
+    init_fields = (:forward, :inverse, :m, :𝓕, :r_original, 
+                    :px_binned, :range, 
+                    :x_sorted,
+                    :𝓕new, :𝓕sorted, :ϕsorted)
+    forward, inverse, m, 𝓕, r_original, 
+        px_binned, range, 
+        x_sorted,
+        𝓕new, 𝓕sorted, ϕsorted = getfield.(Ref(sg.init), init_fields)
+
+    x = sg.x
+    M = sg.method.M
+    tol = sg.method.tol
+    
     # Keep track of difference between periodograms between iterations
     diffs = zeros(Float64, 2)
-
-    # Sorted version of the original time series
-    original_sorted = sort(x)
-
-    # Fourier transform of the zero-mean normalized original signal 
-    # and its amplitudes
-    m = mean(x)
-    𝓕 = forward*(x .- m)
-    r_original = abs.(𝓕)
 
     # RANK ORDERING.
     # Create some Gaussian noise, and find the indices that sorts it with
@@ -66,16 +82,12 @@ function surrogate(x, method::IAAFT)
     g = rand(Normal(), n)
     ts_sorted = x[sortperm(g)]
 
-    𝓕new = Vector{Complex{Float64}}(undef, length(𝓕))
-    𝓕sorted = Vector{Complex{Float64}}(undef, length(𝓕))
-    ϕsorted = Vector{Complex{Float64}}(undef, length(𝓕))
-
     # The surrogate
     s = Vector{Float64}(undef, n)
     
     iter = 1
     success = false
-    while iter <= method.M
+    while iter <= M
         # Take the Fourier transform of `ts_sorted` and get the phase angles of
         # the resulting complex numbers.
         𝓕sorted .= forward * ts_sorted
@@ -94,7 +106,7 @@ function surrogate(x, method::IAAFT)
         s .= real.(inverse * 𝓕new) # ifft normalises by default
 
         # map original values onto shuffle
-        s[sortperm(s)] = original_sorted
+        s[sortperm(s)] = x_sorted
         ts_sorted .= s
 
         # Convergence check on periodogram
@@ -105,7 +117,7 @@ function surrogate(x, method::IAAFT)
             diffs[1] = sum((px_binned[2] .- ps_binned[2]).^2) / sum(px_binned[2].^2)
         else
             diffs[2] = sum((px_binned[2] .- ps_binned[2]).^2) / sum(px_binned[2].^2)
-            abs(diffs[1] - diffs[2]) < method.tol ? break : diffs[1] = copy(diffs[2])
+            abs(diffs[1] - diffs[2]) < tol ? break : diffs[1] = copy(diffs[2])
         end
 
         iter += 1
@@ -113,177 +125,3 @@ function surrogate(x, method::IAAFT)
     
     return s
 end
-
-function iaaft(ts::AbstractVector{T} where T;
-                M::Int = 100, tol::Real = 1e-6, W::Int = 50)
-    any(isnan.(ts)) && throw(DomainError(NaN,"The input must not contain NaN values."))
-    
-    # Sorted version of the original time series
-    original_sorted = sort(ts)
-
-    # Fourier transform and its amplitudes
-    original_fft = fft(ts)
-    original_fft_amplitudes = abs.(original_fft)
-
-    # RANK ORDERING.
-    # Create some Gaussian noise, and find the indices that sorts it with
-    # increasing amplitude. Then sort the original time series according to
-    # the indices rendering the Gaussian noise sorted.
-    n = length(ts)
-    g = rand(Normal(), n)
-    inds = sortperm(g)
-    ts_sorted = ts[inds]
-
-    iter = 1
-    success = false
-
-    spectrum = Vector{Complex{Float64}}(undef, n)
-    surr = Vector{Float64}(undef, n)
-
-    diffs = zeros(Float64, 2)
-    while iter <= M
-        # Take the Fourier transform of `ts_sorted` and get the phase angles of
-        # the resulting complex numbers.
-        FT = fft(ts_sorted)
-        phase_angles = angle.(FT)
-
-        # The new spectrum preserves the amplitudes of the Fourier transform of
-        # the original time series, but randomises the phases (because the
-        # phases are derived from the *randomly sorted* version of the original
-        # time series).
-        spectrum .= original_fft_amplitudes .* exp.(phase_angles .* 1im)
-
-        # Now, let the surrogate time series be the values of the original time
-        # series, but sorted according to the new spectrum. The shuffled series
-        # is generated by taking the inverse Fourier transform of the spectrum
-        # consisting of the original amplitudes, but having randomised phases.
-        surr[:] = real(ifft(spectrum)) # ifft normalises by default
-
-        # map original values onto shuffle
-        surr[sortperm(surr)] = original_sorted
-
-        ts_sorted[:] = surr
-
-        # Convergence check
-        periodogram = DSP.mt_pgram(ts)
-        periodogram_surr = DSP.mt_pgram(surr)
-
-        power_binned = interp([x for x in periodogram.freq],
-                            periodogram.power,
-                            W)
-
-        power_binned_surr = interp([x for x in periodogram_surr.freq],
-                            periodogram_surr.power,
-                            W)
-
-        if iter == 1
-            diffs[1] = sum((power_binned[2] .- power_binned_surr[2]).^2) /
-                        sum(power_binned[2].^2)
-        else
-            diffs[2] = sum((power_binned[2] .- power_binned_surr[2]).^2) /
-                        sum(power_binned[2].^2)
-            if abs(diffs[1] - diffs[2]) < tol
-                break
-            end
-            diffs[1] = copy(diffs[2])
-        end
-
-        iter += 1
-    end
-    surr
-end
-
-"""
-    iaaft_iters(ts::AbstractArray{T, 1} where T;
-                M = 100, tol = 1e-5, W = 50)
-
-Generate an iteratively adjusted amplitude adjusted Fourier transform (IAAFT) [1]
-surrogate series for `ts` and return a vector containing the surrogate realizations
-from each iteration (ideally, these will be the gradually improving realizations - 
-in terms of having better matching periodograms with the periodogram of the original
-signal with every iteration). The last vector contains the final surrogate.
-
-# Literature references
-1. T. Schreiber; A. Schmitz (1996). "Improved Surrogate Data for Nonlinearity
-Tests". Phys. Rev. Lett. 77 (4): 635–638. doi:10.1103/PhysRevLett.77.635. PMID
-10062864.
-"""
-function iaaft_iters(ts::AbstractArray{T, 1} where T;
-                        M = 100, tol = 1e-5, W = 50)
-
-    # Sorted version of the original time series
-    original_sorted = sort(ts)
-
-    # Fourier transform and its amplitudes
-    original_fft = fft(ts)
-    original_fft_amplitudes = abs.(original_fft)
-
-    # Create some Gaussian noise, and find the indices that sorts it with
-    # increasing amplitude. Then sort the original time series according to the
-    # indices rendering the Gaussian noise sorted.
-    n = length(ts)
-    g = rand(Normal(), n)
-    inds = sortperm(g)
-    ts_sorted = ts[inds]
-
-    iter = 1
-    success = false
-
-    spectrum = Vector{Complex{Float64}}(undef, n)
-    surr = Vector{Float64}(undef, n)
-    surrogates = Vector{Vector{Float64}}(undef, 0)
-
-    diffs = zeros(Float64, 2)
-    while iter <= M
-        # Take the Fourier transform of `ts_sorted` and get the phase angles
-        # of the resulting complex numbers.
-        ts_sorted_fft = fft(ts_sorted)
-        phase_angles = angle.(ts_sorted_fft)
-
-        # The new spectrum preserves the amplitudes of the Fourier transform
-        # of the original time series, but randomises the phases (because the
-        # phases are derived from the *randomly sorted* version of the original
-        # time series).
-        spectrum .= original_fft_amplitudes .* exp.(phase_angles .* 1im)
-
-        # Now, let the surrogate time series be the values of the original time
-        # series, but sorted according to the new spectrum. The shuffled series
-        # is generated by taking the inverse Fourier transform of the spectrum
-        # consisting of the original amplitudes, but having randomised phases.
-        surr[:] = real(ifft(spectrum)) # ifft normalises by default
-        surr[sortperm(surr)] = original_sorted # map original values onto shuffle
-        push!(surrogates, surr[:])
-
-        ts_sorted .= surr
-
-        # Convergence check
-        periodogram = DSP.mt_pgram(ts)
-        periodogram_surr = DSP.mt_pgram(surr)
-
-        power_binned = interp([x for x in periodogram.freq],
-                                periodogram.power,
-                                W)
-
-        power_binned_surr = interp([x for x in periodogram_surr.freq],
-                                    periodogram_surr.power,
-                                    W)
-
-        if iter == 1
-            diffs[1] = sum((power_binned[2] .- power_binned_surr[2]).^2) /
-                        sum(power_binned[2].^2)
-        else
-            diffs[2] = sum((power_binned[2] .- power_binned_surr[2]).^2) /
-                        sum(power_binned[2].^2)
-
-            if abs(diffs[1] - diffs[2]) < tol
-                break
-            end
-            diffs[1] = copy(diffs[2])
-        end
-
-        iter += 1
-    end
-    surrogates
-end
-
-export iaaft
