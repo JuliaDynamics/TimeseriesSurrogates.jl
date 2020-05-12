@@ -50,6 +50,10 @@ function __init__()
         include("plotting/surrogate_plot.jl")
         include("plotting/plots_and_anim.jl")
     end
+
+    @require UncertainData="dcd9ba68-c27b-5cea-ae21-829cd07325bf" begin
+        include("utils/uncertaindatasets.jl")
+    end
 end
 
 end # module
