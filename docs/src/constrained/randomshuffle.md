@@ -1,22 +1,14 @@
 # Random shuffle surrogates (RS)
 
-```@docs
-TimeseriesSurrogates.randomshuffle
-```
+Randomly shuffled surrogates are simply permutations of the original time series. 
 
-The easiest way of constructing a constrained surrogate is just shuffling the time indices
-of the original time series. Here's an example:
+Thus, they break any correlations in the signal.
 
 ```@example
 using TimeseriesSurrogates
+ts = AR1() # create a realization of a random AR(1) process
+phases = true
+s = surrogate(ts, RandomShuffle())
 
-# Generate a time series. Here, we'll use an AR1 process.
-ts = AR1()
-
-# Generate a random shuffle surrogate realization
-surrogate = randomshuffle(ts)
-
-# Plot the surrogate along with the time series it is based on, along with autocorrelation
-# and periodogram plots.
-surrplot(ts, surrogate)
+surrplot(ts, s)
 ```

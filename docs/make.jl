@@ -33,9 +33,11 @@ PAGES = [
     "Overview" => "index.md",
     "What is a surrogate?" => "man/whatisasurrogate.md",
     "Surrogate algorithms" => [
-        "Random shuffle (RS)" => "constrained/randomshuffle.md",
-        "Fourier transform (FT)" => "constrained/fourier_surrogates.md",
-        "Amplitude adjusted Fourier (AAFT)" => "constrained/amplitude_adjusted.md"
+        "Random shuffle surrogates" => "constrained/randomshuffle.md",
+        "Block shuffle surrogates" => "constrained/blockshuffle.md",
+        "Fourier transform surrogates" => "constrained/fourier_surrogates.md",
+        "AAFT/IAAFT surrogates" => "constrained/amplitude_adjusted.md",
+        "Pseudoperiodic surrogates" => "constrained/pps.md"
     ],
     "Visualising surrogate realizations and creating gifs" => "plots/visualize_surrogate.md",
     "Example systems" => "man/exampleprocesses.md"

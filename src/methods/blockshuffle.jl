@@ -42,8 +42,8 @@ function surrogenerator(x::AbstractVector, bs::BlockShuffle)
     Ls = get_uniform_blocklengths(L, bs.n)
     cs = cumsum(Ls)
     # will hold a rotation version of x
-    T = eltype(x)
-    xrot = zeros(T, L)
+    xrot = similar(x)
+    T = eltype(xrot)
     init = NamedTuple{(:L, :Ls, :cs, :xrot),Tuple{Int, Vector{Int}, Vector{Int}, Vector{T}}}((L, Ls, cs, xrot))
     return SurrogateGenerator(bs, x, init)
 end
@@ -71,9 +71,10 @@ function (bs::SurrogateGenerator{<:BlockShuffle})()
     # TODO: It would be faster to re-allocate, but blocks may 
     # be of different sizes and are shifted, so indexing gets messy.
     # Just append for now.
-    s = Vector{}(undef, 0)
+    T = eltype(x)
+    s = Vector{T}(undef, 0)
     sizehint!(s, L)
-    
+
     startinds = [1; cs .+ 1]
     @inbounds for i in draw_order
         inds = startinds[i]:startinds[i]+Ls[i]-1

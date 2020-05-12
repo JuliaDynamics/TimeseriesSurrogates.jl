@@ -46,7 +46,7 @@ function __init__()
         # Define and export plot routines for all combinations of example processes and surrogate
         # types
         processes = (:AR1, :NSAR2, :randomwalk, :SNLST)
-        surrogate_methods = (:randomshuffle, :randomphases, :randomamplitudes, :aaft, :iaaft)
+        surrogate_methods = (:RandomShuffle, :BlockShuffle, :RandomFourier, :AAFT, :IAAFT, :PseudoPeriodic)
         include("plotting/surrogate_plot.jl")
         include("plotting/plots_and_anim.jl")
     end
