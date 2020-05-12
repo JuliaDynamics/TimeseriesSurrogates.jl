@@ -7,9 +7,12 @@ This method destroys any linear
 correlation in the signal, but preserves its amplitude distribution.
 """
 struct RandomShuffle <: Surrogate end
-surrogate(x, ::RandomShuffle) = randomshuffle(x)
 
-function randomshuffle(ts::AbstractArray{T, 1} where T)
-    n = length(ts)
-    ts[sample(1:n, n, replace = false)]
+function surrogenerator(x::AbstractVector, rf::RandomShuffle)
+    return SurrogateGenerator(rf, x, nothing)
+end
+
+function (rf::SurrogateGenerator{<:RandomShuffle})()
+    n = length(rf.x)
+    rf.x[sample(1:n, n, replace = false)]
 end

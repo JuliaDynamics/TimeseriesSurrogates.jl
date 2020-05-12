@@ -4,6 +4,8 @@ A Julia package for generating [surrogate time series](https://en.wikipedia.org/
 
 [](examples/iaaft_ex.png)
 
+TODO: add `PseudoPeriodic, noiseradius` to docs.
+
 ## I'm new to surrogate testing
 
 Then you might want to check out
