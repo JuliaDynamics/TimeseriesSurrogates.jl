@@ -23,6 +23,7 @@ include("utils/uncertaindatasets.jl")
 
 # The different surrogate routines
 include("methods/randomshuffle.jl")
+include("methods/blockshuffle.jl")
 include("methods/randomfourier.jl")
 include("methods/aaft.jl")
 include("methods/iaaft.jl")
@@ -36,7 +37,7 @@ export NLNS, NSAR2, AR1, randomwalk, SNLST,
         randomshuffle, randomamplitudes, randomphases, aaft, iaaft, wiaaft,
         # New API
         Surrogate,
-        RandomShuffle, RandomFourier, AAFT, IAAFT
+        RandomShuffle, BlockShuffle, RandomFourier, AAFT, IAAFT
 
 # Visualization routine for time series + surrogate + periodogram/acf/histogram
 using Requires
