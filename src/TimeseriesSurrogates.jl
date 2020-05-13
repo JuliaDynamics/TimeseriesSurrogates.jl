@@ -19,8 +19,6 @@ include("utils/testsystems.jl")
 # Periodogram interpolation
 include("utils/interpolation.jl")
 
-include("utils/uncertaindatasets.jl")
-
 # The different surrogate routines
 include("methods/randomshuffle.jl")
 include("methods/blockshuffle.jl")
