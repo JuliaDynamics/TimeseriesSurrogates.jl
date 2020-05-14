@@ -2,6 +2,7 @@ using DelayEmbeddings, StatsBase, LinearAlgebra
 export PseudoPeriodic, noiseradius
 """
     PseudoPeriodic(d, τ, ρ, shift=true) <: Surrogate
+
 Create surrogates suitable for pseudo-periodic signals. They retain the periodic structure
 of the signal, while inter-cycle dynamics that are either deterministic or correlated
 noise are destroyed (for appropriate `ρ` choice).
