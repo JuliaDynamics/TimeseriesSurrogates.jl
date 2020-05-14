@@ -1,3 +1,5 @@
+export NLNS, NSAR2, AR1, randomwalk, SNLST
+
 """
     AR1(n_steps, x₀, k)
 Simple AR(1) model with no static transformation from [Lucio et al. (2012)](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202).
@@ -104,9 +106,3 @@ AR1(;n_steps = 500, x₀ = rand(), k = rand())    = AR1(n_steps, x₀, k)
 SNLST(;n_steps = 500, x₀ = rand(), k = rand())  = SNLST(n_steps, x₀, k)
 randomwalk(;n_steps = 500, x₀ = rand())         = randomwalk(n_steps, x₀)
 NSAR2(;n_steps = 500, x₀ = rand(), x₁ = rand()) = NSAR2(n_steps, x₀, x₁)
-
-export
-    AR1,
-    SNLST,
-    randomwalk,
-    NSAR2

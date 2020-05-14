@@ -26,17 +26,11 @@ include("methods/randomfourier.jl")
 include("methods/aaft.jl")
 include("methods/iaaft.jl")
 include("methods/wiaaft.jl")
-include("methods/tfts.jl")
 include("methods/pseudoperiodic.jl")
 
 # TODO: I think its more clear when each file exports the names it defines.
 # The Julia function Base.names() can give you all exported names, so no reason to
 # group them at the source.
-export NLNS, NSAR2, AR1, randomwalk, SNLST,
-        randomshuffle, randomamplitudes, randomphases, aaft, iaaft, wiaaft,
-        # New API
-        Surrogate,
-        RandomShuffle, BlockShuffle, RandomFourier, AAFT, IAAFT
 
 # Visualization routine for time series + surrogate + periodogram/acf/histogram
 using Requires
@@ -45,7 +39,7 @@ function __init__()
         # Define and export plot routines for all combinations of example processes and surrogate
         # types
         processes = (:AR1, :NSAR2, :randomwalk, :SNLST)
-        surrogate_methods = (:RandomShuffle, :BlockShuffle, :RandomFourier, :AAFT, :IAAFT, :TFTS, :PseudoPeriodic)
+        surrogate_methods = (:RandomShuffle, :BlockShuffle, :RandomFourier, :AAFT, :IAAFT, :PseudoPeriodic)
         include("plotting/surrogate_plot.jl")
         include("plotting/plots_and_anim.jl")
     end
