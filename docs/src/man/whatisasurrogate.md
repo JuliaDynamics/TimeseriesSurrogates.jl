@@ -28,7 +28,7 @@ x = LinRange(0, 20π, 300) .+ 0.05 .* rand(300)
 ts = sin.(x./rand(20:30, 300) + cos.(x)) 
 s = surrogate(ts, IAAFT())
 
-surrplot(ts, s)
+surroplot(ts, s)
 ```
 
 ## Types of surrogate realizations

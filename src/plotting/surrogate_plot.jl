@@ -2,7 +2,7 @@ using StatsBase
 using DSP
 
 """
-    surrplot(x, s; W = 100, gfs = 8, lfs = 6, 
+    surroplot(x, s; W = 100, gfs = 8, lfs = 6, 
         cx = :black, cs = :red, size = (400, 600); kwargs...)
 
 Plot a time series along with its surrogate realization `s`, and compare the
@@ -28,7 +28,7 @@ periodogram and histogram of the two time series.
 
 - **`kwargs`**: Plots.jl keyword arguments that are supplied to the final `plot` call that assembles the subplots.
 """
-function surrplot(x, s; W = 100, gfs = 8, lfs = 6, 
+function surroplot(x, s; W = 100, gfs = 8, lfs = 6, 
         cx = :black, cs = :red, size = (500, 600), 
         nbins = 50, kwargs...)
     
@@ -75,4 +75,4 @@ function surrplot(x, s; W = 100, gfs = 8, lfs = 6,
                 )
 end
 
-export surrplot
+export surroplot

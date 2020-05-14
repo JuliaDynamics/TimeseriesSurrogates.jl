@@ -38,7 +38,6 @@ PAGES = [
         "Amplitude-adjusted FT" => "constrained/amplitude_adjusted.md",
         "Pseudo-periodic" => "constrained/pps.md"
     ],
-    "Visualising surrogate realizations and creating gifs" => "plots/visualize_surrogate.md",
     "Utility systems" => "man/exampleprocesses.md"
 ]
 

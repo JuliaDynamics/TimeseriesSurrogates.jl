@@ -14,5 +14,5 @@ d, τ = 3, 31
 
 method = PseudoPeriodic(d, τ, ρ, false)
 s = surrogate(x, method)
-surrplot(x, s)
+surroplot(x, s)
 ```

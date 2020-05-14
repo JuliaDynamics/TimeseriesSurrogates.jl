@@ -8,7 +8,7 @@ using TimeseriesSurrogates, Plots
 ts = AR1() # create a realization of a random AR(1) process
 s = surrogate(ts, AAFT())
 
-surrplot(ts, s)
+surroplot(ts, s)
 ```
 
 ## IAAFT
@@ -20,5 +20,5 @@ using TimeseriesSurrogates, Plots
 ts = AR1() # create a realization of a random AR(1) process
 s = surrogate(ts, IAAFT())
 
-surrplot(ts, s)
+surroplot(ts, s)
 ```

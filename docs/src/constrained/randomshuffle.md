@@ -12,7 +12,7 @@ x = AR1() # create a realization of a random AR(1) process
 phases = true
 s = surrogate(x, RandomShuffle())
 
-surrplot(x, s)
+surroplot(x, s)
 ```
 
 ## Block shuffle (BS))
@@ -31,5 +31,5 @@ x = NSAR2(n_steps = 300)
 
 # We want to divide the signal into 8 blocks.
 s = surrogate(x, BlockShuffle(8))
-surrplot(x, s)
+surroplot(x, s)
 ```

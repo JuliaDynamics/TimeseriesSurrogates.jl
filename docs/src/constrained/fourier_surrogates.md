@@ -11,7 +11,7 @@ ts = AR1() # create a realization of a random AR(1) process
 phases = true
 s = surrogate(ts, RandomFourier(phases))
 
-surrplot(ts, s)
+surroplot(ts, s)
 ```
 
 ## Random amplitude
@@ -22,5 +22,5 @@ ts = AR1() # create a realization of a random AR(1) process
 phases = false
 s = surrogate(ts, RandomFourier(phases))
 
-surrplot(ts, s)
+surroplot(ts, s)
 ```
