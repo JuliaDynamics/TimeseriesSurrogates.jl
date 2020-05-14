@@ -56,6 +56,15 @@ end
 end
 
 
+@testset "TFTS" begin 
+    method = TFTS()    
+    s = surrogate(x, method)
+
+    @test length(s) == length(x)
+    @test all([s[i] ∈ x for i = 1:N])
+end
+
+
 @testset "RandomFourier" begin 
     @testset "random phases" begin
         phases = true
