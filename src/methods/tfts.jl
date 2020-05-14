@@ -2,7 +2,10 @@ export TFTS
 """   
     TFTS(fϵ::Real)
 
-A truncated Fourier transform surrogate[^Nakamura2006]:
+A truncated Fourier transform surrogate[^Nakamura2006].
+
+The null hypothesis that these surrogate test is that a stationary linear 
+system generated the irregular fluctuations in the signal[^Nakamura2006].
 
 [^Nakamura2006]: Nakamura, Tomomichi, Michael Small, and Yoshito Hirata. "Testing for nonlinearity in irregular fluctuations with long-term trends." Physical Review E 74.2 (2006): 026205.
 """
@@ -62,23 +65,27 @@ function (sg::SurrogateGenerator{<:TFTS})()
 
     # Surrogate starts out as a random permutation of x
     s = x[StatsBase.sample(1:L, L, replace = false)]
-    
+    𝓕s .= forward*s
+    ϕs .= angle.(𝓕s)
+
     # fϵ is the ratio of high-frequency domain to the whole domain.
     # e.g. when phases with frequency between 1500 and 2000, fϵ = 1500/2000 = 0.25
     # so fϵ = Nhifreq/Nlofreq
-    # Phases in the higher frequency domain are randomised, others are untouched
-    n_hi = ceil(Int, fϵ * n)
-
-    𝓕s .= forward*s
-
-    ϕs .= angle.(𝓕s)
-    ϕs[1:n_hi] = ϕx[1:n_hi]
-
+    
     # Updated spectrum is the old amplitudes with the mixed phases.
-    𝓕new = rx .* exp.(ϕs .* 1im)
- 
-    # Rescale amplitudes according to original time series
+    if fϵ >= 0 # lowest frequencies are kept
+        n_hi = ceil(Int, abs(fϵ * n))
+        ϕs[1:n_hi] .= ϕx[1:n_hi]
+    else # highest frequencies are kept
+        n_lo = ceil(Int, abs(fϵ * n))
+        ϕs[end-n_lo:end] .= ϕx[end-n_lo:end]
+    end
+
+    𝓕new .= rx .* exp.(ϕs .* 1im)
+
     s .= inverse*𝓕new
+
+    # Rescale amplitudes according to original time series
     s[sortperm(s)] .= x_sorted
     return s
 end
