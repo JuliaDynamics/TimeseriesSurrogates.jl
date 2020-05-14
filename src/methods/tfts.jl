@@ -11,14 +11,16 @@ like in [RandomFourier](@ref) surrogates).
 The truncation parameter `fϵ` is the ratio of the high frequency domain to the 
 whole frequency domain. For example, if the number of frequencies is 2000 and frequencies between 1500 and 2000 are to be 
 randomized, then `fϵ = 500/2000 = 0.25`. The appropriate value of `fϵ` strongly 
-depends on the data and time series length, and must be manually determined.
+depends on the data and time series length, and must be manually determined[^Nakamura2006],
+for example by comparing periodograms for the time series and the surrogates.
 
 The TFTS surrogate can be used to test the null hypothesis that the signal is 
 a stationary linear system generated the irregular fluctuations part of the signal[^Nakamura2006].
 
 The by changing the sign of `fϵ`, the implementation here also allows for truncating 
 at the opposite end of the spectrum. Thus, negative values of `fϵ` will leave 
-the lower frequencies intact and shuffle the higher frequencies.
+the lower frequencies intact and shuffle the higher frequencies (the absolute value 
+of `fϵ` still refers to the fraction of high frequency domain to total frequency domain).
 
 [^Nakamura2006]: Nakamura, Tomomichi, Michael Small, and Yoshito Hirata. "Testing for nonlinearity in irregular fluctuations with long-term trends." Physical Review E 74.2 (2006): 026205.
 """
