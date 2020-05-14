@@ -1,22 +1,22 @@
 # Amplitude adjusted Fourier transform surrogates
 
-## AAFT 
+## AAFT
 
 
 ```@example
-using TimeseriesSurrogates
+using TimeseriesSurrogates, Plots
 ts = AR1() # create a realization of a random AR(1) process
 s = surrogate(ts, AAFT())
 
 surrplot(ts, s)
 ```
 
-## IAAFT 
+## IAAFT
 
 The IAAFT surrogates add an iterative step to the AAFT algorithm improve convergence.
 
 ```@example
-using TimeseriesSurrogates
+using TimeseriesSurrogates, Plots
 ts = AR1() # create a realization of a random AR(1) process
 s = surrogate(ts, IAAFT())
 

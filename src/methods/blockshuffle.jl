@@ -3,14 +3,14 @@ export BlockShuffle
 """
     BlockShuffle(n::Int) <: Surrogate
 
-A block shuffle surrogate constructed by dividing the time series 
-into `n` blocks of roughly equal width at random indices (end 
-blocks are wrapped around to the start of the time series). 
+A block shuffle surrogate constructed by dividing the time series
+into `n` blocks of roughly equal width at random indices (end
+blocks are wrapped around to the start of the time series).
 
-These surrogates preserves short-term correlations in the 
-time series, but breaks any long-term dynamical information.
+These surrogates preserve short-term correlations in the
+time series, but break any long-term dynamical information.
 """
-struct BlockShuffle <: Surrogate 
+struct BlockShuffle <: Surrogate
     n::Int
 end
 
@@ -32,7 +32,7 @@ function get_uniform_blocklengths(L::Int, n::Int)
     for i = 1:R
         blocklengths[i] += 1
     end
-        
+
     return blocklengths
 end
 
@@ -57,18 +57,18 @@ function (bs::SurrogateGenerator{<:BlockShuffle})()
     n = bs.method.n
     x = bs.x
 
-    # Just create a temporarily randomly shifted array, so we don't need to mess 
-    # with indexing twice. 
+    # Just create a temporarily randomly shifted array, so we don't need to mess
+    # with indexing twice.
     circshift!(xrot, x, rand(1:L))
-    
+
     # Block always must be shuffled (so ordered samples are not permitted)
     draw_order = zeros(Int, n)
     while any(draw_order .== 0) || all(draw_order .== 1:n)
        StatsBase.sample!(1:n, draw_order, replace = false)
     end
 
-    # The surrogate. 
-    # TODO: It would be faster to re-allocate, but blocks may 
+    # The surrogate.
+    # TODO: It would be faster to re-allocate, but blocks may
     # be of different sizes and are shifted, so indexing gets messy.
     # Just append for now.
     T = eltype(x)

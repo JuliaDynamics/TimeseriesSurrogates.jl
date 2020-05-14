@@ -1,14 +1,18 @@
-# Pseudoperiodic surrogates
+# Pseudo-periodic
 
 ```@example
-using TimeseriesSurrogates
-ts = NSAR2() # create a realization of an NSAR2 process
-phases = true
+using TimeseriesSurrogates, Plots
+t = 0:0.05:20π
+x = @. 4 + 7cos(t) + 2cos(2t + 5π/4)
+x .+= randn(length(x))*0.2
 
-# Embedding dimension/lag and parameter ρ must be specified
-d, τ, ρ = 3, 10, 0.1
-method = PseudoPeriodic(d, τ, ρ)
-s = surrogate(ts, method)
+# Optimal d, τ values deduced using DynamicalSystems.jl
+d, τ = 3, 31
 
-surrplot(ts, s)
+# For ρ you can use `noiseradius`
+ρ = 0.11
+
+method = PseudoPeriodic(d, τ, ρ, false)
+s = surrogate(x, method)
+surrplot(x, s)
 ```

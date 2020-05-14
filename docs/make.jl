@@ -32,15 +32,14 @@ ENV["JULIA_DEBUG"] = "Documenter"
 PAGES = [
     "Overview" => "index.md",
     "What is a surrogate?" => "man/whatisasurrogate.md",
-    "Surrogate algorithms" => [
-        "Random shuffle surrogates" => "constrained/randomshuffle.md",
-        "Block shuffle surrogates" => "constrained/blockshuffle.md",
-        "Fourier transform surrogates" => "constrained/fourier_surrogates.md",
-        "AAFT/IAAFT surrogates" => "constrained/amplitude_adjusted.md",
-        "Pseudoperiodic surrogates" => "constrained/pps.md"
+    "Example applications" => [
+        "Shuffle-based" => "constrained/randomshuffle.md",
+        "Fourier-based" => "constrained/fourier_surrogates.md",
+        "Amplitude-adjusted FT" => "constrained/amplitude_adjusted.md",
+        "Pseudo-periodic" => "constrained/pps.md"
     ],
     "Visualising surrogate realizations and creating gifs" => "plots/visualize_surrogate.md",
-    "Example systems" => "man/exampleprocesses.md"
+    "Utility systems" => "man/exampleprocesses.md"
 ]
 
 makedocs(
