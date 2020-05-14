@@ -30,5 +30,8 @@ matrix:
                                     Pkg.instantiate();'
         - julia --project=docs/ docs/make.jl
       after_success: skip
+after_success:
+  - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
+  
 notifications:
   email: false
