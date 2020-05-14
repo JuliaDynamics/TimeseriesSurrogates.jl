@@ -1,3 +1,5 @@
+export NLNS, NSAR2, AR1, randomwalk, SNLST
+
 """
     AR1(n_steps, x₀, k)
 
@@ -114,9 +116,3 @@ AR1(;n_steps = 500, x₀ = rand(), k = rand())    = AR1(n_steps, x₀, k)
 SNLST(;n_steps = 500, x₀ = rand(), k = rand())  = SNLST(n_steps, x₀, k)
 randomwalk(;n_steps = 500, x₀ = rand())         = randomwalk(n_steps, x₀)
 NSAR2(;n_steps = 500, x₀ = rand(), x₁ = rand()) = NSAR2(n_steps, x₀, x₁)
-
-export
-    AR1,
-    SNLST,
-    randomwalk,
-    NSAR2

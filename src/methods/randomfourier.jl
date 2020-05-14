@@ -1,3 +1,4 @@
+export RandomFourier
 """
     RandomFourier(phases = true) <: Surrogate
 

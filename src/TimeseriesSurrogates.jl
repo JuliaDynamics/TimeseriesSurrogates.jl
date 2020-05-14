@@ -19,8 +19,6 @@ include("utils/testsystems.jl")
 # Periodogram interpolation
 include("utils/interpolation.jl")
 
-include("utils/uncertaindatasets.jl")
-
 # The different surrogate routines
 include("methods/randomshuffle.jl")
 include("methods/blockshuffle.jl")
@@ -33,11 +31,6 @@ include("methods/pseudoperiodic.jl")
 # TODO: I think its more clear when each file exports the names it defines.
 # The Julia function Base.names() can give you all exported names, so no reason to
 # group them at the source.
-export NLNS, NSAR2, AR1, randomwalk, SNLST,
-        randomshuffle, randomamplitudes, randomphases, aaft, iaaft, wiaaft,
-        # New API
-        Surrogate,
-        RandomShuffle, BlockShuffle, RandomFourier, AAFT, IAAFT
 
 # Visualization routine for time series + surrogate + periodogram/acf/histogram
 using Requires
@@ -49,6 +42,10 @@ function __init__()
         surrogate_methods = (:RandomShuffle, :BlockShuffle, :RandomFourier, :AAFT, :IAAFT, :PseudoPeriodic)
         include("plotting/surrogate_plot.jl")
         include("plotting/plots_and_anim.jl")
+    end
+
+    @require UncertainData="dcd9ba68-c27b-5cea-ae21-829cd07325bf" begin
+        include("utils/uncertaindatasets.jl")
     end
 end
 

@@ -1,5 +1,5 @@
 import TimeseriesSurrogates.SurrogateGenerator
-
+export BlockShuffle
 """
     BlockShuffle(n::Int) <: Surrogate
 
