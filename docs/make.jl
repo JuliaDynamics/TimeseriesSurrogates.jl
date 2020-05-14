@@ -56,7 +56,7 @@ makedocs(
 
 if CI
     deploydocs(
-        repo = "github.com/JuliaDynamics/Agents.jl.git",
+        repo = "github.com/JuliaDynamics/TimeseriesSurrogates.jl.git",
         target = "build",
         push_preview = true
     )
