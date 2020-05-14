@@ -57,7 +57,15 @@ end
 
 
 @testset "TFTS" begin 
-    method = TFTS()    
+    method = TFTS(0.05)    
+    s = surrogate(x, method)
+
+    @test length(s) == length(x)
+end
+
+
+@testset "TAAFT" begin 
+    method = TAAFT(0.05)    
     s = surrogate(x, method)
 
     @test length(s) == length(x)

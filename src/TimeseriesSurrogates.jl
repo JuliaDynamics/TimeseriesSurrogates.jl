@@ -25,7 +25,7 @@ include("methods/blockshuffle.jl")
 include("methods/randomfourier.jl")
 include("methods/aaft.jl")
 include("methods/iaaft.jl")
-include("methods/tfts.jl")
+include("methods/truncated_fourier.jl")
 include("methods/wiaaft.jl")
 include("methods/pseudoperiodic.jl")
 
@@ -40,7 +40,7 @@ function __init__()
         # Define and export plot routines for all combinations of example processes and surrogate
         # types
         processes = (:AR1, :NSAR2, :randomwalk, :SNLST)
-        surrogate_methods = (:RandomShuffle, :BlockShuffle, :RandomFourier, :AAFT, :IAAFT, :TFTS, :PseudoPeriodic)
+        surrogate_methods = (:RandomShuffle, :BlockShuffle, :RandomFourier, :AAFT, :IAAFT, :TFTS, :TAAFT, :PseudoPeriodic)
         include("plotting/surrogate_plot.jl")
         include("plotting/plots_and_anim.jl")
     end
