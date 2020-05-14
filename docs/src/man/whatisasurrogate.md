@@ -8,7 +8,7 @@ equations is not known.
 This happens when the only information we have available about the system is a time series.
 
 Surrogate testing can be used to test, for example, the following properties
-about a data set or the underlying process[^2]:
+about a data set or the underlying process:
 1. does the dataset show evidence of nonlinearity?
 2. does the dataset show evidence of low-dimensional chaos?
 
