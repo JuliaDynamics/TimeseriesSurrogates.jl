@@ -1,5 +1,0 @@
-
-## Full reference
-
-```@index
-```

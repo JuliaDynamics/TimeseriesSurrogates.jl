@@ -1,22 +1,21 @@
 export IAAFT
-"""   
-    IAAFT()
+"""
+    IAAFT(M = 100, tol = 1e-6, W = 75)
 
 An iteratively adjusted amplitude-adjusted-fourier-transform surrogate[^SchreiberSchmitz1996].
 
-IAAFT surrogate have the same linear correlation, or periodogram, and also 
-preserves the amplitude distribution of the original data, but are improved relative 
-to AAFT through iterative adjustment (which runs for a maximum of `M` steps). 
-During the iterative adjustment, the periodograms of the original signal and the 
-surrogate are coarse-grained and the powers are averaged over `W` equal-width 
-frequency bins. The iteration procedure ends when the relative deviation 
+IAAFT surrogate have the same linear correlation, or periodogram, and also
+preserves the amplitude distribution of the original data, but are improved relative
+to AAFT through iterative adjustment (which runs for a maximum of `M` steps).
+During the iterative adjustment, the periodograms of the original signal and the
+surrogate are coarse-grained and the powers are averaged over `W` equal-width
+frequency bins. The iteration procedure ends when the relative deviation
 between the periodograms is less than `tol` (or when `M` is reached).
 
 ## References
 
-[^SchreiberSchmitz1996]: T. Schreiber; A. Schmitz (1996). "Improved Surrogate Data for Nonlinearity 
-    Tests". Phys. Rev. Lett. 77 (4): 635–638. doi:10.1103/PhysRevLett.77.635.
-    PMID 10062864. [https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.77.635](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.77.635)
+[^SchreiberSchmitz1996]: T. Schreiber; A. Schmitz (1996). "Improved Surrogate Data for Nonlinearity
+    Tests". [Phys. Rev. Lett. 77 (4)](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.77.635)
 """
 struct IAAFT <: Surrogate
     M::Int
@@ -59,19 +58,19 @@ function surrogenerator(x, method::IAAFT)
 end
 
 function (sg::SurrogateGenerator{<:IAAFT})()
-    init_fields = (:forward, :inverse, :m, :𝓕, :r_original, 
-                    :px_binned, :range, 
+    init_fields = (:forward, :inverse, :m, :𝓕, :r_original,
+                    :px_binned, :range,
                     :x_sorted,
                     :𝓕new, :𝓕sorted, :ϕsorted)
-    forward, inverse, m, 𝓕, r_original, 
-        px_binned, range, 
+    forward, inverse, m, 𝓕, r_original,
+        px_binned, range,
         x_sorted,
         𝓕new, 𝓕sorted, ϕsorted = getfield.(Ref(sg.init), init_fields)
 
     x = sg.x
     M = sg.method.M
     tol = sg.method.tol
-    
+
     # Keep track of difference between periodograms between iterations
     diffs = zeros(Float64, 2)
 
@@ -85,7 +84,7 @@ function (sg::SurrogateGenerator{<:IAAFT})()
 
     # The surrogate
     s = Vector{Float64}(undef, n)
-    
+
     iter = 1
     success = false
     while iter <= M
@@ -123,6 +122,6 @@ function (sg::SurrogateGenerator{<:IAAFT})()
 
         iter += 1
     end
-    
+
     return s
 end
