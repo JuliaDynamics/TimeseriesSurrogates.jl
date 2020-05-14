@@ -1,3 +1,4 @@
+export RandomShuffle
 """
     RandomShuffle() <: Surrogate
 
