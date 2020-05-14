@@ -26,6 +26,7 @@ include("methods/randomfourier.jl")
 include("methods/aaft.jl")
 include("methods/iaaft.jl")
 include("methods/wiaaft.jl")
+include("methods/tfts.jl")
 include("methods/pseudoperiodic.jl")
 
 # TODO: I think its more clear when each file exports the names it defines.
@@ -44,7 +45,7 @@ function __init__()
         # Define and export plot routines for all combinations of example processes and surrogate
         # types
         processes = (:AR1, :NSAR2, :randomwalk, :SNLST)
-        surrogate_methods = (:randomshuffle, :randomphases, :randomamplitudes, :aaft, :iaaft)
+        surrogate_methods = (:RandomShuffle, :BlockShuffle, :RandomFourier, :AAFT, :IAAFT, :TFTS, :PseudoPeriodic)
         include("plotting/surrogate_plot.jl")
         include("plotting/plots_and_anim.jl")
     end
