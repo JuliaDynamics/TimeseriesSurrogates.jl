@@ -33,7 +33,6 @@ struct TFTS <: Surrogate
         new(fϵ)
     end
 end
-TFTS() = error("The truncation factor `fϵ` must be supplied")
 
 function surrogenerator(x, method::TFTS)
     # Pre-plan Fourier transforms
@@ -124,7 +123,6 @@ struct TAAFT <: Surrogate
         new(fϵ)
     end
 end
-TAAFT() = error("The truncation factor `fϵ` must be supplied")
 
 function surrogenerator(x, method::TAAFT)
     init = surrogenerator(x, TFTS(method.fϵ))
