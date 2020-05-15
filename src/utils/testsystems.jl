@@ -2,17 +2,22 @@ export NLNS, NSAR2, AR1, randomwalk, SNLST
 
 """
     AR1(n_steps, x₀, k)
-Simple AR(1) model with no static transformation from [Lucio et al. (2012)](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202).
+
+Simple AR(1) model with no static transformation[^1].
+
 ## Equations
-The system is given by the following map [1]:
+
+The system is given by the following map:
 ```math
 x(t+1) = k x(t) + a(t),
 ```
 where ``a(t)`` is a draw from a normal distribution with zero mean and unit
 variance. `x₀` sets the initial condition and `k` is the tunable parameter in
 the map.
+
 # References
-Lucio et al., Phys. Rev. E *85*, 056202 (2012). [https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202)
+
+[^1]: Lucio et al., Phys. Rev. E *85*, 056202 (2012). [https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202)
 """
 function AR1(n_steps, x₀, k)
     a = rand(Normal(), n_steps)
@@ -26,10 +31,12 @@ end
 
 """
     NSAR2(n_steps, x₀, x₁)
-Cyclostationary AR(2) process from [Lucio et al. (2012)](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202).
+
+Cyclostationary AR(2) process[^1].
+
 ## References
-Lucio et al., Phys. Rev. E *85*, 056202 (2012), after J. Timmer,
-Phys. Rev. E *58*, 5153 (1998). [https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202)
+
+[^1]: Lucio et al., Phys. Rev. E *85*, 056202 (2012). [https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202)
 """
 function NSAR2(n_steps, x₀, x₁)
     T₀ = 50.0
@@ -57,11 +64,13 @@ end
 
 """
     randomwalk(n_steps, x₀)
-Linear random walk (AR(1) process with a unit root) from [Lucio et al. (2012)](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202).
+
+Linear random walk (AR(1) process with a unit root)[^1].
 This is an example of a nonstationary linear process.
+
 # References
-Lucio et al., Phys. Rev. E *85*, 056202 (2012), after J. Timmer,
-Phys. Rev. E *58*, 5153 (1998). [https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202)
+
+[^1]: Lucio et al., Phys. Rev. E *85*, 056202 (2012). [https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202)
 """
 function randomwalk(n_steps, x₀)
     a = rand(Normal(), n_steps)
@@ -77,19 +86,20 @@ end
 
 """
     SNLST(n_steps, x₀, k)
+
 Dynamically linear process transformed by a strongly nonlinear static
-transformation (SNLST), from
-[Lucio et al., 2012](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202).
+transformation (SNLST)[^1].
+
 ## Equations
 The system is by the following map:
 ```math
 x(t) = k x(t-1) + a(t)
 ```
 with the transformation ``s(t) = x(t)^3``.
+
 # References
-Lucio et al., Phys. Rev. E *85*, 056202 (2012), after J. Timmer,
-Phys. Rev. E *58*, 5153 (1998). 
-[https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202)
+
+[^1]: Lucio et al., Phys. Rev. E *85*, 056202 (2012). [https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202)
 """
 function SNLST(n_steps, x₀, k)
     a = rand(Normal(), n_steps)
