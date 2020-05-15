@@ -1,33 +1,38 @@
-# TimeseriesSurrogates.jl
+# Overview
 
-A Julia package for generating [surrogate time series](https://en.wikipedia.org/wiki/Surrogate_data_testing).
+# TODO: add example figure here.
 
-[](examples/iaaft_ex.png)
-
-TODO: add `PseudoPeriodic, noiseradius` to docs.
-
-## I'm new to surrogate testing
-
-Then you might want to check out
+If you are new to this method of [surrogate time series](https://en.wikipedia.org/wiki/Surrogate_data_testing), feel free to read any of the following:
 1. [The method of surrogate testing](@ref)
 2. [What is a surrogate time series?](@ref)
 3. [Types of surrogate realizations](@ref)
 
-## I'm experienced with surrogate testing
+## API
 
-Then you're probably want to check out what [Types of surrogate realizations](@ref) this package provides. You'll find:
+TimeseriesSurrogates.jl exports two main functions. Both of them dispatch on the chosen method, a subtype of `Surrogate`.
 
-1. [Random shuffle surrogates (RS)](@ref), which are just random permutations of the time series.
-2. [Fourier surrogates (FS)](@ref), in the form of either [Random amplitude surrogates](@ref) or [Random phase surrogates](@ref).
-3. [Amplitude adjusted Fourier transform surrogates](@ref). Currently, the [Amplitude adjusted Fourier transform (AAFT)](@ref) and [Iterated AAFT (AAFT)](@ref) methods are implemented.
+```@docs
+surrogate
+surrogenerator
+```
 
+## Surrogate methods
 
-## I want to visualize my surrogate realizations
+```@docs
+RandomShuffle
+BlockShuffle
+RandomFourier
+AAFT
+IAAFT
+PseudoPeriodic
+```
 
-TimeseriesSurrogates.jl provides some convenient plotting routines that'll make it easy to
-check if your surrogates are successfully capturing your target null hypothesis.
-To use the plotting functionality you need to install `Plots` (and a plotting backend).
-Once you load it, via `using Plots`, the following two links are relevant for you:
+### Utils
 
-1. [Autocorrelation / periodogram panels](@ref). Check out the [Examples](@ref) to get started.
-2. [Animate panels (and export to .gif)](@ref). This allows you to check properties of an ensemble of surrogate realizations.
+```@docs
+noiseradius
+```
+
+## Visualization
+
+TimeseriesSurrogates.jl provides the function `surroplot(x, s)`, which comes into scope when `using Plots`. This function is used in the example applications.
