@@ -2,16 +2,11 @@ language: julia
 os:
   - linux
   - windows
-#  - osx
+  # - osx
 
 julia:
   - 1
-  - 1.1
-  # - nightly # commented to save energy and time
-
-before_script:
-  - git config --global user.name "GitUser"
-  - git config --global user.email "git@us.er"
+  # - nightly
 
 before_script:
   - git config --global user.name "GitUser"
@@ -32,6 +27,6 @@ matrix:
       after_success: skip
 after_success:
   - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
-  
+
 notifications:
   email: false
