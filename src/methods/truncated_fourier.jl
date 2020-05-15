@@ -129,6 +129,11 @@ amplitude distribution of the original data.
 """
 struct TAAFT <: Surrogate
     fϵ::Real
+
+    function TAAFT(fϵ::Real)
+        fϵ != 0 || throw(ArgumentError("`fϵ` must be on the interval [-1, 0) ∪ (0, 1] (positive if preserving high frequencies, negative if preserving low frequencies)"))
+        new(fϵ)
+    end
 end
 
 function surrogenerator(x, method::TAAFT)
