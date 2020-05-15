@@ -22,7 +22,9 @@ surrogenerator
 RandomShuffle
 BlockShuffle
 RandomFourier
+TFTS
 AAFT
+TAAFT
 IAAFT
 PseudoPeriodic
 ```

@@ -56,6 +56,36 @@ end
 end
 
 
+@testset "TFTS" begin 
+    method_preserve_lofreq = TFTS(0.05) 
+    method_preserve_hifreq = TFTS(-0.05)    
+
+    s = surrogate(x, method_preserve_lofreq)
+    @test length(s) == length(x)
+
+    s = surrogate(x, method_preserve_hifreq)
+    @test length(s) == length(x)
+
+    @test_throws ArgumentError TFTS(0)
+end
+
+
+@testset "TAAFT" begin 
+    method_preserve_lofreq = TAAFT(0.05) 
+    method_preserve_hifreq = TAAFT(-0.05)    
+   
+    s = surrogate(x, method_preserve_lofreq)
+    @test length(s) == length(x)
+    @test all([s[i] ∈ x for i = 1:N])
+    
+    s = surrogate(x, method_preserve_hifreq)
+    @test length(s) == length(x)
+    @test all([s[i] ∈ x for i = 1:N])
+
+    @test_throws ArgumentError TAAFT(0)
+end
+
+
 @testset "RandomFourier" begin 
     @testset "random phases" begin
         phases = true

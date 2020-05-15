@@ -25,6 +25,7 @@ include("methods/blockshuffle.jl")
 include("methods/randomfourier.jl")
 include("methods/aaft.jl")
 include("methods/iaaft.jl")
+include("methods/truncated_fourier.jl")
 include("methods/wiaaft.jl")
 include("methods/pseudoperiodic.jl")
 
