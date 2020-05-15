@@ -2,10 +2,7 @@
 
 # TODO: add example figure here.
 
-If you are new to this method of [surrogate time series](https://en.wikipedia.org/wiki/Surrogate_data_testing), feel free to read any of the following:
-1. [The method of surrogate testing](@ref)
-2. [What is a surrogate time series?](@ref)
-3. [Types of surrogate realizations](@ref)
+If you are new to this method of [surrogate time series](https://en.wikipedia.org/wiki/Surrogate_data_testing), feel free to read the [What is a surrogate?](@ref) page.
 
 ## API
 
