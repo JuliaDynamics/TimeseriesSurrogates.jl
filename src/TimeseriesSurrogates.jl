@@ -26,7 +26,7 @@ include("methods/randomfourier.jl")
 include("methods/aaft.jl")
 include("methods/iaaft.jl")
 include("methods/truncated_fourier.jl")
-include("methods/wiaaft.jl")
+include("methods/wavelet_based.jl")
 include("methods/pseudoperiodic.jl")
 
 # Visualization routine for time series + surrogate + periodogram/acf/histogram

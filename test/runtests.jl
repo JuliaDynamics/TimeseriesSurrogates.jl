@@ -8,6 +8,15 @@ ts_nan = cumsum(randn(N))
 ts_nan[1] = NaN
 x = cos.(range(0, 20π, length = N)) .+ randn(N)*0.05
 
+@testset "WTS" begin 
+    wts = WTS()
+    wts = WTS(AAFT())
+    s = surrogate(x, wts)
+
+    @test length(s) == length(x)
+    @test all([s[i] ∈ x for i = 1:N])
+end
+
 @testset "Periodic" begin
 	pp = PseudoPeriodic(3, 25, 0.05)
 	s = surrogate(x, pp)
@@ -54,7 +63,6 @@ end
     @test length(s) == length(x)
     @test all([s[i] ∈ x for i = 1:N])
 end
-
 
 @testset "TFTS" begin 
     method_preserve_lofreq = TFTS(0.05) 
