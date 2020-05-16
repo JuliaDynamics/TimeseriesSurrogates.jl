@@ -13,11 +13,15 @@ Based on Keylock (2006)[^Keylock2006], but in contrast to the original
 implementation, you may choose to use any surrogate method from this 
 package to perform the randomization of the detail coefficients at each 
 dyadic scale. The iterative steps after rank ordering (step [v] in [^Keylock2006])
-is not performed in this implementation.
+are not performed in this implementation.
 
 If `surromethod == IAAFT()`, the wavelet surrogates preserves the mean 
 and variance structure of the signal, but randomises nonlinear 
 properties of the signal (i.e. Hurst exponents)[^Keylock2006].
+
+To deal with nonstationary signals, Keylock (2006) recommends using a 
+wavelet with a high number of vanishing moments. Thus, default here is 
+a Daubechies wavelet with 16 vanishing moments.
 
 [^Keylock2006]: C.J. Keylock (2006). "Constrained surrogate time series with preservation of the mean and variance structure". Phys. Rev. E. 73: 036707. doi:10.1103/PhysRevE.73.036707.
 """
