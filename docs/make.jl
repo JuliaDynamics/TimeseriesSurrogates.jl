@@ -5,6 +5,8 @@ CI && Pkg.activate(@__DIR__)
 CI && Pkg.instantiate()
 CI && (ENV["GKSwstype"] = "100")
 using TimeseriesSurrogates
+using Random
+using Distributions
 using Plots
 using Documenter
 using DocumenterTools: Themes
@@ -37,7 +39,8 @@ PAGES = [
         "Fourier-based" => "constrained/fourier_surrogates.md",
         "Amplitude-adjusted FT" => "constrained/amplitude_adjusted.md",
         "Truncated FT/AAFT" => "constrained/truncated_fourier_transform.md", 
-        "Pseudo-periodic" => "constrained/pps.md"
+        "Pseudo-periodic" => "constrained/pps.md",
+        "Wavelet-based" => "constrained/wls.md"
     ],
     "Utility systems" => "man/exampleprocesses.md"
 ]
