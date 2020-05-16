@@ -7,8 +7,7 @@ obtain the surrogate.
 
 ## Shuffling methods
 
-To perform the shuffling step, you can use any of the existing surrogate 
-methods in this package. The choice of surrogate affects how well and 
+The choice of surrogate affects how well and 
 which properties of the original signal is reproduced.
 
 Using random shuffling of the detail coefficients does not preserve the 
@@ -31,7 +30,7 @@ surroplot(x, s)
 
 
 Block shuffling the detail coefficients does a better job at preserving 
-the autocorrelation structure of the original signal.
+the autocorrelation structure of the original signal:
 
 ```@example 
 using TimeseriesSurrogates, Random
@@ -47,6 +46,9 @@ x = cumsum(randn(n)) .+
 s = surrogate(x, WLS(BlockShuffle()));
 surroplot(x, s)
 ```
+
+AAFT shuffling also does a decent job at at preserving 
+the autocorrelation:
 
 ```@example
 using TimeseriesSurrogates, Random
@@ -68,7 +70,7 @@ surroplot(x, s)
 In [Keylock (2006)](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.73.036707), 
 IAAAFT shuffling is used, yielding surrogates that preserve the local mean and 
 variance of the original signal, but randomizes nonlinear properties of the signal.
-*Note: the implementation here does not perform Keylock's last iterate step.*
+*Note: the implementation here does not perform Keylock's last rank-ordering iteration step.*
 
 ```@example
 using TimeseriesSurrogates, Distributions
