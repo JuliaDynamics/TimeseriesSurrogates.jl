@@ -8,9 +8,9 @@ ts_nan = cumsum(randn(N))
 ts_nan[1] = NaN
 x = cos.(range(0, 20π, length = N)) .+ randn(N)*0.05
 
-@testset "WTS" begin 
-    wts = WTS()
-    wts = WTS(AAFT())
+@testset "WLS" begin 
+    wts = WLS()
+    wts = WLS(AAFT())
     s = surrogate(x, wts)
 
     @test length(s) == length(x)
