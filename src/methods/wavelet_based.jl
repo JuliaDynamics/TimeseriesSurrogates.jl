@@ -17,7 +17,9 @@ are not performed in this implementation.
 
 If `surromethod == IAAFT()`, the wavelet surrogates preserves the mean 
 and variance structure of the signal, but randomises nonlinear 
-properties of the signal (i.e. Hurst exponents)[^Keylock2006].
+properties of the signal (i.e. Hurst exponents)[^Keylock2006]. In contrast 
+to IAAFT surrogates, the IAAFT shuffled wavelet surrogates also 
+preserves nonstationarity. 
 
 To deal with nonstationary signals, Keylock (2006) recommends using a 
 wavelet with a high number of vanishing moments. Thus, default here is 
