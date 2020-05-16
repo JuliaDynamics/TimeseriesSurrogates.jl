@@ -199,5 +199,3 @@ function wiaaft(ts; n_maxiter = 100, tol = 1e-5, n_windows = 50)
 
     return surrogates
 end
-
-export wiaaft
