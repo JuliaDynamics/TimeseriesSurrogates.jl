@@ -27,8 +27,8 @@ a Daubechies wavelet with 16 vanishing moments.
 
 [^Keylock2006]: C.J. Keylock (2006). "Constrained surrogate time series with preservation of the mean and variance structure". Phys. Rev. E. 73: 036707. doi:10.1103/PhysRevE.73.036707.
 """
-struct WLS <: Surrogate
-    wt::Wavelets.WT.OrthoWaveletClass
+struct WLS{WT <: Wavelets.WT.OrthoWaveletClass} <: Surrogate
+    wt::WT
     surromethod::Surrogate # should preserve values of the original series
 end
 
