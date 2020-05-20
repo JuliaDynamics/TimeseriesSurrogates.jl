@@ -7,8 +7,14 @@ A block shuffle surrogate constructed by dividing the time series
 into `n` blocks of roughly equal width at random indices (end
 blocks are wrapped around to the start of the time series).
 
-These surrogates preserve short-term correlations in the
-time series, but break any long-term dynamical information.
+Block shuffle surrogates roughly preserve short-range temporal properties 
+in the time series (e.g. correlations at lags less than the block length), 
+but break any long-term dynamical information (e.g. correlations beyond 
+the block length).
+
+Hence, these surrogates can be used to test any null hypothesis aimed at 
+comparing short-range dynamical properties versus long-range dynamical 
+properties of the signal.
 """
 struct BlockShuffle <: Surrogate
     n::Int
