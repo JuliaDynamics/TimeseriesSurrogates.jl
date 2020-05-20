@@ -11,7 +11,7 @@ s = surrogate(ts, AAFT())
 surroplot(ts, s)
 ```
 
-## IAAFT
+## Iterative AAFT (IAAFT)
 
 The IAAFT surrogates add an iterative step to the AAFT algorithm improve convergence.
 
