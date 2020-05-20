@@ -9,7 +9,9 @@ preserves the amplitude distribution of the original data.
 
 AAFT can be used to test the null hypothesis that the data come from a
 monotonic nonlinear transformation of a linear Gaussian process
-(also called integrated white noise).
+(also called integrated white noise)[^Theiler1992]
+
+[^Theiler1992]: J. Theiler et al., [Physica D *58* (1992) 77-94 (1992)](https://www.sciencedirect.com/science/article/pii/016727899290102S)
 """
 struct AAFT <: Surrogate end
 
