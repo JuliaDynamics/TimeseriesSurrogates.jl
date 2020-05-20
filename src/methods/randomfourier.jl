@@ -2,14 +2,19 @@ export RandomFourier
 """
     RandomFourier(phases = true) <: Surrogate
 
-A surrogate[^Theiler1992] that randomizes the Fourier components
+A surrogate that randomizes the Fourier components
 of the signal in some manner. If `phases==true`, the phases are randomized,
-otherwise the amplitudes are randomized.
+otherwise the amplitudes are randomized. 
 
-If `phases==true`, then the resulting signal has same linear correlation, or periodogram,
-as the original data.
+Random Fourier phase surrogates[^Theiler1992] preserve the 
+autocorrelation function, or power spectrum, of the original signal. 
+Random Fourier amplitude surrogates preserve the mean and autocorrelation 
+function but do not preserve the variance of the original. Random 
+amplitude surrogates are not common in the literature, but are provided 
+for convenience.
 
-#TODO: Okay, what happens if `phases!=true` ?
+Random phase surrogates can be used to test the null hypothesis that 
+the original signal was produced by a linear Gaussian process [^Theiler1992]. 
 
 [^Theiler1992]: J. Theiler et al., [Physica D *58* (1992) 77-94 (1992)](https://www.sciencedirect.com/science/article/pii/016727899290102S)
 """
