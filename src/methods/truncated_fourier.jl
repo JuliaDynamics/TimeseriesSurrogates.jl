@@ -115,7 +115,7 @@ end
 """
     TAAFT(fϵ)
 
-An truncated version of the amplitude-adjusted-fourier-transform surrogate[^Theiler1991, ^Nakamura2006].
+An truncated version of the amplitude-adjusted-fourier-transform surrogate[^Theiler1991][^Nakamura2006].
 
 The truncation parameter and phase randomization procedure is identical to [`TFTS`](@ref), but here an 
 additional step of rescaling back to the original data is performed. This preserves the 
