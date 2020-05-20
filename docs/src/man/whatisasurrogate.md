@@ -9,8 +9,11 @@ For the suitable hypothesis to test for, see the documentation strings of provid
 
 The actual hypothesis testing is done by computing an appropriate discriminatory statistic for the input timeseries and the surrogates.
 If the statistic differs greatly between surrogate and input, then the formulated hypothesis can be rejected.
+For an overview of surrogate methods and the hypotheses they can test, see the review from Lancaster et al. (2018)[^Lancaster2018].
 
-Notice that of course another application of surrogate timeseries is to simply generate more timeseries with similar properties as `x`.
+Notice that of course another application of surrogate timeseries is to simply generate more timeseries with similar properties as `x`. 
+
+
 
 ### What is a surrogate time series?
 Let's say we have a nontrivial timeseries `x` consisting of `n` observations.
@@ -30,3 +33,5 @@ s = surrogate(ts, IAAFT())
 
 surroplot(ts, s)
 ```
+
+[^Lancaster2018]: Lancaster, G., Iatsenko, D., Pidde, A., Ticcinelli, V., & Stefanovska, A. (2018). Surrogate data for hypothesis testing of physical systems. Physics Reports, 748, 1–60. doi:10.1016/j.physrep.2018.06.001
