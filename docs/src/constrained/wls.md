@@ -5,84 +5,122 @@ discrete wavelet transform (MODWT) of the signal, shuffling detail
 coefficients across dyadic scales, then inverting the transform to 
 obtain the surrogate. 
 
-## Shuffling methods
+## IAAFT shuffling detail coefficients
 
-The choice of surrogate affects how well and 
-which properties of the original signal is reproduced.
+In [Keylock (2006)](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.73.036707), 
+IAAAFT shuffling is used, yielding surrogates that preserve the local mean and 
+variance of the original signal, but randomizes nonlinear properties of the signal.
+This also preserves nonstationarities in the signal.
+
+```@example
+using TimeseriesSurrogates, Random
+Random.seed!(5040)
+n = 500
+σ = 30
+x = cumsum(randn(n)) .+ 
+    [20*sin(2π/30*i) for i = 1:n] .+ 
+    [20*cos(2π/90*i) for i = 1:n] .+
+    [50*sin(2π/2*i + π) for i = 1:n] .+ 
+    σ .* rand(n).^2 .+ 
+    [0.5*t for t = 1:n];
+
+# Rescale surrogate back to original values
+method = WLS(IAAFT(), true)
+s = surrogate(x, method);
+p = surroplot(x, s)
+```
+
+Even without rescaling, IAAFT shuffling also yields surrogates with local properties 
+very similar to the original signal.
+
+```@example
+using TimeseriesSurrogates, Random
+Random.seed!(5040)
+n = 500
+σ = 30
+x = cumsum(randn(n)) .+ 
+    [20*sin(2π/30*i) for i = 1:n] .+ 
+    [20*cos(2π/90*i) for i = 1:n] .+
+    [50*sin(2π/2*i + π) for i = 1:n] .+ 
+    σ .* rand(n).^2 .+ 
+    [0.5*t for t = 1:n];
+
+# Don't rescale back to original time series.
+method = WLS(IAAFT(), false)
+s = surrogate(x, method);
+p = surroplot(x, s)
+```
+
+## Other shuffling methods
+
+The choice of coefficient shuffling method determines how well and 
+which properties of the original signal are retained by the surrogates. 
+There might be use cases where surrogates do not need to perfectly preserve the 
+autocorrelation of the original signal, so additional shuffling 
+methods are provided for convenience.
 
 Using random shuffling of the detail coefficients does not preserve the 
 autocorrelation structure of the original signal. 
 
 ```@example 
 using TimeseriesSurrogates, Random
-Random.seed!(1234);
-n = 400
-σ = 20
+Random.seed!(5040)
+n = 500
+σ = 30
 x = cumsum(randn(n)) .+ 
-    [20*sin(2π/10*i) for i = 1:n] .+ 
-    [20*cos(2π/50*i) for i = 1:n] .+
+    [20*sin(2π/30*i) for i = 1:n] .+ 
+    [20*cos(2π/90*i) for i = 1:n] .+
     [50*sin(2π/2*i + π) for i = 1:n] .+ 
-    σ .* rand(n).^2;
+    σ .* rand(n).^2 .+ 
+    [0.5*t for t = 1:n];
 
-s = surrogate(x, WLS(RandomShuffle()));
-surroplot(x, s)
+method = WLS(RandomShuffle())
+s = surrogate(x, method);
+p = surroplot(x, s)
 ```
 
 
-Block shuffling the detail coefficients does a better job at preserving 
-the autocorrelation structure of the original signal:
+Block shuffling the detail coefficients better preserve local properties
+because the shuffling is not completely random, but still does not 
+preserve the autocorrelation of the original signal.
 
 ```@example 
 using TimeseriesSurrogates, Random
-Random.seed!(1234);
-n = 400
-σ = 20
+Random.seed!(5040)
+n = 500
+σ = 30
 x = cumsum(randn(n)) .+ 
-    [20*sin(2π/10*i) for i = 1:n] .+ 
-    [20*cos(2π/50*i) for i = 1:n] .+
+    [20*sin(2π/30*i) for i = 1:n] .+ 
+    [20*cos(2π/90*i) for i = 1:n] .+
     [50*sin(2π/2*i + π) for i = 1:n] .+ 
-    σ .* rand(n).^2;
+    σ .* rand(n).^2 .+ 
+    [0.5*t for t = 1:n];
 
-s = surrogate(x, WLS(BlockShuffle()));
-surroplot(x, s)
+s = surrogate(x, WLS(BlockShuffle(10)));
+p = surroplot(x, s)
 ```
 
-AAFT shuffling also does a decent job at at preserving 
-the autocorrelation:
+
+Random Fourier phase shuffling the detail coefficients does a decent job at preserving
+the autocorrelation.
 
 ```@example
 using TimeseriesSurrogates, Random
-Random.seed!(1234);
-n = 400
-σ = 20
+Random.seed!(5040)
+n = 500
+σ = 30
 x = cumsum(randn(n)) .+ 
-    [20*sin(2π/10*i) for i = 1:n] .+ 
-    [20*cos(2π/50*i) for i = 1:n] .+
+    [20*sin(2π/30*i) for i = 1:n] .+ 
+    [20*cos(2π/90*i) for i = 1:n] .+
     [50*sin(2π/2*i + π) for i = 1:n] .+ 
-    σ .* rand(n).^2;
+    σ .* rand(n).^2 .+ 
+    [0.5*t for t = 1:n];
 
-s = surrogate(x, WLS(AAFT()));
+s = surrogate(x, WLS(RandomFourier()));
 surroplot(x, s)
 ```
 
-## Original implementation uses IAAFT shuffling
-
-In [Keylock (2006)](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.73.036707), 
-IAAAFT shuffling is used, yielding surrogates that preserve the local mean and 
-variance of the original signal, but randomizes nonlinear properties of the signal.
-*Note: the implementation here does not perform Keylock's last rank-ordering iteration step.*
-
-```@example
-using TimeseriesSurrogates, Distributions
-n = 300
-# Some noisy sine wave with modulated period
-x = [sin(2π*(t + sin(t))/30) for t in 1:n] .+
-    [0.4*sin(2π/(20*sin(i)) + rand(Uniform(0, 2π))) for i = 1:n] .+
-    [1.5*sin(2π/(80*sin(i))) for i = 1:n]
-
-s = surrogate(x, WLS(IAAFT()));
-surroplot(x, s)
-```
+To generate surrogates that preserve linear properties of the original signal, AAFT or IAAFT shuffling is required.
 
 
 

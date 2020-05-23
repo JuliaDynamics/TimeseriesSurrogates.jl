@@ -2,7 +2,7 @@ export WLS
 using Wavelets
 
 """
-    WLS(surromethod::Surrogate = AAFT(), 
+    WLS(surromethod::Surrogate = IAAFT(), 
         rescale::Bool = true,
         wt::Wavelets.WT.OrthoWaveletClass = Wavelets.WT.Daubechies{16}())
 
@@ -11,11 +11,9 @@ wavelet transform (MODWT) of the signal, shuffling detail
 coefficients at each dyadic scale using the provided `surromethod`,
 then taking the inverse transform to obtain a surrogate.
 
-If `rescale == true`, then surrogate values are mapped onto the 
-values of the original time series, as in the [`AAFT`](@ref) algorithm.
+## Coefficient shuffling method
 
-
-Based on Keylock (2006)[^Keylock2006], but in contrast to the original 
+In contrast to the original 
 implementation where IAAFT is used, you may choose to use any surrogate 
 method from this package to perform the randomization of the detail 
 coefficients at each dyadic scale. Note: The iterative procedure after 
@@ -24,25 +22,25 @@ this implementation.
 
 If `surromethod == IAAFT()`, the wavelet surrogates preserves the local 
 mean and variance structure of the signal, but randomises nonlinear 
-properties of the signal (i.e. Hurst exponents)[^Keylock2006]. In contrast 
-to IAAFT surrogates, the IAAFT shuffled wavelet surrogates also 
-preserves nonstationarity. 
+properties of the signal (i.e. Hurst exponents)[^Keylock2006]. These surrogates
+can therefore be used to test for changes in nonlinear properties of the 
+original signal.
+
+In contrast to IAAFT surrogates, the IAAFT-wavelet surrogates also 
+preserves nonstationarity. Using other `surromethod`s does not necessarily
+preserve nonstationarity.
 
 To deal with nonstationary signals, Keylock (2006) recommends using a 
 wavelet with a high number of vanishing moments. Thus, the default is to
 use a Daubechies wavelet with 16 vanishing moments.
 
-## Example 
 
-```julia
-using TimeseriesSurrogates, Wavelets
+## Rescaling 
 
-# Default is 
-method = WLS()
-
-# Specify wavelet
-method = WLS()
-```
+If `rescale == true`, then surrogate values are mapped onto the 
+values of the original time series, as in the [`AAFT`](@ref) algorithm.
+If `rescale == false`, surrogate values are not constrained to the 
+original time series values.
 
 [^Keylock2006]: C.J. Keylock (2006). "Constrained surrogate time series with preservation of the mean and variance structure". Phys. Rev. E. 73: 036707. doi:10.1103/PhysRevE.73.036707.
 """
@@ -51,7 +49,7 @@ struct WLS{WT <: Wavelets.WT.OrthoWaveletClass, S <: Surrogate} <: Surrogate
     rescale::Bool
     wt::WT
 
-    function WLS(method::S = AAFT(), rescale::Bool = true, wt::WT = Wavelets.WT.Daubechies{16}()) where {S <: Surrogate, WT <: Wavelets.WT.OrthoWaveletClass}
+    function WLS(method::S = IAAFT(), rescale::Bool = true, wt::WT = Wavelets.WT.Daubechies{16}()) where {S <: Surrogate, WT <: Wavelets.WT.OrthoWaveletClass}
         new{WT, S}(method, rescale, wt)
     end
 end
