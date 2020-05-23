@@ -32,13 +32,13 @@ cd(@__DIR__)
 ENV["JULIA_DEBUG"] = "Documenter"
 
 PAGES = [
-    "Overview" => "index.md",
+    "Documentation" => "index.md",
     "What is a surrogate?" => "man/whatisasurrogate.md",
     "Example applications" => [
         "Shuffle-based" => "constrained/randomshuffle.md",
         "Fourier-based" => "constrained/fourier_surrogates.md",
         "Amplitude-adjusted FT" => "constrained/amplitude_adjusted.md",
-        "Truncated FT/AAFT" => "constrained/truncated_fourier_transform.md", 
+        "Truncated FT/AAFT" => "constrained/truncated_fourier_transform.md",
         "Pseudo-periodic" => "constrained/pps.md",
         "Wavelet-based" => "constrained/wls.md"
     ],
