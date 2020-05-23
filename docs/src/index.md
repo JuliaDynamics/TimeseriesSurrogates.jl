@@ -1,6 +1,6 @@
-# Overview
+# TimeseriesSurrogates.jl
 
-# TODO: add example figure here.
+![](surroplot.png)
 
 If you are new to this method of [surrogate time series](https://en.wikipedia.org/wiki/Surrogate_data_testing), feel free to read the [What is a surrogate?](@ref) page.
 
