@@ -31,5 +31,7 @@ x = NSAR2(n_steps = 300)
 
 # We want to divide the signal into 8 blocks.
 s = surrogate(x, BlockShuffle(8))
-surroplot(x, s)
+p = surroplot(x, s)
+savefig(p, "../surroplot.png") # hide
+p
 ```
