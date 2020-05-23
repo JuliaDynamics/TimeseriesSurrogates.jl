@@ -24,6 +24,7 @@ AAFT
 TAAFT
 IAAFT
 PseudoPeriodic
+WLS
 ```
 
 ### Utils
