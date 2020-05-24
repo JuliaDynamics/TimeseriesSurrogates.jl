@@ -40,5 +40,8 @@ Documentation strings for the various methods describe the usage inteded by the 
 
 ``TimeseriesSurrogates.jl`` is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a GitHub organization dedicated to creating high quality scientific software for studying dynamical system. Originally, ``TimeseriesSurrogates.jl`` was developed to provide a machinery for hypothesis testing for causal inference in the ``CausalityTools.jl`` Julia package (also part of JuliaDynamics), but is now provided as a stand-alone package due to its widespread usefulness in the study of dynamical systems.
 
+# Acknowledgements
+
+KAH acknowledges funding by the Trond Mohn Foundation (previously Bergen Research Foundation) (Bergen, Norway) and a fast-track initative grant from Bjerknes Centre for Climate Research (Bergen, Norway).
 
 # References
