@@ -42,7 +42,9 @@ PAGES = [
         "Pseudo-periodic" => "constrained/pps.md",
         "Wavelet-based" => "constrained/wls.md"
     ],
-    "Utility systems" => "man/exampleprocesses.md"
+    "Utility systems" => "man/exampleprocesses.md",
+    "Contributing" => "contributor_guide.md",
+    "Installation" => "installation.md"
 ]
 
 makedocs(
