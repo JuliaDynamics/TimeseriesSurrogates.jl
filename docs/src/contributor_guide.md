@@ -15,7 +15,8 @@ Please mark method requests clearly as "Method request: my new method...", and p
 
 Pull requests for new surrogate methods are very welcome. Ideally, your implementation should use the same API as the existing methods: 
 
-- Create a `struct` for your surrogate method, e.g. `struct MyNewSurrogateMethod <: Surrogate`, that contain the parameters for the method.
+- Create a `struct` for your surrogate method, e.g. `struct MyNewSurrogateMethod <: Surrogate`, that contain the parameters for the method. The docstring for the method should contain a reference to scientific publications detailing the algorithm,
+as well as the intended purpose of the method, and potential implementation details that differ from the original algorithm. 
 - Implement `surrogenerator(x, method::MyNewSurrogateMethod)`, where you pre-compute things for efficiency and return a `SurrogateGenerator` instance.
 - Implement the `SurrogateGenerator{<:MyNewSurrogateMethod}` functor that produces surrogate time series on demand. This is where the precomputed things are used, and the actual algorithm is implemented.
 - Then `surrogate(x, method::Surrogate)` will "just work". 
