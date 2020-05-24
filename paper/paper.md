@@ -43,5 +43,6 @@ Documentation strings for the various methods describe the usage inteded by the 
 # Acknowledgements
 
 KAH acknowledges funding by the Trond Mohn Foundation (previously Bergen Research Foundation) (Bergen, Norway) and a fast-track initative grant from Bjerknes Centre for Climate Research (Bergen, Norway).
+GD acknowledges funding from the Max Planck Society.
 
 # References
