@@ -28,6 +28,20 @@ end
 	#TODO: Test for noiseradius
 end
 
+@testset "PeriodicTwin" begin
+    # A better test based on recurrence plots should be considered.
+    d, τ = 2, 6
+    δ = 0.2
+    ρ = noiseradius(x, d, τ, 0.02:0.02:0.5)
+    method = PseudoPeriodicTwin(d, τ, δ, ρ)
+
+    sg = surrogenerator(x, method)
+	s = sg()[:, 1]
+	@test length(s) == length(ts)
+	@test all(s[i] ∈ x for i in 1:N)
+end
+
+
 @testset "BlockShuffle" begin 
     bs1 = BlockShuffle()
     bs2 = BlockShuffle(4)

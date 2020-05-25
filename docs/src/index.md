@@ -26,6 +26,7 @@ AAFT
 TAAFT
 IAAFT
 PseudoPeriodic
+PseudoPeriodicTwin
 WLS
 ```
 

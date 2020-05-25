@@ -28,6 +28,7 @@ include("methods/iaaft.jl")
 include("methods/truncated_fourier.jl")
 include("methods/wavelet_based.jl")
 include("methods/pseudoperiodic.jl")
+include("methods/pseudoperiodic_twin.jl")
 
 # Visualization routine for time series + surrogate + periodogram/acf/histogram
 using Requires
