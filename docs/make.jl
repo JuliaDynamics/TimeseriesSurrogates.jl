@@ -43,8 +43,7 @@ PAGES = [
         "Wavelet-based" => "constrained/wls.md"
     ],
     "Utility systems" => "man/exampleprocesses.md",
-    "Contributing" => "contributor_guide.md",
-    "Installation" => "installation.md"
+    "Contributing" => "contributor_guide.md"
 ]
 
 makedocs(

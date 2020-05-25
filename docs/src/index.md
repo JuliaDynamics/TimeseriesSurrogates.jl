@@ -38,3 +38,12 @@ noiseradius
 ## Visualization
 
 TimeseriesSurrogates.jl provides the function `surroplot(x, s)`, which comes into scope when `using Plots`. This function is used in the example applications.
+
+
+## Installation
+
+TimeseriesSurrogates is a registered Julia package. To install the latest version, run the following in your Julia console.
+
+```julia
+import Pkg; Pkg.add("TimeseriesSurrogates")
+```
