@@ -15,9 +15,9 @@ library [DynamicalSystems.jl](https://juliadynamics.github.io/DynamicalSystems.j
 See its documentation for choosing appropriate values for `d, τ`. For `ρ`, we have implemented
 the method proposed in the paper in the function [`noiseradius`](@ref).
 
-The argument `shift` is not discussed in the paper, but it is possible to adjust the algorithm
-so that there is little phase shift between the periodic component of the original and
-surrogate data.
+The argument `shift` is not discussed in the paper. If `shift=false`
+we adjust the algorithm so that there is little phase shift between the
+periodic component of the original and surrogate data.
 
 [^Small2001]: Small et al., Surrogate test for pseudoperiodic time series data, [Physical Review Letters, 87(18)](https://doi.org/10.1103/PhysRevLett.87.188101)
 """
