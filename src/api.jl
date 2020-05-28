@@ -41,3 +41,14 @@ function surrogate(x, method::Surrogate)
     sg = surrogenerator(x, method)
     sg()
 end
+
+"""
+    surrogate(x,t, method::Surrogate) → s
+Create a  single timeseries `s` from the irregular time series `x` with time steps `t`
+based on the given `method`.
+If you want to generate more than one surrogate from `x`, you should use a [`surrogenerator`](@ref)
+"""
+function surrogate(x, t, method::Surrogate)
+    sg = surrogenerator(x,t,method)
+    sg()
+end

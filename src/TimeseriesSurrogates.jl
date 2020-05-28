@@ -4,6 +4,7 @@ module TimeseriesSurrogates
 # the global usage here. It makes it easier to understand how each algorithm works
 # and what it needs
 using Distributions
+using Distances # Will be used by the LombScargle method
 using StatsBase
 using InplaceOps
 using AbstractFFTs
@@ -28,6 +29,9 @@ include("methods/iaaft.jl")
 include("methods/truncated_fourier.jl")
 include("methods/wavelet_based.jl")
 include("methods/pseudoperiodic.jl")
+
+# Methods for irregular time series
+include("methods/lombscargle.jl")
 
 # Visualization routine for time series + surrogate + periodogram/acf/histogram
 using Requires
