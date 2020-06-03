@@ -3,10 +3,18 @@ using LombScargle
 export LS
 """
 LS(t; tol=1, N_total=10000, N_acc=2000,q=1)
-Compute a surrogate of the irregular time series with supporting time steps t
-based on the simulated annealing method described in
+Compute a surrogate of an irregular time series with supporting time steps `t` based on the simulated annealing algorithm described in [^SchreiberSchmitz1999].
 
-[^SchmitzSchreiber1999] A.Schmitz T.Schreiber (1999). "Testing for nonlinearity in unevenly sampled time series" [Phys. Rev E](https://journals.aps.org/pre/pdf/10.1103/PhysRevE.59.4044)
+LS surrogates preserve the periodogram and the amplitude distribution of the original signal.
+
+This algorithm starts with a random permutation of the original data.
+Then it iteratively approaches the power spectrum of the original data by swapping two randomly selected values in the surrogate data
+if the minkowski distance of order `q` between the power spectrum of the surrogate data and the original data is less than before.
+The iteration procedure ends when the relative deviation between the periodograms is less than `tol` or when `N_total` number of tries or `N_acc` number of actual swaps is reached.
+
+It is similar to the [`IAAFT`](@ref) method for regular time series.
+
+[^SchmitzSchreiber1999]: A.Schmitz T.Schreiber (1999). "Testing for nonlinearity in unevenly sampled time series" [Phys. Rev E](https://journals.aps.org/pre/pdf/10.1103/PhysRevE.59.4044)
 """
 struct LS{T<:AbstractVector,S<:Real} <: Surrogate
     t::T
