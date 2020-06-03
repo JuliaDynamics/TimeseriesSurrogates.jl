@@ -30,8 +30,8 @@ LS(t;tol=1.0, N_total=10000, N_acc=5000, q=1) = LS(t, tol, N_total, N_acc,q)
 function surrogenerator(x, method::LS)
     lsplan = LombScargle.plan(method.t, x, fit_mean=false)
     x_ls = lombscargle(lsplan)
-    xpower = x_ls.power
-    @show sum(xpower)
+    # We have to copy the power vector here, because we are reusing lsplan later on
+    xpower = copy(x_ls.power)
     dist=Minkowski(method.q)
     init = (lsplan=lsplan, xpower=xpower, n=length(x), dist=dist)
     return SurrogateGenerator(method, x, init)
@@ -42,40 +42,29 @@ function (sg::SurrogateGenerator{<:LS})()
     lsplan, xpower, n, dist = sg.init
     t = sg.method.t
     tol = sg.method.tol
-    #@show lsplan, xpower, n
-    s = surrogate(sg.x, RandomShuffle())
-    #@show sg.x== s
-    lsplan = LombScargle.plan(t,s, fit_mean=false)
-    s_ls = lombscargle(lsplan)
-    #@show sum(xpower)
-    #@show xpower== s_ls.power
-    #@show xpower
-    #@show s_ls.power
-    lossold = evaluate(dist,xpower, s_ls.power)
+    s = surrogate(t, RandomShuffle())
+    #_perodogram! reuses the lsplan with a shuffled time vector.
+    # This is the same as shuffling the signal
+    spower = LombScargle._periodogram!(s, lsplan)
+    lossold = evaluate(dist,xpower, spower)
     i = j = 0
     newsurr = zero(s)
     while i < sg.method.N_total && j<sg.method.N_acc
         if mod(i,2000) ==0
             @show i, j,lossold
-            #@show sum(xpower), xpower[1:5]
-            #@show sum(s_ls.power), s_ls.power[1:5]
         end
 
         k,l = sample(1:n,2, replace=false)
-        #@show k,l
         copy!(newsurr, s)
-        #@show length(newsurr)
-        #@show newsurr[1]
+        #@show s
         newsurr[[k,l]] .= s[[l,k]]
-        lsplan = LombScargle.plan(t, newsurr, fit_mean=false)
-        s_ls = lombscargle(lsplan)
-        lossnew = evaluate(dist,xpower, s_ls.power)
-        #@show lossnew, lossold
+        #lsplan = LombScargle.plan(t, newsurr, fit_mean=false)
+        #s_ls = lombscargle(lsplan)
+        spower = LombScargle._periodogram!(newsurr, lsplan)
+        lossnew = evaluate(dist,xpower, spower)
         if lossnew < lossold
             lossnew <= tol && break
-            #@show "update"
             s, lossold = copy(newsurr), lossnew
-            #@show length(s)
             j += 1
         #=else
             ## Implement drawing with a probability p
@@ -93,5 +82,8 @@ function (sg::SurrogateGenerator{<:LS})()
         i+=1
     end
     @info i,j, lossold
-    return s
+    #Use the permutation of the time vector to permute the signal vector
+    perm = sortperm(sortperm(s)) # This gives us the inverse permutation from t to perm
+    @assert t[perm] == s # Check, whether this worked as expected
+    return sg.x[perm]
 end
