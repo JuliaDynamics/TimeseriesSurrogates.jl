@@ -1,12 +1,13 @@
-# Irregular Timeseries Surrogates
+# Surrogates for unevenly sampled time series
 
 
-To derive a surrogate for irregular time series we can use surrogate methods which are irrespective of the time axis like [`RandomShuffle`](@ref) or [`BlockShuffle`](@ref)
+To derive a surrogate for unevenly sampled time series, we can use surrogate methods which which does not explicitly use the time axis like [`RandomShuffle`](@ref) or [`BlockShuffle`](@ref)
 or we need to use algorithms, which take the irregularity of the time axis into account.
 
-## LombScargle based surrogate
+## Lomb-Scargle based surrogate
 
-The LS surrogate is a form of a constrained surrogate which takes the LombScargle periodogram to derive surrogates with similar phase distribution.
+The LS surrogate is a form of a constrained surrogate which takes the Lomb-Scargle periodogram to derive surrogates with similar phase distribution as the original time series.
+This function uses the simulated annealing algorithm to compute a minima of the difference between the original periodogram and the surrogate periodogram.
 
 ```@docs
 LS
@@ -22,4 +23,3 @@ s = surrogate(ts, ls)
 plot(t,ts,label="original data")
 plot!(t, s, label="Surrogate data")
 ```
-243.765771 seconds (369.40 M allocations: 186.162 GiB, 3.49% gc time)
