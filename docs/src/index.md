@@ -17,6 +17,10 @@ surrogenerator
 
 ## Surrogate methods
 
+```@index
+Order   = [:type]
+```
+
 ```@docs
 RandomShuffle
 BlockShuffle
@@ -38,3 +42,5 @@ noiseradius
 ## Visualization
 
 TimeseriesSurrogates.jl provides the function `surroplot(x, s)`, which comes into scope when `using Plots`. This function is used in the example applications.
+
+## References
