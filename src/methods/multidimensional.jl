@@ -19,7 +19,7 @@ end
 function (sg::SurrogateGenerator{<:ShuffleDimensions})()
     data = copy(sg.x.data)
     for i in 1:length(data)
-        data[i] = shuffle(data[i])
+        @inbounds data[i] = shuffle(data[i])
     end
     return Dataset(data)
 end
