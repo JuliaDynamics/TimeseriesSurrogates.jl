@@ -1,4 +1,7 @@
-import TimeseriesSurrogates.SurrogateGenerator
+#########################################################################
+# BlockSuffle
+#########################################################################
+
 export BlockShuffle
 """
     BlockShuffle(n::Int) <: Surrogate
@@ -7,22 +10,17 @@ A block shuffle surrogate constructed by dividing the time series
 into `n` blocks of roughly equal width at random indices (end
 blocks are wrapped around to the start of the time series).
 
-Block shuffle surrogates roughly preserve short-range temporal properties 
-in the time series (e.g. correlations at lags less than the block length), 
-but break any long-term dynamical information (e.g. correlations beyond 
+Block shuffle surrogates roughly preserve short-range temporal properties
+in the time series (e.g. correlations at lags less than the block length),
+but break any long-term dynamical information (e.g. correlations beyond
 the block length).
 
-Hence, these surrogates can be used to test any null hypothesis aimed at 
-comparing short-range dynamical properties versus long-range dynamical 
+Hence, these surrogates can be used to test any null hypothesis aimed at
+comparing short-range dynamical properties versus long-range dynamical
 properties of the signal.
 """
 struct BlockShuffle <: Surrogate
     n::Int
-end
-
-function surrogate(x, rs::BlockShuffle)
-    sg = surrogenerator(x, rs)
-    sg()
 end
 
 Base.show(io::IO, bs::BlockShuffle) = show(io, "BlockShuffle(n=$(bs.n))")
@@ -89,3 +87,33 @@ function (bs::SurrogateGenerator{<:BlockShuffle})()
 
     return s
 end
+
+#########################################################################
+# CycleShuffle
+#########################################################################
+
+#########################################################################
+# Timeshift
+#########################################################################
+"""
+    CircShift(n) <: Surrogate
+Surrogates that are circularly shifted versions of the original timeseries.
+
+`n` can be an integer (meaning to shift for `n` indices), or any vector of integers,
+which means that each surrogate is shifted by a random entry of `n`.
+"""
+struct CircShift{N} <: Surrogate
+    n::N
+end
+
+function surrogenerator(x, sd::CircShift)
+    return SurrogateGenerator(sd, x, nothing)
+end
+
+function (sg::SurrogateGenerator{<:CircShift})()
+    s = random_shift(sg.method.n)
+    return circshift(sg.x, s)
+end
+
+random_shift(n::Integer) = n
+random_shift(n::AbstractVector{<:Integer}) = rand(n)
