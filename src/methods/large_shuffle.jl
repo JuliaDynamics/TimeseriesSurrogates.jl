@@ -112,6 +112,14 @@ See also [`PseudoPeriodic`](@ref).
 struct CycleShuffle <: Surrogate
 end
 
+function (sg::SurrogateGenerator{<:CycleShuffle})()
+    if peaks[1] == 1 && peaks[end] == N
+        pop!(peaks) # remove last peak if start and end are both peaks
+    end
+    return s
+end
+
+
 #########################################################################
 # Timeshift
 #########################################################################
