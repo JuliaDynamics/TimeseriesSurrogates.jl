@@ -8,7 +8,7 @@ ts_nan = cumsum(randn(N))
 ts_nan[1] = NaN
 x = cos.(range(0, 20π, length = N)) .+ randn(N)*0.05
 
-@testset "WLS" begin 
+@testset "WLS" begin
     wts = WLS()
     wts = WLS(AAFT())
     s = surrogate(x, wts)
@@ -28,7 +28,7 @@ end
 	#TODO: Test for noiseradius
 end
 
-@testset "BlockShuffle" begin 
+@testset "BlockShuffle" begin
     bs1 = BlockShuffle()
     bs2 = BlockShuffle(4)
     s1 = surrogate(x, bs1)
@@ -40,7 +40,7 @@ end
     @test all([s2[i] ∈ x for i = 1:N])
 end
 
-@testset "RandomShuffle" begin 
+@testset "RandomShuffle" begin
     rs = RandomShuffle()
     s = surrogate(x, rs)
 
@@ -48,25 +48,25 @@ end
     @test all([s[i] ∈ x for i = 1:N])
 end
 
-@testset "AAFT" begin 
-    aaft = AAFT()    
+@testset "AAFT" begin
+    aaft = AAFT()
     s = surrogate(x, aaft)
 
     @test length(s) == length(x)
     @test all([s[i] ∈ x for i = 1:N])
 end
 
-@testset "IAAFT" begin 
-    iaaft = IAAFT()    
+@testset "IAAFT" begin
+    iaaft = IAAFT()
     s = surrogate(x, iaaft)
 
     @test length(s) == length(x)
     @test all([s[i] ∈ x for i = 1:N])
 end
 
-@testset "TFTS" begin 
-    method_preserve_lofreq = TFTS(0.05) 
-    method_preserve_hifreq = TFTS(-0.05)    
+@testset "TFTS" begin
+    method_preserve_lofreq = TFTS(0.05)
+    method_preserve_hifreq = TFTS(-0.05)
 
     s = surrogate(x, method_preserve_lofreq)
     @test length(s) == length(x)
@@ -78,14 +78,14 @@ end
 end
 
 
-@testset "TAAFT" begin 
-    method_preserve_lofreq = TAAFT(0.05) 
-    method_preserve_hifreq = TAAFT(-0.05)    
-   
+@testset "TAAFT" begin
+    method_preserve_lofreq = TAAFT(0.05)
+    method_preserve_hifreq = TAAFT(-0.05)
+
     s = surrogate(x, method_preserve_lofreq)
     @test length(s) == length(x)
     @test all([s[i] ∈ x for i = 1:N])
-    
+
     s = surrogate(x, method_preserve_hifreq)
     @test length(s) == length(x)
     @test all([s[i] ∈ x for i = 1:N])
@@ -94,7 +94,7 @@ end
 end
 
 
-@testset "RandomFourier" begin 
+@testset "RandomFourier" begin
     @testset "random phases" begin
         phases = true
         rf = RandomFourier(phases)
@@ -112,8 +112,17 @@ end
     end
 end
 
+using DelayEmbeddings
+@testset "ShufleDims" begin
+	X = Dataset(rand(100, 3))
+	Y = surrogate(X, ShuffleDimensions())
+	for i in 1:100
+		@test sort(X[i]) == sort(Y[i])
+	end
+end
 
-#= 
+
+#=
 @testset "IAAFT" begin
     # With pre-planning
     method = IAAFT(ts)
@@ -126,5 +135,5 @@ end
     surr = surrogate(ts, method)
     @test length(ts) == length(surr)
     @test all(sort(ts) .== sort(surr))
-end 
+end
 =#
