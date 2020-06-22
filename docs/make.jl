@@ -40,7 +40,8 @@ PAGES = [
         "Amplitude-adjusted FT" => "constrained/amplitude_adjusted.md",
         "Truncated FT/AAFT" => "constrained/truncated_fourier_transform.md",
         "Pseudo-periodic" => "constrained/pps.md",
-        "Wavelet-based" => "constrained/wls.md"
+        "Wavelet-based" => "constrained/wls.md",
+        "Multidimensional surrogates" => "multidim.md",
     ],
     "Utility systems" => "man/exampleprocesses.md"
 ]
