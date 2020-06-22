@@ -1,5 +1,5 @@
 using Test
-using TimeseriesSurrogates
+using TimeseriesSurrogates, DSP
 
 dt = π/20
 x = Float64[]
@@ -12,6 +12,4 @@ for i in 1:10 # 10 periods
 end
 
 N = length(x)
-x .+= randn(N)/20
-
-plot(x)
+x .+= randn(N)/10
