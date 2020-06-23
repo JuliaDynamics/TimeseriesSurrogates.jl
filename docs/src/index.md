@@ -33,6 +33,7 @@ TAAFT
 IAAFT
 PseudoPeriodic
 WLS
+ShuffleDimensions
 ```
 
 ### Utils

@@ -123,3 +123,29 @@ end
 		@test a ∈ x
 	end
 end
+
+using DelayEmbeddings
+@testset "ShufleDims" begin
+	X = Dataset(rand(100, 3))
+	Y = surrogate(X, ShuffleDimensions())
+	for i in 1:100
+		@test sort(X[i]) == sort(Y[i])
+	end
+end
+
+
+#=
+@testset "IAAFT" begin
+    # With pre-planning
+    method = IAAFT(ts)
+    surr = surrogate(ts, method)
+    @test length(ts) == length(surr)
+    @test all(sort(ts) .== sort(surr))
+
+    # Without pre-planning
+    method = IAAFT()
+    surr = surrogate(ts, method)
+    @test length(ts) == length(surr)
+    @test all(sort(ts) .== sort(surr))
+end
+=#
