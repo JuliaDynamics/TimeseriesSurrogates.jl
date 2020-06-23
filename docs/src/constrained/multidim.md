@@ -17,13 +17,13 @@ e = 10.0 .^ range(-4, 1, length = 22)
 CX = correlationsum(X, e; w = 5)
 
 le = log10.(e)
-plot(le, log10.(CX))
+p1 = plot(le, log10.(CX), legend = false)
 
 sg = surrogenerator(X, ShuffleDimensions())
 for i in 1:10
     Z = sg()
     CZ = correlationsum(Z, e)
-    plot!(le, log10.(CZ), alpha = 0.5, lw = 0.5, color = "k", ls = ":")
+    plot!(p1, le, log10.(CZ), color = "black")
 end
-plot!(xlabel = "log(e)", ylabel = "log(C)");
+xlabel!("log(e)"); ylabel!("log(C)");
 ```
