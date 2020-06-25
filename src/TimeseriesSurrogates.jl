@@ -21,7 +21,7 @@ include("utils/interpolation.jl")
 
 # The different surrogate routines
 include("methods/randomshuffle.jl")
-include("methods/blockshuffle.jl")
+include("methods/large_shuffle.jl")
 include("methods/randomfourier.jl")
 include("methods/aaft.jl")
 include("methods/iaaft.jl")

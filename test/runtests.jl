@@ -112,6 +112,18 @@ end
     end
 end
 
+@testset "Circ/Cycle shuffle" begin
+	x = random_cycles()
+	s = surrogate(x, CycleShuffle())
+	for a in s
+		@test a ∈ x
+	end
+	s = surrogate(x, CircShift(1:length(x)))
+	for a in s
+		@test a ∈ x
+	end
+end
+
 using DelayEmbeddings
 @testset "ShufleDims" begin
 	X = Dataset(rand(100, 3))

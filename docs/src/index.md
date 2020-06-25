@@ -24,6 +24,8 @@ Order   = [:type]
 ```@docs
 RandomShuffle
 BlockShuffle
+CycleShuffle
+CircShift
 RandomFourier
 TFTS
 AAFT
