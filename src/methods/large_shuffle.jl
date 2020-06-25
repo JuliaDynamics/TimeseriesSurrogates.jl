@@ -92,7 +92,7 @@ end
 # CycleShuffle
 #########################################################################
 """
-    CycleShuffle(firstlast::Bool = false; n::Int = 7, σ = 0.5) <: Surrogate
+    CycleShuffle(n::Int = 7, σ = 0.5) <: Surrogate
 
 Cycle shuffled surrogates[^Theiler1995] that identify successive local peaks in the data and shuffle the
 cycles in-between the peaks. Similar to [`BlockShuffle`](@ref), but here
