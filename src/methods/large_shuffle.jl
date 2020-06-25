@@ -95,12 +95,12 @@ end
     CycleShuffle(firstlast::Bool = false; n::Int = 7, σ = 0.5) <: Surrogate
 
 Cycle shuffled surrogates[^Theiler1995] that identify successive local peaks in the data and shuffle the
-cycles inbetween the peaks. Similar with [`BlockShuffle`](@ref), but here
+cycles in-between the peaks. Similar to [`BlockShuffle`](@ref), but here
 the "blocks" are defined as follows:
-1. The timeseries is smoothened via convolution with Gaussian (`DSP.gaussian(n, σ)`).
+1. The timeseries is smoothened via convolution with a Gaussian (`DSP.gaussian(n, σ)`).
 2. Local maxima of the smoothened signal define the peaks, and thus the blocks in between them.
 3. The first and last index of timeseries can never be peaks and thus signals that
-   should have peaks very close to start or end may not perform well. In addition,
+   should have peaks very close to start or end of the timeseries may not perform well. In addition,
    points before the first or after the last peak are never shuffled.
 3. The defined blocks are randomly shuffled as in [`BlockShuffle`](@ref).
 
@@ -150,7 +150,8 @@ end
 Surrogates that are circularly shifted versions of the original timeseries.
 
 `n` can be an integer (meaning to shift for `n` indices), or any vector of integers,
-which means that each surrogate is shifted by a random entry of `n`.
+which which means that each surrogate is shifted by an integer,
+selected randomly among the entries in `n`.
 """
 struct CircShift{N} <: Surrogate
     n::N
