@@ -9,6 +9,7 @@ If you are new to this method of [surrogate time series](https://en.wikipedia.or
 ## API
 
 TimeseriesSurrogates.jl exports two main functions. Both of them dispatch on the chosen method, a subtype of `Surrogate`.
+It is recommended to standardize the signal before using these functions, i.e. subtract mean and divide by standard deviation.
 
 ```@docs
 surrogate
