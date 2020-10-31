@@ -2,6 +2,18 @@ using DSP, Random, ARFIMA
 
 lpcmethod = LPCLevinson()
 
+"""
+    AutoRegressive(n, method = LPCLevinson())
+
+Autoregressive surrogates of order-`n`. The autoregressive coefficients `φ` are estimated
+using `DSP.lpc(x, n, method)`, and thus see the documentation of DSP.jl for possible
+`method`s.
+
+While these surrogates are obviously suited to test the null hypothesis whether the data
+are coming from a autoregressive process, the Fourier Transform-based surrogates are
+probably a better option. The current method is more like a convient way to estimate
+autoregressive coefficients and automatically generate surrogates based on them.
+"""
 struct AutoRegressive{M} <: Surrogate
     n::Int
     m::M
