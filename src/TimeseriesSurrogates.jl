@@ -29,6 +29,7 @@ include("methods/truncated_fourier.jl")
 include("methods/wavelet_based.jl")
 include("methods/pseudoperiodic.jl")
 include("methods/multidimensional.jl")
+include("methods/ar.jl")
 
 # Visualization routine for time series + surrogate + periodogram/acf/histogram
 using Requires
