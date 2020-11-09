@@ -32,6 +32,7 @@ TFTS
 AAFT
 TAAFT
 IAAFT
+AutoRegressive
 PseudoPeriodic
 WLS
 ShuffleDimensions

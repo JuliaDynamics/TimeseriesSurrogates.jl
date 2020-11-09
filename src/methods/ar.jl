@@ -40,7 +40,6 @@ end
 
 function autoregressive(d::Normal{T}, N, φ) where {T}
     f = length(φ)
-    @show f, N
     z = zeros(T, N+f)
     @inbounds for i in 1:f; z[i] = rand(d); end
     @inbounds for i in f+1:length(z)
