@@ -10,8 +10,16 @@ using `DSP.lpc(x, n, method)`, and thus see the documentation of DSP.jl for poss
 
 While these surrogates are obviously suited to test the null hypothesis whether the data
 are coming from a autoregressive process, the Fourier Transform-based surrogates are
-probably a better option. The current method is more like a convient way to estimate
+probably a better option. The current method is more like an explicit way to
+produce surrogates for the same hypothesis by fitting a model.
+It can be used as convient way to estimate
 autoregressive coefficients and automatically generate surrogates based on them.
+
+The coefficients φ of the autoregressive fit can be found by doing
+```julia
+sg = surrogenerator(x, AutoRegressive(n))
+φ = sg.init.φ
+```
 """
 struct AutoRegressive{M} <: Surrogate
     n::Int
@@ -26,14 +34,15 @@ function surrogenerator(x, method::AutoRegressive)
 end
 
 function (sg::SurrogateGenerator{<:AutoRegressive})()
-    n, φ, d = length(sg.x), sg.init.φ, sg.init.d
-    return autoregressive(d, n, φ)
+    N, φ, d = length(sg.x), sg.init.φ, sg.init.d
+    return autoregressive(d, N, φ)
 end
 
-function autoregressive(d::Normal{T}, n, φ) where {T}
+function autoregressive(d::Normal{T}, N, φ) where {T}
     f = length(φ)
-    z = zeros(T, n+length(φ))
-    @inbounds for i in 1:length(φ); z[i] = rand(d); end
+    @show f, N
+    z = zeros(T, N+f)
+    @inbounds for i in 1:f; z[i] = rand(d); end
     @inbounds for i in f+1:length(z)
         s = zero(T)
         for j in 1:f
@@ -42,5 +51,5 @@ function autoregressive(d::Normal{T}, n, φ) where {T}
         s += rand(d)
         z[i] = s
     end
-    return view(z, length(φ)+1:n)
+    return view(z, f+1:N+f)
 end
