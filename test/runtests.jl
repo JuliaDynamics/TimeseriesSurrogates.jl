@@ -51,7 +51,7 @@ end
 @testset "AutoRegressive" begin
 	y = TimeseriesSurrogates.AR1(2000, 0.1, 0.5)
     sg = surrogenerator(y, AutoRegressive(1))
-	@test 0.4 abs(sg.init.φ) ≤ 0.6
+	@test 0.4 ≤ abs(sg.init.φ[1]) ≤ 0.6
 	s = sg()
     @test length(s) == length(y)
 end
