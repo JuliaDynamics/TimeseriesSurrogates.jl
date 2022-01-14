@@ -5,6 +5,7 @@ CI && Pkg.activate(@__DIR__)
 CI && Pkg.instantiate()
 CI && (ENV["GKSwstype"] = "100")
 using TimeseriesSurrogates
+using DynamicalSystems
 using Random
 using Distributions
 using Plots
@@ -42,6 +43,7 @@ PAGES = [
         "Pseudo-periodic" => "constrained/pps.md",
         "Pseudo-periodic twin" => "constrained/ppts.md",
         "Wavelet-based" => "constrained/wls.md"
+        "Multidimensional surrogates" => "constrained/multidim.md",
     ],
     "Utility systems" => "man/exampleprocesses.md"
 ]

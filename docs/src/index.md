@@ -9,6 +9,7 @@ If you are new to this method of [surrogate time series](https://en.wikipedia.or
 ## API
 
 TimeseriesSurrogates.jl exports two main functions. Both of them dispatch on the chosen method, a subtype of `Surrogate`.
+It is recommended to standardize the signal before using these functions, i.e. subtract mean and divide by standard deviation.
 
 ```@docs
 surrogate
@@ -17,17 +18,25 @@ surrogenerator
 
 ## Surrogate methods
 
+```@index
+Order   = [:type]
+```
+
 ```@docs
 RandomShuffle
 BlockShuffle
+CycleShuffle
+CircShift
 RandomFourier
 TFTS
 AAFT
 TAAFT
 IAAFT
+AutoRegressive
 PseudoPeriodic
 PseudoPeriodicTwin
 WLS
+ShuffleDimensions
 ```
 
 ### Utils
@@ -39,3 +48,5 @@ noiseradius
 ## Visualization
 
 TimeseriesSurrogates.jl provides the function `surroplot(x, s)`, which comes into scope when `using Plots`. This function is used in the example applications.
+
+## References

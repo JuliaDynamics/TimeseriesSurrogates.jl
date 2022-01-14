@@ -21,7 +21,7 @@ include("utils/interpolation.jl")
 
 # The different surrogate routines
 include("methods/randomshuffle.jl")
-include("methods/blockshuffle.jl")
+include("methods/large_shuffle.jl")
 include("methods/randomfourier.jl")
 include("methods/aaft.jl")
 include("methods/iaaft.jl")
@@ -29,6 +29,8 @@ include("methods/truncated_fourier.jl")
 include("methods/wavelet_based.jl")
 include("methods/pseudoperiodic.jl")
 include("methods/pseudoperiodic_twin.jl")
+include("methods/multidimensional.jl")
+include("methods/ar.jl")
 
 # Visualization routine for time series + surrogate + periodogram/acf/histogram
 using Requires
