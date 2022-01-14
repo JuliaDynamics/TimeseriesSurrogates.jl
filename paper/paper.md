@@ -30,8 +30,6 @@ The method of surrogate data [@Theiler:1991] is a way to generate data that pres
 
 TimeseriesSurrogates.jl is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a GitHub organization dedicated to creating high quality scientific software for studying dynamical system.
 
-#TODO: Example figure of a surrogate, just like in the docs.
-
 ## Available surrogate methods
 
 TimeseriesSurrogates.jl is a software package for the Julia programming language [@Bezanson:2017] that provides performant implementations of commonly used surrogate methods, using an easily extendable interface.  As of the 1.0 release of the package, supported methods include:
