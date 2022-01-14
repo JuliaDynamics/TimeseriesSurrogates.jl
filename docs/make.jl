@@ -5,6 +5,7 @@ CI && Pkg.activate(@__DIR__)
 CI && Pkg.instantiate()
 CI && (ENV["GKSwstype"] = "100")
 using TimeseriesSurrogates
+using DynamicalSystems
 using Random
 using Distributions
 using Plots
@@ -40,7 +41,8 @@ PAGES = [
         "Amplitude-adjusted FT" => "constrained/amplitude_adjusted.md",
         "Truncated FT/AAFT" => "constrained/truncated_fourier_transform.md",
         "Pseudo-periodic" => "constrained/pps.md",
-        "Wavelet-based" => "constrained/wls.md"
+        "Wavelet-based" => "constrained/wls.md",
+        "Multidimensional surrogates" => "constrained/multidim.md",
     ],
     "Utility systems" => "man/exampleprocesses.md",
     "Contributing" => "contributor_guide.md"
