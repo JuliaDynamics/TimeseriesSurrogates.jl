@@ -111,7 +111,9 @@ end
 ```
   1.839767 seconds (12.12 M allocations: 1.450 GiB, 19.25% gc time)
 ```
-This means that we can get a factor of 5 speedup simply from a smart design choice which allows us to re-use computation and memory when making surrogates.
+This means that we can get a factor of 5 speedup simply from a smart design choice which allows us to re-use computation and memory when making surrogates. Average times to construct single surrogates after initialization of the surrogate generators are summarized in Figure 1.
+
+![Figure 1: Mean time (in seconds, based on 30 realizations) to generate a single surrogate using a pre-initialized generators for currently implemented surrogate methods in TimeseriesSurrogates.jl, using default parameters. The maximum number of iterations for the IAAFT algorithm is set to 100. A Juputer notebook in which results can be reproduced is available in the GitHub repo for this paper.](figs/mean_times_in_seconds.png)
 
 ## Acknowledgements
 
