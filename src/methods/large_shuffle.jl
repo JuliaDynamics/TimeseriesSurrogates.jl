@@ -40,7 +40,7 @@ function get_uniform_blocklengths(L::Int, n::Int)
     return blocklengths
 end
 
-function surrogenerator(x::AbstractVector, bs::BlockShuffle)
+function surrogenerator(x::AbstractVector, bs::BlockShuffle, rng = Random.default_rng())
     L = length(x)
     bs.n < L || error("The number of blocks exceeds number of available points")
     Ls = get_uniform_blocklengths(L, bs.n)
@@ -49,7 +49,7 @@ function surrogenerator(x::AbstractVector, bs::BlockShuffle)
     xrot = similar(x)
     T = eltype(xrot)
     init = NamedTuple{(:L, :Ls, :cs, :xrot),Tuple{Int, Vector{Int}, Vector{Int}, Vector{T}}}((L, Ls, cs, xrot))
-    return SurrogateGenerator(bs, x, init)
+    return SurrogateGenerator(bs, x, init, rng)
 end
 
 function (bs::SurrogateGenerator{<:BlockShuffle})()
@@ -63,7 +63,7 @@ function (bs::SurrogateGenerator{<:BlockShuffle})()
 
     # Just create a temporarily randomly shifted array, so we don't need to mess
     # with indexing twice.
-    circshift!(xrot, x, rand(1:L))
+    circshift!(xrot, x, rand(bs.rng, 1:L))
 
     # Block always must be shuffled (so ordered samples are not permitted)
     draw_order = zeros(Int, n)
@@ -118,7 +118,7 @@ struct CycleShuffle{T <: AbstractFloat} <: Surrogate
 end
 CycleShuffle(n = 7, σ = 0.5) = CycleShuffle{typeof(σ)}(n, σ)
 
-function surrogenerator(x::AbstractVector, cs::CycleShuffle)
+function surrogenerator(x::AbstractVector, cs::CycleShuffle, rng = Random.default_rng())
     n, N = cs.n, length(x)
     g = DSP.gaussian(n, cs.σ)
     smooth = DSP.conv(x, g)
@@ -127,13 +127,13 @@ function surrogenerator(x::AbstractVector, cs::CycleShuffle)
     peaks = findall(i -> smooth[i-1] < smooth[i] && smooth[i] > smooth[i+1], 2:N-1)
     blocks = [collect(peaks[i]:peaks[i+1]-1) for i in 1:length(peaks)-1]
     init =  (blocks = blocks, s = copy(x), peak1 = peaks[1])
-    SurrogateGenerator(cs, x, init)
+    SurrogateGenerator(cs, x, init, rng)
 end
 
 function (sg::SurrogateGenerator{<:CycleShuffle})()
     blocks, s, peak1 = sg.init
     x = sg.x
-    shuffle!(blocks)
+    shuffle!(sg.rng, blocks)
     i = peak1
     for b in blocks
         s[(0:length(b)-1) .+ i] .= @view x[b]
@@ -157,14 +157,14 @@ struct CircShift{N} <: Surrogate
     n::N
 end
 
-function surrogenerator(x, sd::CircShift)
-    return SurrogateGenerator(sd, x, nothing)
+function surrogenerator(x, sd::CircShift, rng = Random.default_rng())
+    return SurrogateGenerator(sd, x, nothing, rng)
 end
 
 function (sg::SurrogateGenerator{<:CircShift})()
-    s = random_shift(sg.method.n)
+    s = random_shift(sg.method.n, sg.rng)
     return circshift(sg.x, s)
 end
 
-random_shift(n::Integer) = n
-random_shift(n::AbstractVector{<:Integer}) = rand(n)
+random_shift(n::Integer, rng) = n
+random_shift(n::AbstractVector{<:Integer}, rng) = rand(rng, n)
