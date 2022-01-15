@@ -11,15 +11,15 @@ suited to distinguish deterministic datasets from high dimensional noise.
 """
 struct ShuffleDimensions <: Surrogate end
 
-function surrogenerator(x, sd::ShuffleDimensions)
+function surrogenerator(x, sd::ShuffleDimensions, rng = Random.default_rng())
     @assert x isa Dataset "input `x` must be `DelayEmbeddings.Dataset` for `ShuffleDimensions`"
-    return SurrogateGenerator(sd, x, nothing)
+    return SurrogateGenerator(sd, x, nothing, rng)
 end
 
 function (sg::SurrogateGenerator{<:ShuffleDimensions})()
     data = copy(sg.x.data)
     for i in 1:length(data)
-        @inbounds data[i] = shuffle(data[i])
+        @inbounds data[i] = shuffle(sg.rng, data[i])
     end
     return Dataset(data)
 end
