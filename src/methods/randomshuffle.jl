@@ -27,5 +27,5 @@ end
 
 function (rf::SurrogateGenerator{<:RandomShuffle})()
     n = length(rf.x)
-    rf.x[sample(sg.rng, 1:n, n; replace = false)]
+    rf.x[sample(rf.rng, 1:n, n; replace = false)]
 end

@@ -29,14 +29,13 @@ Base.show(io::IO, bs::BlockShuffle) = show(io, "BlockShuffle(n=$(bs.n))")
 BlockShuffle() = BlockShuffle(2)
 
 function get_uniform_blocklengths(L::Int, n::Int)
-     # Compute block lengths
+    # Compute block lengths
     N = floor(Int, L/n)
     R = L % n
     blocklengths = [N for i = 1:n]
     for i = 1:R
         blocklengths[i] += 1
     end
-
     return blocklengths
 end
 
@@ -68,7 +67,7 @@ function (bs::SurrogateGenerator{<:BlockShuffle})()
     # Block always must be shuffled (so ordered samples are not permitted)
     draw_order = zeros(Int, n)
     while any(draw_order .== 0) || all(draw_order .== 1:n)
-       StatsBase.sample!(1:n, draw_order, replace = false)
+       StatsBase.sample!(bs.rng, 1:n, draw_order, replace = false)
     end
 
     # The surrogate.
