@@ -37,12 +37,13 @@ struct TFTS <: Surrogate
     fϵ::Real
 
     function TFTS(fϵ::Real)
-        fϵ != 0 || throw(ArgumentError("`fϵ` must be on the interval [-1, 0) ∪ (0, 1] (positive if preserving high frequencies, negative if preserving low frequencies)"))
+        if (0 < fε ≤ 1) || (-1 ≤ fε < 0)
+        throw(ArgumentError("`fϵ` must be on the interval [-1, 0) ∪ (0, 1] (positive if preserving high frequencies, negative if preserving low frequencies)"))
         new(fϵ)
     end
 end
 
-function surrogenerator(x, method::TFTS)
+function surrogenerator(x, method::TFTS, rng = Random.default_rng())
     # Pre-plan Fourier transforms
     forward = plan_rfft(x)
     inverse = plan_irfft(forward*x, length(x))
@@ -67,7 +68,7 @@ function surrogenerator(x, method::TFTS)
         x_sorted = x_sorted,
         𝓕new = 𝓕new, 𝓕s = 𝓕s, ϕs = ϕs)
 
-    return SurrogateGenerator(method, x, init)
+    return SurrogateGenerator(method, x, init, rng)
 end
 
 function (sg::SurrogateGenerator{<:TFTS})()
@@ -86,7 +87,7 @@ function (sg::SurrogateGenerator{<:TFTS})()
         𝓕new, 𝓕s, ϕs = getfield.(Ref(sg.init), init_fields)
 
     # Surrogate starts out as a random permutation of x
-    s = x[StatsBase.sample(1:L, L, replace = false)]
+    s = x[StatsBase.sample(sg.rng, 1:L, L; replace = false)]
     𝓕s .= forward*s
     ϕs .= angle.(𝓕s)
 
@@ -133,9 +134,9 @@ struct TAAFT <: Surrogate
     end
 end
 
-function surrogenerator(x, method::TAAFT)
-    init = surrogenerator(x, TFTS(method.fϵ))
-    return SurrogateGenerator(method, x, init)
+function surrogenerator(x, method::TAAFT, rng = Random.default_rng())
+    init = surrogenerator(x, TFTS(method.fϵ), rng)
+    return SurrogateGenerator(method, x, init, rng)
 end
 
 function (taaft::SurrogateGenerator{<:TAAFT})()
