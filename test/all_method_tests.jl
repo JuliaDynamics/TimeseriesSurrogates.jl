@@ -1,5 +1,6 @@
 using Test
 using TimeseriesSurrogates
+ENV["GKSwstype"] = "100"
 
 N = 1000
 ts = cumsum(randn(N))
@@ -25,19 +26,6 @@ end
 	# the same frequency, should be considered.
 
 	#TODO: Test for noiseradius
-end
-
-@testset "PeriodicTwin" begin
-    # A better test based on recurrence plots should be considered.
-    d, τ = 2, 6
-    δ = 0.2
-    ρ = noiseradius(x, d, τ, 0.02:0.02:0.5)
-    method = PseudoPeriodicTwin(d, τ, δ, ρ)
-
-    sg = surrogenerator(x, method)
-    s = sg()[:, 1]
-    @test length(s) == length(ts)
-    @test all(s[i] ∈ x for i in 1:N)
 end
 
 @testset "BlockShuffle" begin
@@ -145,30 +133,10 @@ end
 end
 
 using DelayEmbeddings
-@testset "ShuffleDims" begin
+@testset "ShufleDims" begin
 	X = Dataset(rand(100, 3))
 	Y = surrogate(X, ShuffleDimensions())
 	for i in 1:100
 		@test sort(X[i]) == sort(Y[i])
 	end
 end
-
-
-#=
-@testset "IAAFT" begin
-    # With pre-planning
-    method = IAAFT(ts)
-    surr = surrogate(ts, method)
-    @test length(ts) == length(surr)
-    @test all(sort(ts) .== sort(surr))
-
-    # Without pre-planning
-    method = IAAFT()
-    surr = surrogate(ts, method)
-    @test length(ts) == length(surr)
-    @test all(sort(ts) .== sort(surr))
-end
-=#
-
-include("all_method_tests.jl")
-include("reproducibility.jl")

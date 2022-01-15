@@ -54,7 +54,7 @@ struct WLS{WT <: Wavelets.WT.OrthoWaveletClass, S <: Surrogate} <: Surrogate
     end
 end
 
-function surrogenerator(x::AbstractVector{T}, method::WLS) where T
+function surrogenerator(x::AbstractVector{T}, method::WLS, rng = Random.default_rng()) where T
     wl = wavelet(method.wt)
     L = length(x)
     x_sorted = sort(x)
@@ -72,29 +72,31 @@ function surrogenerator(x::AbstractVector{T}, method::WLS) where T
     sWmirr = zeros(T, size(W))
 
     # Surrogate generators for each set of coefficients
-    sgs = [surrogenerator(W[:, i], method.surromethod) for i = 1:Nscales]
+    sgs = [surrogenerator(W[:, i], method.surromethod, rng) for i = 1:Nscales]
 
     # Temporary array for the circular shift error minimizing step 
     circshifted_s = zeros(T, size(W))
     circshifted_smirr = zeros(T, size(W))
+    R = zeros(size(W))
 
     init = (wl = wl, W = W, Nscales = Nscales, L = L, 
             sW = sW, sgs = sgs, sWmirr = sWmirr, 
             circshifted_s = circshifted_s,
             circshifted_smirr = circshifted_smirr,
-            x_sorted = x_sorted)
+            x_sorted = x_sorted, R = R,
+    )
     
-    return SurrogateGenerator(method, x, init)
+    return SurrogateGenerator(method, x, init, rng)
 end
  
 function (sg::SurrogateGenerator{<:WLS})()
     fds = (:wl, :W, :Nscales, :L, :sW, :sgs, :sWmirr, 
         :circshifted_s, :circshifted_smirr,
-        :x_sorted)
+        :x_sorted, :R)
 
     wl, W, Nscales, L, sW, sgs, sWmirr, 
         circshifted_s, circshifted_smirr,
-        x_sorted = getfield.(Ref(sg.init), fds)
+        x_sorted, R = getfield.(Ref(sg.init), fds)
 
     # Create surrogate versions of detail coefficients at each dyadic scale [first part of step (ii) in Keylock]   
     for λ in 1:Nscales
@@ -135,12 +137,11 @@ function (sg::SurrogateGenerator{<:WLS})()
     end
 
     # Decide which coefficients are retained (either surrogate or mirror surrogate coefficients)
-    R = zeros(size(W))
     for λ in 1:Nscales
         if maxcorrs[λ] >= maxcorrs_mirr[λ]
-            R[:, λ] = circshift(sW[:, λ], optimal_shifts[λ])
+            R[:, λ] .= circshift(sW[:, λ], optimal_shifts[λ])
         else 
-            R[:, λ] = circshift(sWmirr[:, λ], optimal_shifts_mirr[λ])
+            R[:, λ] .= circshift(sWmirr[:, λ], optimal_shifts_mirr[λ])
         end
     end
 
@@ -151,5 +152,4 @@ function (sg::SurrogateGenerator{<:WLS})()
     end
 
     return s
-    
 end

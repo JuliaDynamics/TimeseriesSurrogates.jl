@@ -1,8 +1,6 @@
 module TimeseriesSurrogates
 
-# TODO: I think it is more clear when each file uses the packages it needs instead of
-# the global usage here. It makes it easier to understand how each algorithm works
-# and what it needs
+using Random
 using Distributions
 using StatsBase
 using InplaceOps
