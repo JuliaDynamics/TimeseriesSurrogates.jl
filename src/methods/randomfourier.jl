@@ -39,10 +39,10 @@ function (rf::SurrogateGenerator{<:RandomFourier})()
     r = abs.(𝓕)
     ϕ = abs.(𝓕)
     if rf.method.phases
-        randomised_ϕ = rand(rf.rng, Uniform(0, 2*pi), n)
+        randomised_ϕ = rand(rf.rng, Uniform(0, 2π), n)
         new_𝓕 = r .* exp.(randomised_ϕ .* 1im)
     else
-        randomised_r = r .* rand(rf.rng, Uniform(0, 2*pi), n)
+        randomised_r = r .* rand(rf.rng, Uniform(0, 2π), n)
         new_𝓕 = randomised_r .* exp.(ϕ .* 1im)
     end
     return inverse*new_𝓕 .+ m
