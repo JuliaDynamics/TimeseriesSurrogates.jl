@@ -73,7 +73,7 @@ _prepare_embed(x::AbstractVector, d, τ) = embed(x, d, τ)
 _prepare_embed(x::Dataset, d, τ) = x
 
 
-function surrogenerator(x::Union{AbstractVector, Dataset}, pp::PseudoPeriodicTwin)
+function surrogenerator(x::Union{AbstractVector, Dataset}, pp::PseudoPeriodicTwin, rng = Random.default_rng())
     d, τ, δ, metric = getfield.(Ref(pp), (:d, :τ, :δ, :metric))
     ρ = getfield.(Ref(pp), (:ρ))
     
@@ -123,7 +123,7 @@ function surrogenerator(x::Union{AbstractVector, Dataset}, pp::PseudoPeriodicTwi
     W = [pweights(exp.(-dists[setdiff(1:Npts, i), i] / ρ)) for i = 1:Npts]
     
     init = (pts = pts, Nx = Nx, Npts = Npts, dists = dists, R = R, twins = twins, W = W)
-    return SurrogateGenerator(pp, x, init)
+    return SurrogateGenerator(pp, x, init, rng)
 end
 
 
@@ -139,7 +139,7 @@ function (sg::SurrogateGenerator{<:PseudoPeriodicTwin})()
     # Randomly pick a point from the state space as the starting point 
     # for the surrogate.
     n = 1
-    i = rand(1:Npts)
+    i = rand(sg.rng, 1:Npts)
     s[n] = pts[i]
     
     while n < Nx
@@ -147,7 +147,7 @@ function (sg::SurrogateGenerator{<:PseudoPeriodicTwin})()
         # with probability 1/nⱼ, where nⱼ are the number of twins for the point xᵢ.
         if haskey(twins, i)
             # sample uniformly over possible target twins (meaning 1/nⱼ) by default
-            j = twins[i][rand(1:length(twins[i]))]
+            j = twins[i][rand(sg.rng, 1:length(twins[i]))]
             s[n] = pts[j]
             i = j
             n += 1
@@ -159,7 +159,7 @@ function (sg::SurrogateGenerator{<:PseudoPeriodicTwin})()
         # of the next point xⱼ decreases exponentially with increasing distance
         # from the current point xᵢ. Probabilities for jumping from xᵢ to any other 
         # point have been pre-computed, and is stored in W[i].
-        j = sample(1:Npts, W[i])
+        j = sample(sg.rng, 1:Npts, W[i])
         s[n] = pts[j]
         i = j
         n += 1
