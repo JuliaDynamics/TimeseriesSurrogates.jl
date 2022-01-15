@@ -32,7 +32,7 @@ struct PseudoPeriodic{T<:Real} <: Surrogate
 end
 PseudoPeriodic(d, t, r) = PseudoPeriodic(d, t, r, true)
 
-function surrogenerator(x::AbstractVector, pp::PseudoPeriodic)
+function surrogenerator(x::AbstractVector, pp::PseudoPeriodic, rng = Random.default_rng())
     # in the following symbol `y` stands for `s` of the paper
     d, τ = getfield.(Ref(pp), (:d, :τ))
     N = length(x)
@@ -41,21 +41,21 @@ function surrogenerator(x::AbstractVector, pp::PseudoPeriodic)
     w = zeros(eltype(z), Ñ-1) # weights vector
     y = Dataset([z[1] for i in 1:N])
     init = (y = y, w = w, z = z)
-    return SurrogateGenerator(pp, x, init)
+    return SurrogateGenerator(pp, x, init, rng)
 end
 
 function (sg::SurrogateGenerator{<:PseudoPeriodic})()
     y, z, w = getfield.(Ref(sg.init), (:y, :z, :w))
     ρ, shift = getfield.(Ref(sg.method), (:ρ, :shift))
-    pseudoperiodic!(y, sg.x, z, w, ρ, shift)
+    pseudoperiodic!(y, sg.x, z, w, ρ, shift, sg.rng)
 end
 # Low-level method, also used in `noiseradius`
-function pseudoperiodic!(y, x, z, w, ρ, shift)
+function pseudoperiodic!(y, x, z, w, ρ, shift, rng)
     N, Ñ = length.((x, z))
-    y[1] = shift ? rand(z.data) : z[1]
+    y[1] = shift ? rand(rng, z.data) : z[1]
     @inbounds for i in 1:N-1
         w .= (exp(-norm(z[t] - y[i])/ρ) for t in 1:Ñ-1)
-        j = sample(1:Ñ-1, pweights(w))
+        j = sample(rng, 1:Ñ-1, pweights(w))
         y[i+1] = z[j+1]
     end
     return y[:, 1]
@@ -92,7 +92,7 @@ function noiseradius(sg::SurrogateGenerator{<:PseudoPeriodic}, ρs, n = 1)
     N = length(sg.x)
     @inbounds for _ in 1:n
         for (ℓ, ρ) in enumerate(ρs)
-            s = pseudoperiodic!(y, x, z, w, ρ, sg.method.shift)
+            s = pseudoperiodic!(y, x, z, w, ρ, sg.method.shift, sg.rng)
             for i in 1:N-1
                 # TODO: This can be optimized heavily: checking x[i+2] already tells us
                 # that we shouldn't check x[i+1] on the next iteration.
