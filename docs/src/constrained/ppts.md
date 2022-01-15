@@ -1,7 +1,7 @@
 # Pseudo-periodic twin surrogates
 
 ```@example
-using TimeseriesSurrogates, Plots, DelayEmbeddings
+using TimeseriesSurrogates, Plots, DynamicalSystems
 
 # Example system from the original paper
 n, Δt = 500, 0.05
