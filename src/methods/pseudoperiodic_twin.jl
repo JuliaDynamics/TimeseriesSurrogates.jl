@@ -28,7 +28,7 @@ to also provide the embedding delay `τ` and embedding dimension `d`.
 ## Null hypothesis 
 
 Pseudo-periodic twin surrogates generate signals similar to the original data if the 
-original signal (quasi-)periodic. If the original signal is not 
+original signal is (quasi-)periodic. If the original signal is not 
 (quasi-)periodic, then these surrogates will have different 
 recurrence plots than the original signal, but preserve the overall 
 shape of the attractor. Thus, `PseudoPeriodicTwin` surrogates can be used to test 
