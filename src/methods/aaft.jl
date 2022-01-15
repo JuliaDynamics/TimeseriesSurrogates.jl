@@ -17,7 +17,7 @@ struct AAFT <: Surrogate end
 
 function surrogenerator(x, method::AAFT, rng = Random.default_rng())
     init = surrogenerator(x, RandomFourier(true), rng)
-    return SurrogateGenerator(method, x, init)
+    return SurrogateGenerator(method, x, init, rng)
 end
 
 function (rf::SurrogateGenerator{<:AAFT})()

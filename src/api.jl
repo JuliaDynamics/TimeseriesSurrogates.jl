@@ -7,7 +7,7 @@ struct SurrogateGenerator{S<:Surrogate, X, A, R<:AbstractRNG}
     method::S # method with its input parameters
     x::X      # input timeseries
     init::A   # pre-initialized things that speed up process
-    rng::R
+    rng::R    # random number generator object
 end
 
 """
