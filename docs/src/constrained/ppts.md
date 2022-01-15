@@ -1,4 +1,4 @@
-# Pseudo-periodic twin
+# Pseudo-periodic twin surrogates
 
 ```@example
 using TimeseriesSurrogates, Plots, DelayEmbeddings
@@ -14,23 +14,26 @@ d, τ = 2, 6
 ρ = noiseradius(x, d, τ, 0.02:0.02:0.5)
 method = PseudoPeriodicTwin(d, τ, δ, ρ)
 
-# Generate the surrogate
-sg = surrogenerator(x, method)
-S = sg();
+# Generate the surrogate, which is a `d`-dimensional dataset.
+surr_orbit = surrogate(x, method)
 
-# Plot
+# Get scalar surrogate time series from first and second column.
+s1, s2 = columns(surr_orbit)
+
+# Scalar time series versus surrogate time series
 p_ts = plot(xlabel = "Time", ylabel = "Value")
-plot!(S[:, 1], label = "", c = :red)
+plot!(s1, label = "", c = :red)
 plot!(x, label = "", c = :black)
 
+# Embedding versus surrogate embedding
 X = embed(x, d, τ)
 px = plot(xlabel=  "x(t)", ylabel = "x(t-$τ)", label = "")
 plot!(X[:, 1], X[:, 2], label = "", c = :black)
 scatter!(X[:, 1], X[:, 2], label = "", c = :black)
 
 ps = plot(xlabel=  "s(t)", ylabel = "s(t-$τ)", label = "")
-plot!(S[:, 1], S[:, 2], label = "", c = :red)
-scatter!(S[:, 1], S[:, 2], label = "", c = :red)
+plot!(s1, s2, label = "", c = :red)
+scatter!(s1, s2, label = "", c = :red)
 
 plot(layout = grid(2, 1),
     p_ts,
