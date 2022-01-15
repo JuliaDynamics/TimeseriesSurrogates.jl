@@ -3,7 +3,8 @@ using Pkg
 CI = get(ENV, "CI", nothing) == "true" || get(ENV, "GITHUB_TOKEN", nothing) !== nothing
 CI && Pkg.activate(@__DIR__)
 CI && Pkg.instantiate()
-CI && (ENV["GKSwstype"] = "100")
+ENV["GKSwstype"] = "100"
+
 using TimeseriesSurrogates
 using DynamicalSystems
 using Random
