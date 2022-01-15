@@ -37,8 +37,9 @@ struct TFTS <: Surrogate
     fϵ::Real
 
     function TFTS(fϵ::Real)
-        if (0 < fε ≤ 1) || (-1 ≤ fε < 0)
-        throw(ArgumentError("`fϵ` must be on the interval [-1, 0) ∪ (0, 1] (positive if preserving high frequencies, negative if preserving low frequencies)"))
+        if (0 < fϵ ≤ 1) || (-1 ≤ fϵ < 0)
+            throw(ArgumentError("`fϵ` must be on the interval [-1, 0) ∪ (0, 1] (positive if preserving high frequencies, negative if preserving low frequencies)"))
+        end
         new(fϵ)
     end
 end
