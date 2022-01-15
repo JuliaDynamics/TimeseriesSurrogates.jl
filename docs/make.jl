@@ -42,7 +42,7 @@ PAGES = [
         "Truncated FT/AAFT" => "constrained/truncated_fourier_transform.md",
         "Pseudo-periodic" => "constrained/pps.md",
         "Pseudo-periodic twin" => "constrained/ppts.md",
-        "Wavelet-based" => "constrained/wls.md"
+        "Wavelet-based" => "constrained/wls.md",
         "Multidimensional surrogates" => "constrained/multidim.md",
     ],
     "Utility systems" => "man/exampleprocesses.md"
