@@ -60,7 +60,7 @@ function (sg::SurrogateGenerator{<:LS})()
     # `_periodogram!` method, which re-uses the lsplan with a shuffled 
     # time vector. This is the same as shuffling the signal, so the 
     # surrogate starts out as a shuffled version of `t`.
-    s = surrogate(t, RandomShuffle())
+    s = surrogate(t, RandomShuffle(), rng)
     
     # Power spectrum for the randomly shuffled signal.
     spower = LombScargle._periodogram!(lsplan.P, s, lsplan)
