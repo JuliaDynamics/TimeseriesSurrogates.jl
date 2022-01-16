@@ -10,8 +10,8 @@ x = cos.(range(0, 20π, length = N)) .+ randn(N)*0.05
 
 @testset "LombScargle" begin
     t = sort((0:N-1) + rand(N))
-    tol = 5
-    ls = LS(t, tol = tol)
+    tol = 10
+    ls = LS(t, tol = 10, n_total = 50000, n_acc = 10000)
 
     s = surrogate(x, ls)
 
