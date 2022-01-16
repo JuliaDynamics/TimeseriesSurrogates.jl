@@ -47,6 +47,7 @@ PAGES = [
         "Wavelet-based" => "constrained/wls.md",
         "Multidimensional surrogates" => "constrained/multidim.md",
         "Surrogates for irregular timeseries" => "constrained/irregular_surrogates.md",
+        "Surrogates for nonstationary timeseries" => "constrained/nonstationary.md"
     ],
     "Utility systems" => "man/exampleprocesses.md"
 ]
