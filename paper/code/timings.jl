@@ -1,5 +1,6 @@
 using Pkg; Pkg.activate("./"); Pkg.instantiate();
-using TimeseriesSurrogates, Plots, Distributions, DynamicalSystems, Random; gr()
+using TimeseriesSurrogates, BenchmarkTools, Plots, Distributions, DynamicalSystems, Random;
+gr()
 
 # Here, we compute the mean time to generate a single surrogate for each of the methods 
 # implemented in TimeseriesSurrogates.jl at the time of submission to JOSS. 
@@ -58,7 +59,7 @@ mean time to generate a surrogate.
 function time_n(methods; n = 100)
     benchmarks = zeros(length(methods))
     for (i, surrogen) in enumerate(methods)
-        benchmarks[i] = @elapsed generate_surrs(surrogen, n)
+        benchmarks[i] = @belapsed generate_surrs($surrogen, $n)
     end
     
     return benchmarks ./ n
