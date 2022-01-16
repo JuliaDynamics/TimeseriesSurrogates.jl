@@ -23,7 +23,7 @@ all_conceivable_methods = [
     RandomFourier(true)
     RandomFourier(false)
     CycleShuffle()
-    LS(t, tol = 10, n_total = 50000, n_acc = 10000)
+    LS(t; tol = 10, n_total = 50000, n_acc = 10000)
 ]
 
 methodnames = [string(nameof(typeof(x))) for x in all_conceivable_methods]
