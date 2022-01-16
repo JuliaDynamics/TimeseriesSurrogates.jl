@@ -9,9 +9,6 @@ or we need to use algorithms, which take the irregularity of the time axis into 
 The LS surrogate is a form of a constrained surrogate which takes the Lomb-Scargle periodogram to derive surrogates with similar phase distribution as the original time series.
 This function uses the simulated annealing algorithm to compute a minima of the difference between the original periodogram and the surrogate periodogram.
 
-```@docs
-LS
-```
 
 ```@example
 using TimeseriesSurrogates, Plots

@@ -37,6 +37,7 @@ PseudoPeriodic
 PseudoPeriodicTwin
 WLS
 ShuffleDimensions
+LS
 ```
 
 ### Utils
