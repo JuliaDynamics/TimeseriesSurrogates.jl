@@ -2,6 +2,7 @@ module TimeseriesSurrogates
 
 using Random
 using Distributions
+using Distances # Will be used by the LombScargle method
 using StatsBase
 using InplaceOps
 using AbstractFFTs
@@ -29,6 +30,9 @@ include("methods/pseudoperiodic.jl")
 include("methods/pseudoperiodic_twin.jl")
 include("methods/multidimensional.jl")
 include("methods/ar.jl")
+
+# Methods for irregular time series
+include("methods/lombscargle.jl")
 
 # Visualization routine for time series + surrogate + periodogram/acf/histogram
 using Requires
