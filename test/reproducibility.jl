@@ -1,9 +1,10 @@
 using Random
-N = 1000
+N = 500
 ts = cumsum(randn(N))
 ts_nan = cumsum(randn(N))
 ts_nan[1] = NaN
 x = cos.(range(0, 20π, length = N)) .+ randn(N)*0.05
+t = (0:N-1) + rand(N)
 
 all_conceivable_methods = [
     WLS()
@@ -22,6 +23,7 @@ all_conceivable_methods = [
     RandomFourier(true)
     RandomFourier(false)
     CycleShuffle()
+    LS(t; tol = 10, n_total = 50000, n_acc = 10000)
 ]
 
 methodnames = [string(nameof(typeof(x))) for x in all_conceivable_methods]
