@@ -4,6 +4,8 @@ tags:
   - Julia
   - surrogate data
   - time series
+  - nonlinear time series analysis
+  - hypothesis testing
 authors:
   - name: Kristian Agasøster Haaga
     orcid: 0000-0001-6880-8725
