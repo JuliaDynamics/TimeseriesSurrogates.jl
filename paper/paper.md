@@ -53,34 +53,30 @@ Surrogate data has been used in several thousand publications so far (citation n
 Documentation strings for the various methods describe the usage intended by the original authors of the methods.
 Example applications are showcased in the [package documentation](https://juliadynamics.github.io/TimeseriesSurrogates.jl/dev/).
 
-# Design for a concise yet fast API
-# TODO: this section can be reduced
-When creating surrogate timeseries, it is very often the case that the user wants to create 1000s of surrogates for an input timeseries and input surrogate method.
-Because of this requirement, generating a surrogate should be as fast as possible, while still allowing an easy to use interface that remains extendable.
-The design of TimeseriesSurrogates.jl is centered around these requirements.
+# Design of TimeseriesSurrogates.jl
+TimeseriesSurrogates.jl has been designed to be as performant as possible and as simple to extend as possible.
+
 At a first level, we offer a function
 ```julia
 method = RandomShuffle() # can be any valid method
-s = surrogate(x, method)
+s = surrogate(x, method, rng)
 ```
-which creates a surrogate `s` based on the input `x` and the given method (any of the methods mentioned in the above section).
+which creates a surrogate `s` based on the input `x` and the given method (any of the methods mentioned in the above section). `rng` is an optional random number generation object that establishes reproducibility.
+
 This interface is easily extendable because it uses Julia's multiple dispatch on the given `method`.
 Thus, any new contribution of a new method uses the exact same interface, but introduces a new method type, e.g.
 ```julia
 m = NewContributedMethod(args...)
-s = surrogate(x, method)
+s = surrogate(x, method, rng)
 ```
-As a side-benefit, this makes different methods being *arguments of a function*, instead of being *different functions*.
-The latter is the approach of other packages, e.g. `randomshuffle(x), randomfourier(x), iafft(x)` are different functions that generate surrogates based on different methods.
-We believe our approach is simpler to learn and makes it much easier to compare same higher level algorithms for different input surrogate methods.
 
 The function `surrogate` is straight-forward to use, but it does not allow maximum performance.
-The reason for this is that when trying to make a second surrogate from `x` and the same method, there are many structures and computations that could be pre-initialized and/or reused for all surrogates.
-To this end, we provide a second level of interface, the `surrogenerator` function.
+The reason for this is that when trying to make a second surrogate from `x` and the same method, there are many structures and computations that could be pre-initialized and/or reused for all surrogates. This is especially relevant for real-world applications where one typically makes thousands of surrogates from a given method.
+To address this, we provide a second level of interface, the `surrogenerator` function.
 It works as follows: first the user initializes a "surrogate generator" structure:
 ```julia
 method = RandomShuffle()
-sg = surrogenerator(x, method)
+sg = surrogenerator(x, method, rng)
 ```
 The structure `sg` can generate surrogates of `x` on demand in the most performant manner possible for the given inputs `x, method`.
 It can be used like so:
@@ -90,39 +86,12 @@ for i in 1:100
     # code...
 end
 ```
-Depending on the type of the method, the interface around `surrogenerator` can have massive performance gains.
-Let us demonstrate the performance difference between naively calling `surrogate` in a loop and using the `surrogenerator` method for e.g. a truncated Fourier transform method
 
-```julia
-using TimeseriesSurrogates
-n, a, A, σ = 300, 0.7, 20, 15
-x = cumsum(randn(n)) .+ [(1 + a*i) .+ A*sin(2π/10*i) for i = 1:n] .+
-    [A^2*sin(2π/2*i + π) for i = 1:n] .+ σ .* rand(n).^2;
+# Comparison
+# TODO: 
+we have more methods than the matlab and python packages. 
 
-method = TFTS(0.05)
-
-@time for j in 1:10000
-  s = surrogate(x, method)
-end
-```
-```
-  8.203013 seconds (14.96 M allocations: 1.861 GiB, 6.24% gc time)
-```
-
-versus:
-
-```julia
-@time begin
-  sg = surrogenerator(x, method)
-  for j in 1:10000
-    s = sg()
-  end
-end
-```
-```
-  1.839767 seconds (12.12 M allocations: 1.450 GiB, 19.25% gc time)
-```
-This means that we can get a factor of 5 speedup simply from a smart design choice which allows us to re-use computation and memory when making surrogates. Average times to construct single surrogates after initialization of the surrogate generators are summarized in Figure 1.
+Then, figure with performance comparison versus matlab
 
 ![Figure 1: Mean time (in seconds, based on 30 realizations) to generate a single surrogate using a pre-initialized generators for currently implemented surrogate methods in TimeseriesSurrogates.jl, using default parameters. The maximum number of iterations for the IAAFT algorithm is set to 100. A Juputer notebook in which results can be reproduced is available in the GitHub repo for this paper.](figs/mean_times_in_seconds.png)
 
