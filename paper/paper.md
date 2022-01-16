@@ -93,9 +93,10 @@ end
 # TODO: 
 we have more methods than the matlab and python packages. 
 
-Then, figure with performance comparison versus matlab
+The average time to generate surrogates in TimeseriesSurrogates.jl is faster or roughly equivalent to 
+the MATLAB surrogate code provided by Lancaster et al. (2018)[@Lancaster:2018], though comparisons are not exact, due to differing implementations and tuning options. Timings for commonly used surrogate methods that are common to both libraries are shown in Figure 1.
 
-![Figure 1: Mean time (in seconds, based on 30 realizations) to generate a single surrogate using a pre-initialized generators for currently implemented surrogate methods in TimeseriesSurrogates.jl, using default parameters. The maximum number of iterations for the IAAFT algorithm is set to 100. A Juputer notebook in which results can be reproduced is available in the GitHub repo for this paper.](figs/mean_times_in_seconds.png)
+![Figure 1: Mean time (in seconds, based on 100 realizations) to generate a single surrogate using a pre-initialized generators for currently implemented surrogate methods in TimeseriesSurrogates.jl,  using default parameters, with the maximum number of iterations for the IAAFT algorithm is set to 100. MATLAB timing are generated using the code provided by Lancaster et al. (2018)[@Lancaster:2018]. Julia and MATLAB scripts to reproduce timings are available in the GitHub repo for this paper. Note: timings for the pseudoperiodic surrogates in matlab include embedding lag and dimension finding, which has been included in the preprocessing step in the Julia version.](figs/timings.png)
 
 # Acknowledgements
 
