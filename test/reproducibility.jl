@@ -22,6 +22,8 @@ all_conceivable_methods = [
     TAAFT(-0.05)
     RandomFourier(true)
     RandomFourier(false)
+    TFTDRandomFourier(true)
+    TFTDRandomFourier(false)
     CycleShuffle()
     LS(t; tol = 10, n_total = 50000, n_acc = 10000)
 ]

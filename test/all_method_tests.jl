@@ -143,6 +143,24 @@ end
     end
 end
 
+@testset "TFTDRandomFourier" begin
+    @testset "random phases" begin
+        phases = true
+        rf = TFTDRandomFourier(phases)
+        s = surrogate(x, rf)
+
+        @test length(s) == length(x)
+    end
+
+    @testset "random amplitudes" begin
+        phases = false
+        rf = TFTDRandomFourier(phases)
+        s = surrogate(x, rf)
+
+        @test length(s) == length(x)
+    end
+end
+
 @testset "Circ/Cycle shuffle" begin
 	x = random_cycles()
 	s = surrogate(x, CycleShuffle())
