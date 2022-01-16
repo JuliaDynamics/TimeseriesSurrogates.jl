@@ -8,6 +8,16 @@ ts_nan = cumsum(randn(N))
 ts_nan[1] = NaN
 x = cos.(range(0, 20π, length = N)) .+ randn(N)*0.05
 
+@testset "LombScargle" begin
+    t = sort((0:N-1) + rand(N))
+    tol = 5
+    ls = LS(t, tol = tol)
+
+    s = surrogate(x, ls)
+
+    @test all(sort(s) .== sort(x))
+end
+
 @testset "WLS" begin
     wts = WLS()
     wts = WLS(AAFT())
