@@ -27,27 +27,27 @@ struct AutoRegressive{M} <: Surrogate
 end
 AutoRegressive(n::Int) = AutoRegressive(n, LPCLevinson())
 
-function surrogenerator(x, method::AutoRegressive)
+function surrogenerator(x, method::AutoRegressive, rng = Random.default_rng())
     φ, e = lpc(x, method.n, method.m)
     init = (d = Normal(0, std(x)), φ = φ)
-    return SurrogateGenerator(method, x, init)
+    return SurrogateGenerator(method, x, init, rng)
 end
 
 function (sg::SurrogateGenerator{<:AutoRegressive})()
     N, φ, d = length(sg.x), sg.init.φ, sg.init.d
-    return autoregressive(d, N, φ)
+    return autoregressive(d, N, φ, sg.rng)
 end
 
-function autoregressive(d::Normal{T}, N, φ) where {T}
+function autoregressive(d::Normal{T}, N, φ, rng) where {T}
     f = length(φ)
     z = zeros(T, N+f)
-    @inbounds for i in 1:f; z[i] = rand(d); end
+    @inbounds for i in 1:f; z[i] = rand(rng, d); end
     @inbounds for i in f+1:length(z)
         s = zero(T)
         for j in 1:f
             s += φ[j]*z[i-j]
         end
-        s += rand(d)
+        s += rand(rng, d)
         z[i] = s
     end
     return view(z, f+1:N+f)

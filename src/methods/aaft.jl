@@ -15,9 +15,9 @@ monotonic nonlinear transformation of a linear Gaussian process
 """
 struct AAFT <: Surrogate end
 
-function surrogenerator(x, method::AAFT)
-    init = surrogenerator(x, RandomFourier(true))
-    return SurrogateGenerator(method, x, init)
+function surrogenerator(x, method::AAFT, rng = Random.default_rng())
+    init = surrogenerator(x, RandomFourier(true), rng)
+    return SurrogateGenerator(method, x, init, rng)
 end
 
 function (rf::SurrogateGenerator{<:AAFT})()

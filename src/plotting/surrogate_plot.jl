@@ -68,8 +68,8 @@ function surroplot(x, s; W = 100, gfs = 8, lfs = 6,
     l = Plots.@layout [a{0.3h}; b{0.25h}; c{0.25h}; d{0.2h}]
     Plots.plot(p1, p2, p3, p4;
                 layout = l,
-                guidefont = (gfs, gfs, gfs, gfs),
-                legendfont = (lfs, lfs, lfs, lfs),
+                guidefont = Plots.font(gfs),
+                legendfont = Plots.font(lfs),
                 size = size,
                 kwargs...
                 )
