@@ -29,7 +29,7 @@ end
 
 Base.show(io::IO, x::IAAFT) = print(io, "IAAFT(M=$(x.M), tol=$(x.tol), W=$(x.W))")
 
-function surrogenerator(x, method::IAAFT)
+function surrogenerator(x, method::IAAFT, rng = Random.default_rng())
     # Pre-plan Fourier transforms
     forward = plan_rfft(x)
     inverse = plan_irfft(forward*x, length(x))
@@ -54,7 +54,7 @@ function surrogenerator(x, method::IAAFT)
             px_binned = px_binned, range = range, x_sorted = x_sorted,
             𝓕new = 𝓕new, 𝓕sorted =  𝓕sorted, ϕsorted = ϕsorted)
 
-    return SurrogateGenerator(method, x, init)
+    return SurrogateGenerator(method, x, init, rng)
 end
 
 function (sg::SurrogateGenerator{<:IAAFT})()
@@ -79,7 +79,7 @@ function (sg::SurrogateGenerator{<:IAAFT})()
     # increasing amplitude. Then sort the original time series according to
     # the indices rendering the Gaussian noise sorted.
     n = length(x)
-    g = rand(Normal(), n)
+    g = rand(sg.rng, Normal(), n)
     ts_sorted = x[sortperm(g)]
 
     # The surrogate

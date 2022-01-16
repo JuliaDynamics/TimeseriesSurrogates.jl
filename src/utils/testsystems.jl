@@ -1,4 +1,4 @@
-export NLNS, NSAR2, AR1, randomwalk, SNLST
+export NLNS, NSAR2, AR1, randomwalk, SNLST, random_cycles
 
 """
     AR1(n_steps, x₀, k)
@@ -116,3 +116,26 @@ AR1(;n_steps = 500, x₀ = rand(), k = rand())    = AR1(n_steps, x₀, k)
 SNLST(;n_steps = 500, x₀ = rand(), k = rand())  = SNLST(n_steps, x₀, k)
 randomwalk(;n_steps = 500, x₀ = rand())         = randomwalk(n_steps, x₀)
 NSAR2(;n_steps = 500, x₀ = rand(), x₁ = rand()) = NSAR2(n_steps, x₀, x₁)
+
+
+"""
+    random_cycles(; periods=10 dt=π/20, σ = 0.05, frange = (0.8, 2.0))
+Make a timeseries that is composed of `period` full sine wave periods, each with a
+random frequency in the range given by `frange`, and added noise with std `σ`.
+The sampling time is `dt`.
+"""
+function random_cycles(; periods=10, dt=π/20, σ = 0.05, frange = (1.0, 1.6))
+    dt = π/20
+    x = Float64[]
+
+    for i in 1:periods
+        f = (frange[1]-frange[2])*rand() + frange[1]
+        T = 2π/f
+        t = 0:dt:T
+        append!(x, sin.(f .* t))
+    end
+
+    N = length(x)
+    x .+= randn(N)/20
+    return x
+end

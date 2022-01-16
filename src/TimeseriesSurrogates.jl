@@ -1,8 +1,6 @@
 module TimeseriesSurrogates
 
-# TODO: I think it is more clear when each file uses the packages it needs instead of
-# the global usage here. It makes it easier to understand how each algorithm works
-# and what it needs
+using Random
 using Distributions
 using Distances # Will be used by the LombScargle method
 using StatsBase
@@ -22,13 +20,16 @@ include("utils/interpolation.jl")
 
 # The different surrogate routines
 include("methods/randomshuffle.jl")
-include("methods/blockshuffle.jl")
+include("methods/large_shuffle.jl")
 include("methods/randomfourier.jl")
 include("methods/aaft.jl")
 include("methods/iaaft.jl")
 include("methods/truncated_fourier.jl")
 include("methods/wavelet_based.jl")
 include("methods/pseudoperiodic.jl")
+include("methods/pseudoperiodic_twin.jl")
+include("methods/multidimensional.jl")
+include("methods/ar.jl")
 
 # Methods for irregular time series
 include("methods/lombscargle.jl")

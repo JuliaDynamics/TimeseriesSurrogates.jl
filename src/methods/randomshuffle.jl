@@ -21,11 +21,11 @@ identically distributed random variables[^Theiler1991, ^Lancaster2018].
 """
 struct RandomShuffle <: Surrogate end
 
-function surrogenerator(x::AbstractVector, rf::RandomShuffle)
-    return SurrogateGenerator(rf, x, nothing)
+function surrogenerator(x::AbstractVector, rf::RandomShuffle, rng = Random.default_rng())
+    return SurrogateGenerator(rf, x, nothing, rng)
 end
 
 function (rf::SurrogateGenerator{<:RandomShuffle})()
     n = length(rf.x)
-    rf.x[sample(1:n, n, replace = false)]
+    rf.x[sample(rf.rng, 1:n, n; replace = false)]
 end

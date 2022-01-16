@@ -4,7 +4,9 @@ CI = get(ENV, "CI", nothing) == "true" || get(ENV, "GITHUB_TOKEN", nothing) !== 
 CI && Pkg.activate(@__DIR__)
 CI && Pkg.instantiate()
 CI && (ENV["GKSwstype"] = "100")
+
 using TimeseriesSurrogates
+using DynamicalSystems
 using Random
 using Distributions
 using Plots
@@ -41,7 +43,10 @@ PAGES = [
         "Truncated FT/AAFT" => "constrained/truncated_fourier_transform.md",
         "Pseudo-periodic" => "constrained/pps.md",
         "Wavelet-based" => "constrained/wls.md",
-        "Surrogates for Irregular Timeseries" => "constrained/irregular_surrogates.md"
+        "Pseudo-periodic twin" => "constrained/ppts.md",
+        "Wavelet-based" => "constrained/wls.md",
+        "Multidimensional surrogates" => "constrained/multidim.md",
+        "Surrogates for irregular timeseries" => "constrained/irregular_surrogates.md",
     ],
     "Utility systems" => "man/exampleprocesses.md"
 ]
