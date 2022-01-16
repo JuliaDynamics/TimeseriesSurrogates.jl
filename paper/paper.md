@@ -44,6 +44,9 @@ Surrogate data has been used in several thousand publications so far (citation n
 | `RandomShuffling` | random shuffling of individual data points | [@Theiler:1991] |
 | `BlockShuffle`  | random shuffling of blocks of data points  | [@Theiler:1991] |
 | `RandomFourier`  | randomization of phases of Fourier transform of the signal  | [@Theiler:1991] |
+| `CycleShuffle`  | randomization of phases of Fourier transform of the signal  | [@Theiler:1995] |
+| `CircShift`  | circularly shift the signal  | |
+| `ShuffleDimensions`  | circularly shift the signal  | This paper. |
 | `AAFT`  | amplitude adjusted `RandomFourier`  | [@Theiler:1991] |
 | `IAAFT`  | iterative amplitude adjusted `RandomFourier`  | [@SchreiberSchmitz:1996] |
 | `TFTS`  | truncated Fourier transform phase randomization  | [@Nakamura:2006] |
@@ -51,6 +54,8 @@ Surrogate data has been used in several thousand publications so far (citation n
 | `WLS`  | wavelet-based methods using maximal overlap discrete wavelet transforms | [@Keylock:2006] |
 | `WIAAFT`  | wavelet-based iterative amplitude adjusted transforms | [@Keylock:2006] |
 | `PseudoPeriodic`  | randomization of phases of Fourier transform of the signal  | [@Small:2001] |
+| `PseudoPeriodicTwin`  | combination of pseudoperiodic and twin surrogates  | [Miralles2015] |
+| `LS`  | Lomb-Scargle periodogram based surrogates for irregular time grids  | [Schmitz:1999] |
 
 Documentation strings for the various methods describe the usage intended by the original authors of the methods.
 Example applications are showcased in the [package documentation](https://juliadynamics.github.io/TimeseriesSurrogates.jl/dev/).
