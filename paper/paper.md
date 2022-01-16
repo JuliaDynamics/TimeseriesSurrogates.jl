@@ -25,25 +25,30 @@ bibliography: paper.bib
 ---
 
 # Introduction
-
 The method of surrogate data [@Theiler:1991] is a way to generate data that preserve one or more statistical or dynamical properties of a signal, but is otherwise randomized. One can thus generate synthetic time series that "look like" or behave like the original data in some manner, but are otherwise random. Surrogate time series methods have widespread use in null hypothesis testing in nonlinear dynamics, for null hypothesis testing in causal inference, for the more general case of producing synthetic data with similar statistical properties as an original signal. Originally introduced by @Theiler:1991 to test for nonlinearity in time series, numerous surrogate methods aimed preserving different properties of the original signal have since emerged (for a review, see @Lancaster:2018).
 
 TimeseriesSurrogates.jl is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a GitHub organization dedicated to creating high quality scientific software for studying dynamical system.
 
 # Statement of Need
-Surrogate data has been used in several thousand publications so far (citation number of [@Theiler:1991] is more than 4,000) and hence the community is in clear need of such methods. Existing software for such methods provide much less methods than available in the literature, and with less-than optimal performance (see Comparison section below). TimeseriesSurrogates.jl provides more than double the amount of methods given by other packages in more than 100x the speed.
+Surrogate data has been used in several thousand publications so far (citation number of [@Theiler:1991] is more than 4,000) and hence the community is in clear need of such methods. Existing software packages for surrogate generation provide much less methods than available in the literature, and with less-than optimal performance (see Comparison section below). TimeseriesSurrogates.jl provides more than double the amount of methods given by other packages in more than 100x the speed.
 
 
 # Available surrogate methods
-# TODO: This section can be made more concise and each bullet point should least a single method. Perhaps even better to make this section a table
 
-TimeseriesSurrogates.jl is a software package for the Julia programming language [@Bezanson:2017] that provides performant implementations of commonly used surrogate methods, using an easily extendable interface.  As of the 1.0 release of the package, supported methods include:
+# TODO: There are several methods missing here
 
-- Basic methods based on random shuffling[@Theiler:1991] and random block shuffling.
-- For preserving linear properties of the signal --- the autocorrelation function or power spectrum of the data --- several algorithms based on Fourier phase randomization are provided: random Fourier phase surrogates [@Theiler:1991], amplitude-ajusted Fourier transform (AAFT)[@Theiler:1991] and iterative AAFT (IAAFT) surrogates[@SchreiberSchmitz:1996]. These methods are aimed at stationary data.
-- For nonstationary data, we provide modifications of the Fourier transform based surrogates where parts of the frequencies are left untouched, such as truncated Fourier transform surrogates (TFTS) and truncated AAFT (TAAFT) surrogates[@Nakamura:2006].
-- Wavelet-based surrogates (WLS) surrogates are computed by taking the maximal overlap discrete wavelet transform (MODWT) of a signal, then randomizing the detail coefficients at each dyadic scale using some strategy, and finally taking the inverse MODWT to obtain a surrogate time series. In our implementation, the user controls the detail coefficient randomization and rescaling, yielding a variety of different wavelet based surrogate methods, including the wavelet-IAAFT surrogate method (WIAAFT)[@Keylock:2006].
-- Pseudoperiodic surrogates (PPS)[@Small:2001].
+| Method | Description | Reference |
+|---|---|---|
+| `RandomShuffling` | random shuffling of individual data points | [@Theiler:1991] |
+| `BlockShuffle`  | random shuffling of blocks of data points  | [@Theiler:1991] |
+| `RandomFourier`  | randomization of phases of Fourier transform of the signal  | [@Theiler:1991] |
+| `AAFT`  | amplitude adjusted `RandomFourier`  | [@Theiler:1991] |
+| `IAAFT`  | iterative amplitude adjusted `RandomFourier`  | [@SchreiberSchmitz:1996] |
+| `TFTS`  | truncated Fourier transform phase randomization  | [@Nakamura:2006] |
+| `TAAFT`  | iterative `TFTS` | [@Nakamura:2006] |
+| `WLS`  | wavelet-based methods using maximal overlap discrete wavelet transforms | [@Keylock:2006] |
+| `WIAAFT`  | wavelet-based iterative amplitude adjusted transforms | [@Keylock:2006] |
+| `PseudoPeriodic`  | randomization of phases of Fourier transform of the signal  | [@Small:2001] |
 
 Documentation strings for the various methods describe the usage intended by the original authors of the methods.
 Example applications are showcased in the [package documentation](https://juliadynamics.github.io/TimeseriesSurrogates.jl/dev/).
