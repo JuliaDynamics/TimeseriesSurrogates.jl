@@ -41,12 +41,14 @@ end
 
 function surrogenerator(x::AbstractVector, rf::TFTDRandomFourier, rng = Random.default_rng())
     # Detrended time series
+    m = mean(x)
     trend = linear_trend(x)
-    x̂ = x .- trend
+
+    x̂ = x .- m .- trend
 
     # Pre-plan Fourier transforms
     forward = plan_rfft(x̂)
-    inverse = plan_irfft(forward*x̂, length(x̂))
+    inverse = plan_irfft(forward * x̂, length(x̂))
  
     # Pre-compute 𝓕
     𝓕 = forward*x̂
@@ -62,7 +64,7 @@ function surrogenerator(x::AbstractVector, rf::TFTDRandomFourier, rng = Random.d
     ϕs = Vector{Complex{Float64}}(undef, length(𝓕))
  
     init = (forward = forward, inverse = inverse,
-        rx = rx, ϕx = ϕx, n = n,
+        rx = rx, ϕx = ϕx, n = n, m = m,
         𝓕new = 𝓕new, 𝓕s = 𝓕s, ϕs = ϕs, 
         trend = trend, x̂ = x̂)
 
@@ -73,11 +75,11 @@ function (sg::SurrogateGenerator{<:TFTDRandomFourier})()
     fϵ = sg.method.fϵ
 
     init_fields = (:forward, :inverse,
-        :rx, :ϕx, :n,
+        :rx, :ϕx, :n, :m,
         :𝓕new, :𝓕s, :ϕs, :trend, :x̂)
 
     forward, inverse,
-        rx, ϕx, n,
+        rx, ϕx, n, m,
         𝓕new, 𝓕s, ϕs, trend, x̂ = getfield.(Ref(sg.init), init_fields)
 
     # Surrogate starts out as a random permutation of x̂
@@ -95,5 +97,5 @@ function (sg::SurrogateGenerator{<:TFTDRandomFourier})()
     # Updated spectrum is the old amplitudes with the mixed phases.
     𝓕new .= rx .* exp.(ϕs .* 1im)
 
-    return inverse*𝓕new .+ trend
+    return inverse*𝓕new .+ m .+ trend
 end
