@@ -4,7 +4,6 @@ using Random
 using Distributions
 using Distances # Will be used by the LombScargle method
 using StatsBase
-using InplaceOps
 using AbstractFFTs
 using DSP
 using Interpolations
