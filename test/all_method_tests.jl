@@ -2,7 +2,7 @@ using Test
 using TimeseriesSurrogates
 ENV["GKSwstype"] = "100"
 
-N = 1000
+N = 500
 ts = cumsum(randn(N))
 ts_nan = cumsum(randn(N))
 ts_nan[1] = NaN
