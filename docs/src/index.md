@@ -34,6 +34,7 @@ TAAFT
 IAAFT
 AutoRegressive
 PseudoPeriodic
+PseudoPeriodicTwin
 WLS
 ShuffleDimensions
 ```

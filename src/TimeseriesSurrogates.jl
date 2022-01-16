@@ -26,6 +26,7 @@ include("methods/iaaft.jl")
 include("methods/truncated_fourier.jl")
 include("methods/wavelet_based.jl")
 include("methods/pseudoperiodic.jl")
+include("methods/pseudoperiodic_twin.jl")
 include("methods/multidimensional.jl")
 include("methods/ar.jl")
 
