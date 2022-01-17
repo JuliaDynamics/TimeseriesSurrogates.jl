@@ -22,19 +22,19 @@ s1, s2 = columns(surr_orbit)
 
 # Scalar time series versus surrogate time series
 fig = Figure()
-ax_ts = Axis(fog[1,:]; xlabel = "time", ylabel = "value")
-lines!(ax_ts, s1; c = :red)
-lines!(ax_ts, x; c = :black)
+ax_ts = Axis(fig[1,1:2]; xlabel = "time", ylabel = "value")
+lines!(ax_ts, s1; color = :red)
+lines!(ax_ts, x; color = :black)
 
 # Embedding versus surrogate embedding
 X = embed(x, d, τ)
 ax2 = Axis(fig[2, 1]; xlabel = "x(t)", ylabel = "x(t-$τ)")
-lines!(ax2, X[:, 1], X[:, 2]; c = :black)
-scatter!ax2, (X[:, 1], X[:, 2]; c = :black)
+lines!(ax2, X[:, 1], X[:, 2]; color = :black)
+scatter!(ax2, X[:, 1], X[:, 2]; color = :black, markersize = 4)
 
 ps = Axis(fig[2,2]; xlabel=  "s(t)", ylabel = "s(t-$τ)")
-lines!(ps, s1, s2; c = :red)
-scatter!(ps, s1, s2; c = :red)
+lines!(ps, s1, s2; color = :red)
+scatter!(ps, s1, s2; color = :black, markersize = 4)
 
 fig
 ```

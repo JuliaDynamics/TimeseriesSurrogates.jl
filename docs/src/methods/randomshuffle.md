@@ -9,7 +9,6 @@ Thus, they break any correlations in the signal.
 ```@example MAIN
 using TimeseriesSurrogates, CairoMakie
 x = AR1() # create a realization of a random AR(1) process
-phases = true
 s = surrogate(x, RandomShuffle())
 surroplot(x, s)
 ```
