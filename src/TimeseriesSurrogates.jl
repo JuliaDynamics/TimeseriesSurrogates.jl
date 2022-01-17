@@ -40,6 +40,9 @@ function __init__()
     @require UncertainData="dcd9ba68-c27b-5cea-ae21-829cd07325bf" begin
         include("utils/uncertaindatasets.jl")
     end
+    @require Makie="ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a" begin
+        include("plotting/surrogate_plot.jl")
+    end
 end
 
 export surroplot_path

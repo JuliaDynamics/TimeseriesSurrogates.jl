@@ -9,7 +9,7 @@ using TimeseriesSurrogates
 using DynamicalSystems
 using Random
 using Distributions
-using CairoMakie
+using CairoMakie, Makie
 using Documenter
 using DocumenterTools: Themes
 

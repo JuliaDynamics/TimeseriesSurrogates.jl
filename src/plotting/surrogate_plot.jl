@@ -2,22 +2,19 @@ using TimeseriesSurrogates.StatsBase
 using TimeseriesSurrogates.DSP
 
 """
-    surroplot(x, s; W = 100, gfs = 8, lfs = 6, 
-        cx = :black, cs = :red, size = (400, 600); kwargs...
-    )
+    surroplot(x, s; kwargs...)
 
 Plot a timeseries `x` along with its surrogate realization `s`, and compare the
 periodogram and histogram of the two time series.
 
 ## Keyword arguments 
-- `gfs` and `lfs`: Fontsizes of the guides and legends, respectively.
 - `cx` and `cs`: Colors of the original and the surrogate time series, respectively.
 - `nbins`: The number of bins for the histograms. 
 - `resolution`: A tuple giving the resolution of the figure.
 """
 function surroplot(x, s;
         cx = "#1B1B1B", cs = ("#2DB9C5", 0.9), resolution = (500, 600), 
-        nbins = 50, kwargs...
+        nbins = 50,
     )
     
     t = 1:length(x)
@@ -53,3 +50,4 @@ function surroplot(x, s;
     ax4.ylabel = "histogram"
     return fig
 end
+export surroplot

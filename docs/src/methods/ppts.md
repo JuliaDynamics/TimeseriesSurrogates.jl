@@ -1,7 +1,7 @@
 # Pseudo-periodic twin surrogates
 
 ```@example MAIN
-using TimeseriesSurrogates, DynamicalSystems, CairoMakie
+using TimeseriesSurrogates, DynamicalSystems, CairoMakie, Makie
 
 # Example system from the original paper
 n, Δt = 500, 0.05

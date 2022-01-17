@@ -48,13 +48,14 @@ noiseradius
 
 ## Visualization
 
-TimeseriesSurrogates.jl has defined a simple function `surroplot(x, s)`. But this is not exported nor even included in the code. It requires any package of the Makie.jl ecosystem already loaded to work.
+TimeseriesSurrogates.jl has defined a simple function `surroplot(x, s)`.
+This comes into scope when `using Makie` (you also need a plotting backend).But this is not exported nor even included in the code. It requires any package of the Makie.jl ecosystem already loaded to work.
 
 To load the function, do:
 ```@example MAIN
 using TimeseriesSurrogates
-using CairoMakie # hide
-include(surroplot_path())
+using CairoMakie, Makie
+# surroplot(x, s) # for signal x and surrogate s
 ```
 
 ## References
