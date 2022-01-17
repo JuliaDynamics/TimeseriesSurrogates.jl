@@ -3,7 +3,7 @@ using LombScargle, Distances
 export LS
 
 """
-    LS(t; tol = 1, n_total = 20000, n_acc = 5000, q = 1)
+    LS(t; tol = 1, n_total = 10000, n_acc = 1000, q = 1)
 
 Compute a surrogate of an unevenly sampled time series with supporting time steps `t` based on 
 the simulated annealing algorithm described in [^SchreiberSchmitz1999].
@@ -29,7 +29,7 @@ struct LS{T<:AbstractVector, S<:Real} <: Surrogate
     q::Int
 end
 
-LS(t; tol = 1.0, n_total = 50000, n_acc = 5000, q = 1) = LS(t, tol, n_total, n_acc, q)
+LS(t; tol = 1.0, n_total = 10000, n_acc = 1000, q = 1) = LS(t, tol, n_total, n_acc, q)
 
 
 function surrogenerator(x, method::LS, rng = Random.default_rng())

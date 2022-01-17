@@ -3,8 +3,8 @@
 ## AAFT
 
 
-```@example
-using TimeseriesSurrogates, Plots
+```@example MAIN
+using TimeseriesSurrogates, CairoMakie, Makie
 ts = AR1() # create a realization of a random AR(1) process
 s = surrogate(ts, AAFT())
 
@@ -15,8 +15,8 @@ surroplot(ts, s)
 
 The IAAFT surrogates add an iterative step to the AAFT algorithm improve convergence.
 
-```@example
-using TimeseriesSurrogates, Plots
+```@example MAIN
+using TimeseriesSurrogates, CairoMakie, Makie
 ts = AR1() # create a realization of a random AR(1) process
 s = surrogate(ts, IAAFT())
 

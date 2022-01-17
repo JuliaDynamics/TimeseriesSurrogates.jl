@@ -6,7 +6,7 @@ Truncated Fourier transform surrogates preserve some portion of the frequency sp
 the original signal. Here, we randomize the 95% highest frequencies, while keeping the
 5% lowermost frequencies intact.
 
-```@example
+```@example MAIN
 using TimeseriesSurrogates
 n = 300
 a = 0.7
@@ -25,7 +25,7 @@ One may also choose to preserve the opposite end of the frequency spectrum. Belo
 we randomize the 20% lowermost frequencies, while keeping the 80% highest frequencies
 intact.
 
-```@example
+```@example MAIN
 using TimeseriesSurrogates
 n = 300
 a = 0.7
@@ -45,7 +45,7 @@ Truncated AAFT surrogates are similar to TFTS surrogates, but adds the extra ste
 to the original values of the signal, so that the original signal and the surrogates consists of
 the same values.
 
-```@example
+```@example MAIN
 using TimeseriesSurrogates
 n = 300
 a = 0.7
@@ -61,7 +61,7 @@ surroplot(x, s_tfts)
 ```
 
 
-```@example
+```@example MAIN
 using TimeseriesSurrogates
 n = 300
 a = 0.7
