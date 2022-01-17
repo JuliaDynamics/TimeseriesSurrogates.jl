@@ -54,8 +54,7 @@ To load the function, do:
 ```@example MAIN
 using TimeseriesSurrogates
 using CairoMakie # hide
-path = joinpath(pathof(TimeseriesSurrogates), "plotting", "surrogate_plot.jl")
-include(path)
+include(surroplot_path())
 ```
 
 ## References

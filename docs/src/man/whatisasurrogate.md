@@ -26,7 +26,7 @@ alike", which is due to the fact the surrogate realization almost exactly preser
 power spectrum and autocorrelation of the time series, as shown in the lower panels.
 
 ```@example
-using TimeseriesSurrogates, Plots
+using TimeseriesSurrogates, CairoMakie
 x = LinRange(0, 20π, 300) .+ 0.05 .* rand(300)
 ts = sin.(x./rand(20:30, 300) + cos.(x))
 s = surrogate(ts, IAAFT())
