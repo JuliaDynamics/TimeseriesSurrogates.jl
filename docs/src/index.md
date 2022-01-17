@@ -40,7 +40,7 @@ ShuffleDimensions
 LS
 ```
 
-### Utils
+### Utilities
 
 ```@docs
 noiseradius
@@ -48,6 +48,14 @@ noiseradius
 
 ## Visualization
 
-TimeseriesSurrogates.jl provides the function `surroplot(x, s)`, which comes into scope when `using Plots`. This function is used in the example applications.
+TimeseriesSurrogates.jl has defined a simple function `surroplot(x, s)`. But this is not exported nor even included in the code. It requires any package of the Makie.jl ecosystem already loaded to work.
+
+To load the function, do:
+```@example MAIN
+using TimeseriesSurrogates
+using CairoMakie # hide
+path = joinpath(pathof(TimeseriesSurrogates), "plotting", "surrogate_plot.jl")
+include(path)
+```
 
 ## References

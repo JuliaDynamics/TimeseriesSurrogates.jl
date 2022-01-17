@@ -1,6 +1,5 @@
 using TimeseriesSurrogates.StatsBase
 using TimeseriesSurrogates.DSP
-using CairoMakie
 
 """
     surroplot(x, s; W = 100, gfs = 8, lfs = 6, 
