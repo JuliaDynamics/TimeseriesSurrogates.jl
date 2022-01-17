@@ -16,7 +16,7 @@ periodogram and histogram of the two time series.
 - `resolution`: A tuple giving the resolution of the figure.
 """
 function surroplot(x, s;
-        cx = "#1B1B1B", cs = ("#6F4AC7", 0.9), resolution = (500, 600), 
+        cx = "#1B1B1B", cs = ("#2DB9C5", 0.9), resolution = (500, 600), 
         nbins = 50, kwargs...
     )
     
@@ -24,7 +24,7 @@ function surroplot(x, s;
     fig = Figure(resolution = resolution)
     
     # Time series
-    ax1, _ = lines(fig[1,1], t, s; color = cx)
+    ax1, _ = lines(fig[1,1], t, x; color = cx)
     lines!(ax1, t, s; color = cs)
     # Autocorrelation
     acx = autocor(x)

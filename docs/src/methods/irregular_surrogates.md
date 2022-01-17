@@ -19,9 +19,9 @@ N = 1000
 t = (1:N) - rand(N) 
 x = AR1(n_steps = N)
 
-# Generate surrogate
-ls = LS(t, tol = 1, N_total = 100000, N_acc = 50000)
-s = surrogate(x, ls)
+ls = LS(t)
+s = surrogate(x, ls)s
+surroplot(x, s)
 
 fig, ax = lines(t, x; label = "original")
 lines!(ax, t, s; label = "surrogate")
