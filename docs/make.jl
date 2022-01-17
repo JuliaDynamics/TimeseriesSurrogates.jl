@@ -36,15 +36,16 @@ PAGES = [
     "Documentation" => "index.md",
     "What is a surrogate?" => "man/whatisasurrogate.md",
     "Example applications" => [
-        "Shuffle-based" => "methods/randomshuffle.md",
-        "Fourier-based" => "methods/fourier_surrogates.md",
-        "Amplitude-adjusted FT" => "methods/amplitude_adjusted.md",
-        "Truncated FT/AAFT" => "methods/truncated_fourier_transform.md",
-        "Pseudo-periodic" => "methods/pps.md",
-        "Pseudo-periodic twin" => "methods/ppts.md",
-        "Wavelet-based" => "methods/wls.md",
-        "Multidimensional surrogates" => "methods/multidim.md",
-        "Surrogates for irregular timeseries" => "methods/irregular_surrogates.md",
+        "Shuffle-based" => "constrained/randomshuffle.md",
+        "Fourier-based" => "constrained/fourier_surrogates.md",
+        "Amplitude-adjusted FT" => "constrained/amplitude_adjusted.md",
+        "Pseudo-periodic" => "constrained/pps.md",
+        "Wavelet-based" => "constrained/wls.md",
+        "Pseudo-periodic twin" => "constrained/ppts.md",
+        "Wavelet-based" => "constrained/wls.md",
+        "Multidimensional surrogates" => "constrained/multidim.md",
+        "Surrogates for irregular timeseries" => "constrained/irregular_surrogates.md",
+        "Surrogates for nonstationary timeseries" => "constrained/nonstationary.md"
     ],
     "Utility systems" => "man/exampleprocesses.md"
 ]

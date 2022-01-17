@@ -30,6 +30,7 @@ include("methods/pseudoperiodic.jl")
 include("methods/pseudoperiodic_twin.jl")
 include("methods/multidimensional.jl")
 include("methods/ar.jl")
+include("methods/trend_based.jl")
 
 # Methods for irregular time series
 include("methods/lombscargle.jl")
