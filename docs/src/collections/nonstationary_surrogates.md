@@ -1,6 +1,5 @@
 # Surrogates for nonstationary time series
 
-
 ## Truncated FT/AAFT surrogates
 
 ### [`TFTS`](@ref)
