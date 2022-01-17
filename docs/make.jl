@@ -40,7 +40,6 @@ PAGES = [
         "Shuffle-based" => "constrained/randomshuffle.md",
         "Fourier-based" => "constrained/fourier_surrogates.md",
         "Amplitude-adjusted FT" => "constrained/amplitude_adjusted.md",
-        "Truncated FT/AAFT" => "constrained/truncated_fourier_transform.md",
         "Pseudo-periodic" => "constrained/pps.md",
         "Wavelet-based" => "constrained/wls.md",
         "Pseudo-periodic twin" => "constrained/ppts.md",
