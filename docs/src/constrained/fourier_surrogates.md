@@ -5,7 +5,7 @@ transform of a time series, then shuffling either the phase angles or the amplit
 
 ## Random phase
 
-```@example
+```@example MAIN
 using TimeseriesSurrogates, Plots
 ts = AR1() # create a realization of a random AR(1) process
 phases = true
@@ -16,7 +16,7 @@ surroplot(ts, s)
 
 ## Random amplitude
 
-```@example
+```@example MAIN
 using TimeseriesSurrogates, Plots
 ts = AR1() # create a realization of a random AR(1) process
 phases = false

@@ -10,8 +10,8 @@ The LS surrogate is a form of a constrained surrogate which takes the Lomb-Scarg
 This function uses the simulated annealing algorithm to minimize the Minkowski distance between the original periodogram and the surrogate periodogram.
 
 
-```@example
-using TimeseriesSurrogates, Plots
+```@example MAIN
+using TimeseriesSurrogates, CairoMakie
 
 # Example data: random AR(1) process with a time axis with unevenly 
 # spaced time steps
@@ -23,7 +23,8 @@ x = AR1(n_steps = N)
 ls = LS(t, tol = 1, N_total = 100000, N_acc = 50000)
 s = surrogate(x, ls)
 
-plot()
-plot!(t, x, label = "Original signal")
-plot!(t, s, label = "Surrogate")
+fig, ax = lines(t, x; label = "original")
+lines!(ax, t, s; label = "surrogate")
+axislegend(ax)
+fig
 ```

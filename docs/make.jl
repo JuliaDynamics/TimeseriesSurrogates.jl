@@ -61,7 +61,8 @@ makedocs(
         ),
     sitename = "TimeseriesSurrogates.jl",
     authors = "Kristian Agasøster Haaga, George Datseris",
-    pages = PAGES
+    pages = PAGES,
+    expandfirst = ["index.md"], #  this is the first script that loads plotting function
 )
 
 if CI
