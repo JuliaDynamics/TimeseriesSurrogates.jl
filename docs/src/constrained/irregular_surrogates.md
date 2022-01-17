@@ -20,7 +20,7 @@ t = (1:N) - rand(N)
 x = AR1(n_steps = N)
 
 # Generate surrogate
-ls = LS(t, tol = 1, N_total = 100000, N_acc = 50000)
+ls = LS(t, tol = 1, n_total = 100000, n_acc = 50000)
 s = surrogate(x, ls)
 
 plot()
