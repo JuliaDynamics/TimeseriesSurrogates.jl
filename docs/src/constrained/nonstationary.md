@@ -75,7 +75,7 @@ s_taaft_hi = surrogate(x, TAAFT(-0.2))
 surroplot(x, s_taaft_hi)
 ```
 
-## Truncated Fourier + trend removal/addition
+## Truncated FT surrogates with trend removal/addition
 
 For time series with strong trends, Lucio et al. (2012)[^Lucio2012] proposes variants 
 of the truncated Fourier-based surrogates wherein the trend is removed prior to
