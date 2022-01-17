@@ -12,7 +12,7 @@ IAAAFT shuffling is used, yielding surrogates that preserve the local mean and
 variance of the original signal, but randomizes nonlinear properties of the signal.
 This also preserves nonstationarities in the signal.
 
-```@example
+```@example MAIN
 using TimeseriesSurrogates, Random
 Random.seed!(5040)
 n = 500
@@ -33,7 +33,7 @@ p = surroplot(x, s)
 Even without rescaling, IAAFT shuffling also yields surrogates with local properties 
 very similar to the original signal.
 
-```@example
+```@example MAIN
 using TimeseriesSurrogates, Random
 Random.seed!(5040)
 n = 500
@@ -62,7 +62,7 @@ methods are provided for convenience.
 Using random shuffling of the detail coefficients does not preserve the 
 autocorrelation structure of the original signal. 
 
-```@example 
+```@example MAIN
 using TimeseriesSurrogates, Random
 Random.seed!(5040)
 n = 500
@@ -84,7 +84,7 @@ Block shuffling the detail coefficients better preserve local properties
 because the shuffling is not completely random, but still does not 
 preserve the autocorrelation of the original signal.
 
-```@example 
+```@example MAIN
 using TimeseriesSurrogates, Random
 Random.seed!(5040)
 n = 500
@@ -104,7 +104,7 @@ p = surroplot(x, s)
 Random Fourier phase shuffling the detail coefficients does a decent job at preserving
 the autocorrelation.
 
-```@example
+```@example MAIN
 using TimeseriesSurrogates, Random
 Random.seed!(5040)
 n = 500

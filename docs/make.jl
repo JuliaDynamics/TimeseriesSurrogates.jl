@@ -1,15 +1,14 @@
 cd(@__DIR__)
 using Pkg
 CI = get(ENV, "CI", nothing) == "true" || get(ENV, "GITHUB_TOKEN", nothing) !== nothing
-CI && Pkg.activate(@__DIR__)
+Pkg.activate(@__DIR__)
 CI && Pkg.instantiate()
-CI && (ENV["GKSwstype"] = "100")
 
 using TimeseriesSurrogates
 using DynamicalSystems
 using Random
 using Distributions
-using Plots
+using CairoMakie, Makie
 using Documenter
 using DocumenterTools: Themes
 
@@ -52,7 +51,7 @@ PAGES = [
 ]
 
 makedocs(
-    modules = [TimeseriesSurrogates],
+    modules = [TimeseriesSurrogates, DynamicalSystems],
     format = Documenter.HTML(
         prettyurls = CI,
         assets = [
@@ -61,7 +60,8 @@ makedocs(
         ),
     sitename = "TimeseriesSurrogates.jl",
     authors = "Kristian Agasøster Haaga, George Datseris",
-    pages = PAGES
+    pages = PAGES,
+    expandfirst = ["index.md"], #  this is the first script that loads plotting function
 )
 
 if CI
