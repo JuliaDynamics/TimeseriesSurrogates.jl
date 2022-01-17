@@ -1,78 +1,53 @@
-using StatsBase
-using DSP
+using TimeseriesSurrogates.StatsBase
+using TimeseriesSurrogates.DSP
 
 """
-    surroplot(x, s; W = 100, gfs = 8, lfs = 6, 
-        cx = :black, cs = :red, size = (400, 600); kwargs...)
+    surroplot(x, s; kwargs...)
 
-Plot a time series along with its surrogate realization `s`, and compare the
+Plot a timeseries `x` along with its surrogate realization `s`, and compare the
 periodogram and histogram of the two time series.
 
-## Arguments
-
-- **`x`**: the time series for which to generate a surrogate.
-
-- **`s`** is the surrogate realization of the time series.
-
 ## Keyword arguments 
-
-- **`W`**: Sets the number of windows for binning the periodogram.
-
-- **`gfs`** and **`lfs`**: Fontsizes of the guides and legends, respectively.
-
-- **`cx`** and **`cs`**: Colors of the original and the surrogate time series, respectively.
-
-- **`size`**: A tuple giving the size of the assembled plot. 
-
-- **`nbins`**: The number of bins for the histograms. 
-
-- **`kwargs`**: Plots.jl keyword arguments that are supplied to the final `plot` call that assembles the subplots.
+- `cx` and `cs`: Colors of the original and the surrogate time series, respectively.
+- `nbins`: The number of bins for the histograms. 
+- `resolution`: A tuple giving the resolution of the figure.
 """
-function surroplot(x, s; W = 100, gfs = 8, lfs = 6, 
-        cx = :black, cs = :red, size = (500, 600), 
-        nbins = 50, kwargs...)
+function surroplot(x, s;
+        cx = "#1B1B1B", cs = ("#2DB9C5", 0.9), resolution = (500, 600), 
+        nbins = 50,
+    )
+    
+    t = 1:length(x)
+    fig = Makie.Figure(resolution = resolution)
     
     # Time series
-    p1 = Plots.plot()
-    Plots.plot!(x, label = "", c = cx); 
-    Plots.plot!(s, label = "", c = cs)
-
+    ax1, _ = Makie.lines(fig[1,1], t, x; color = cx)
+    Makie.lines!(ax1, t, s; color = cs)
     # Autocorrelation
-    p2 = Plots.plot()
-    Plots.plot!(autocor(x), label = "", c = cx)
-    Plots.plot!(autocor(s), label = "", c = cs)
+    acx = autocor(x)
+    ax2, _ = Makie.lines(fig[2,1], 0:length(acx)-1, acx; color = cx)
+    Makie.lines!(ax2, 0:length(acx)-1, autocor(s); color = cs)
 
     # Binned multitaper periodograms
     p, psurr = DSP.mt_pgram(x), DSP.mt_pgram(s)
-    p3 = Plots.plot() 
-    Plots.plot!(interp([x for x in p.freq], p.power, W), label = "", c = cx, yaxis = :log10)
-    Plots.plot!(interp([x for x in psurr.freq], psurr.power, W), label = "", c = cs, yaxis = :log10)
+    ax3 = Makie.Axis(fig[3,1]; yscale = log10)
+    Makie.lines!(ax3, p.freq, p.power; color = cx)
+    Makie.lines!(ax3, psurr.freq, psurr.power; color = cs)
 
     # Histograms
-    p4 = Plots.plot()
-    Plots.histogram!(x, label = "Original", alpha = 0.5, nbins = nbins, c = cx)
-    Plots.histogram!(s, label = "Surrogate", alpha = 0.5, nbins = nbins, c = cs)
+    ax4 = Makie.Axis(fig[4,1])
+    Makie.hist!(ax4, x; label = "Original", bins = nbins, color = (cx, 0.5))
+    Makie.hist!(ax4, s; label = "Surrogate", bins = nbins, color = (cs, 0.5))
+    Makie.axislegend(ax4)
 
-    Plots.xlabel!(p1, "Time step")
-    Plots.ylabel!(p1, "Value")
-
-    Plots.xlabel!(p2, "Lag")
-    Plots.ylabel!(p2, "Autocorrelation")
-
-    Plots.xlabel!(p3, "Binned frequency")
-    Plots.ylabel!(p3, "Power")
-
-    Plots.xlabel!(p4, "Binned value")
-    Plots.ylabel!(p4, "Frequency")
-
-    l = Plots.@layout [a{0.3h}; b{0.25h}; c{0.25h}; d{0.2h}]
-    Plots.plot(p1, p2, p3, p4;
-                layout = l,
-                guidefont = Plots.font(gfs),
-                legendfont = Plots.font(lfs),
-                size = size,
-                kwargs...
-                )
+    ax1.xlabel = "time step"
+    ax1.ylabel = "value"
+    ax2.xlabel = "lag"
+    ax2.ylabel = "autocor"
+    ax3.xlabel = "binned freq."
+    ax3.ylabel = "power"
+    ax4.xlabel = "binned value"
+    ax4.ylabel = "histogram"
+    return fig
 end
-
 export surroplot
