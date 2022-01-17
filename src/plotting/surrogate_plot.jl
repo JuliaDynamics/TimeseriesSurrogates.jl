@@ -11,14 +11,13 @@ Plot a timeseries `x` along with its surrogate realization `s`, and compare the
 periodogram and histogram of the two time series.
 
 ## Keyword arguments 
-- `W`: Sets the number of windows for binning the periodogram.
 - `gfs` and `lfs`: Fontsizes of the guides and legends, respectively.
 - `cx` and `cs`: Colors of the original and the surrogate time series, respectively.
 - `nbins`: The number of bins for the histograms. 
 - `resolution`: A tuple giving the resolution of the figure.
 """
-function surroplot(x, s; W = 100,
-        cx = :black, cs = :red, resolution = (500, 600), 
+function surroplot(x, s;
+        cx = "#1B1B1B", cs = ("#6F4AC7", 0.9), resolution = (500, 600), 
         nbins = 50, kwargs...
     )
     
@@ -30,14 +29,14 @@ function surroplot(x, s; W = 100,
     lines!(ax1, t, s; color = cs)
     # Autocorrelation
     acx = autocor(x)
-    ax2, _ = lines(fig[2,1], 0:length(acx)-1, acs; color = cx)
+    ax2, _ = lines(fig[2,1], 0:length(acx)-1, acx; color = cx)
     lines!(ax2, 0:length(acx)-1, autocor(s); color = cs)
 
     # Binned multitaper periodograms
     p, psurr = DSP.mt_pgram(x), DSP.mt_pgram(s)
     ax3 = Axis(fig[3,1]; yscale = log10)
-    lines!(ax3, interp([x for x in p.freq], p.power, W), color = cx)
-    lines!(ax3, interp([x for x in psurr.freq], psurr.power, W), color = cs)
+    lines!(ax3, p.freq, p.power; color = cx)
+    lines!(ax3, psurr.freq, psurr.power; color = cs)
 
     # Histograms
     ax4 = Axis(fig[4,1])
