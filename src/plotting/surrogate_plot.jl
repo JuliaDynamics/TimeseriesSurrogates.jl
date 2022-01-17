@@ -18,27 +18,27 @@ function surroplot(x, s;
     )
     
     t = 1:length(x)
-    fig = Figure(resolution = resolution)
+    fig = Makie.Figure(resolution = resolution)
     
     # Time series
-    ax1, _ = lines(fig[1,1], t, x; color = cx)
-    lines!(ax1, t, s; color = cs)
+    ax1, _ = Makie.lines(fig[1,1], t, x; color = cx)
+    Makie.lines!(ax1, t, s; color = cs)
     # Autocorrelation
     acx = autocor(x)
-    ax2, _ = lines(fig[2,1], 0:length(acx)-1, acx; color = cx)
-    lines!(ax2, 0:length(acx)-1, autocor(s); color = cs)
+    ax2, _ = Makie.lines(fig[2,1], 0:length(acx)-1, acx; color = cx)
+    Makie.lines!(ax2, 0:length(acx)-1, autocor(s); color = cs)
 
     # Binned multitaper periodograms
     p, psurr = DSP.mt_pgram(x), DSP.mt_pgram(s)
-    ax3 = Axis(fig[3,1]; yscale = log10)
-    lines!(ax3, p.freq, p.power; color = cx)
-    lines!(ax3, psurr.freq, psurr.power; color = cs)
+    ax3 = Makie.Axis(fig[3,1]; yscale = log10)
+    Makie.lines!(ax3, p.freq, p.power; color = cx)
+    Makie.lines!(ax3, psurr.freq, psurr.power; color = cs)
 
     # Histograms
-    ax4 = Axis(fig[4,1])
+    ax4 = Makie.Axis(fig[4,1])
     Makie.hist!(ax4, x; label = "Original", bins = nbins, color = (cx, 0.5))
     Makie.hist!(ax4, s; label = "Surrogate", bins = nbins, color = (cs, 0.5))
-    axislegend(ax4)
+    Makie.axislegend(ax4)
 
     ax1.xlabel = "time step"
     ax1.ylabel = "value"

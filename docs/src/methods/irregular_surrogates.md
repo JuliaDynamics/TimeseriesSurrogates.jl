@@ -20,7 +20,7 @@ t = (1:N) - rand(N)
 x = AR1(n_steps = N)
 
 ls = LS(t)
-s = surrogate(x, ls)s
+s = surrogate(x, ls)
 surroplot(x, s)
 
 fig, ax = lines(t, x; label = "original")

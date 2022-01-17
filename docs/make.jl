@@ -3,7 +3,6 @@ using Pkg
 CI = get(ENV, "CI", nothing) == "true" || get(ENV, "GITHUB_TOKEN", nothing) !== nothing
 Pkg.activate(@__DIR__)
 CI && Pkg.instantiate()
-CI && (ENV["GKSwstype"] = "100")
 
 using TimeseriesSurrogates
 using DynamicalSystems
@@ -42,7 +41,6 @@ PAGES = [
         "Amplitude-adjusted FT" => "methods/amplitude_adjusted.md",
         "Truncated FT/AAFT" => "methods/truncated_fourier_transform.md",
         "Pseudo-periodic" => "methods/pps.md",
-        "Wavelet-based" => "methods/wls.md",
         "Pseudo-periodic twin" => "methods/ppts.md",
         "Wavelet-based" => "methods/wls.md",
         "Multidimensional surrogates" => "methods/multidim.md",
