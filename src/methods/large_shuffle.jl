@@ -87,6 +87,66 @@ function (bs::SurrogateGenerator{<:BlockShuffle})()
     return s
 end
 
+
+#########################################################################
+# TODO: New api
+#########################################################################
+
+struct BlockShuffle2 <: Surrogate
+    n::Int
+end
+
+function surrogenerator(x::AbstractVector, bs::BlockShuffle2, rng = Random.default_rng())
+    L = length(x)
+    bs.n < L || error("The number of blocks exceeds number of available points")
+    Ls = get_uniform_blocklengths(L, bs.n)
+    cs = cumsum(Ls)
+    # will hold a rotation version of x
+    xrot = similar(x)
+    s = similar(x)
+    T = eltype(xrot)
+    init = NamedTuple{(:L, :Ls, :cs, :xrot),Tuple{Int, Vector{Int}, Vector{Int}, Vector{T}}}((L, Ls, cs, xrot))
+    return SurrogateGenerator2(bs, x, s, init, rng)
+end
+
+function (bs::SurrogateGenerator2{<:BlockShuffle2})()
+    # TODO: A circular custom array implementation would be much more elegant here
+    L = bs.init.L
+    Ls = bs.init.Ls
+    cs = bs.init.cs
+    xrot = bs.init.xrot
+    n = bs.method.n
+    x = bs.x
+    s = bs.s
+
+    # Just create a temporarily randomly shifted array, so we don't need to mess
+    # with indexing twice.
+    circshift!(xrot, x, rand(bs.rng, 1:L))
+
+    # Block always must be shuffled (so ordered samples are not permitted)
+    draw_order = zeros(Int, n)
+    while any(draw_order .== 0) || all(draw_order .== 1:n)
+       StatsBase.sample!(bs.rng, 1:n, draw_order, replace = false)
+    end
+
+    # The surrogate.
+    # TODO: It would be faster to re-allocate, but blocks may
+    # be of different sizes and are shifted, so indexing gets messy.
+    # Just append for now.
+    T = eltype(x)
+    # Todo: don't redefine s here, actually keep track of indices
+    s = Vector{T}(undef, 0)
+    sizehint!(s, L)
+
+    startinds = [1; cs .+ 1]
+    @inbounds for i in draw_order
+        inds = startinds[i]:startinds[i]+Ls[i]-1
+        append!(s, xrot[inds])
+    end
+
+    return s
+end
+
 #########################################################################
 # CycleShuffle
 #########################################################################
@@ -141,6 +201,42 @@ function (sg::SurrogateGenerator{<:CycleShuffle})()
     return s
 end
 
+export CycleShuffle2
+
+struct CycleShuffle2{T <: AbstractFloat} <: Surrogate
+    n::Int
+    σ::T
+end
+CycleShuffle2(n = 7, σ = 0.5) = CycleShuffle2{typeof(σ)}(n, σ)
+
+function surrogenerator(x::AbstractVector, cs::CycleShuffle2, rng = Random.default_rng())
+    n, N = cs.n, length(x)
+    g = DSP.gaussian(n, cs.σ)
+    smooth = DSP.conv(x, g)
+    r = length(smooth) - N
+    smooth = iseven(r) ? smooth[r÷2+1:end-r÷2] : smooth[r÷2+1:end-r÷2-1]
+    peaks = findall(i -> smooth[i-1] < smooth[i] && smooth[i] > smooth[i+1], 2:N-1)
+    blocks = [collect(peaks[i]:peaks[i+1]-1) for i in 1:length(peaks)-1]
+    init =  (blocks = blocks, peak1 = peaks[1])
+    SurrogateGenerator2(cs, x, similar(x), init, rng)
+end
+
+function (sg::SurrogateGenerator2{<:CycleShuffle2})()
+    blocks, peak1 = sg.init
+    x = sg.x
+    s = sg.s
+    rng = sg.rng
+    shuffle!(rng, blocks)
+    i = peak1
+    for b in blocks
+        s[(0:length(b)-1) .+ i] .= @view x[b]
+        i += length(b)
+    end
+    return s
+end
+
+
+
 #########################################################################
 # Timeshift
 #########################################################################
@@ -167,3 +263,20 @@ end
 
 random_shift(n::Integer, rng) = n
 random_shift(n::AbstractVector{<:Integer}, rng) = rand(rng, n)
+
+export CircShift2
+struct CircShift2{N} <: Surrogate
+    n::N
+end
+
+function surrogenerator(x, sd::CircShift2, rng = Random.default_rng())
+    return SurrogateGenerator2(sd, x, similar(x), nothing, rng)
+end
+
+function (sg::SurrogateGenerator2{<:CircShift2})()
+    x, s = sg.x, sg.s
+    shift = random_shift(sg.method.n, sg.rng)
+    circshift!(s, x, shift)
+
+    return s
+end

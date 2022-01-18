@@ -27,9 +27,7 @@ end
 
 function (rf::SurrogateGenerator{<:RandomShuffle})()
     n = length(rf.x)
-    idxs = zeros(Int, length(rf.x))
-    sample!(rf.rng, 1:n, idxs; replace = false)
-    @show idxs
+    idxs = sample(rf.rng, 1:n, n; replace = false)
     rf.x[idxs]
 end
 
@@ -39,16 +37,25 @@ export RandomShuffle2
 struct RandomShuffle2 <: Surrogate end
 
 function surrogenerator(x::AbstractVector, rf::RandomShuffle2, rng = Random.default_rng())
+    n = length(x)
+    idxs = collect(1:n)
+
     init = (
-        perms = zeros(Int, length(x)),
-        idxs = collect(1:length(x)),
+        permutation = zeros(Int, n),
+        idxs = idxs,
     )
-    return SurrogateGenerator2(rf, x, shuffle(rng, x), init, rng)
+
+    return SurrogateGenerator2(rf, x, similar(x), init, rng)
 end
 
 function (sg::SurrogateGenerator2{<:RandomShuffle2})()
-    sample!(sg.rng, sg.init.idxs, sg.init.perms; replace = false)
-    @show sg.init.perms
-    sg.s .= sg.x[sg.init.perms]
-    return sg.s
+    # Get relevant fields from surrogate generator.
+    x, s, rng = sg.x, sg.s, sg.rng
+    permutation, idxs  = getfield.(Ref(sg.init), (:permutation, :idxs))
+    n = length(x)
+    #permutation = sample(rng, 1:n, n; replace = false)
+    # Draw a new permutation of the data
+    sample!(rng, idxs, permutation; replace = false)
+    s .= x[permutation]
+    return s
 end

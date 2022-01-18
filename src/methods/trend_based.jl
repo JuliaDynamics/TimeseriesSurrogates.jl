@@ -34,9 +34,9 @@ const TFTD = TFTDRandomFourier
 
 # Efficient linear regression formula from dmbates julia discourse post (nov 2019)
 # https://discourse.julialang.org/t/efficient-way-of-doing-linear-regression/31232/27?page=2
-function linreg(x::AbstractVector{T}, y::AbstractVector{T}) where {T<:AbstractFloat}
+function linreg(x, y)
     (N = length(x)) == length(y) || throw(DimensionMismatch())
-    ldiv!(cholesky!(Symmetric([T(N) sum(x); zero(T) sum(abs2, x)], :U)), [sum(y), dot(x, y)])
+    ldiv!(cholesky!(Symmetric([float(N) sum(x); 0.0 sum(abs2, x)], :U)), [sum(y), dot(x, y)])
 end
 
 function linear_trend(x)
