@@ -14,79 +14,94 @@ monotonic nonlinear transformation of a linear Gaussian process
 [^Theiler1991]: J. Theiler, S. Eubank, A. Longtin, B. Galdrikian, J. Farmer, Testing for nonlinearity in time series: The method of surrogate data, Physica D 58 (1–4) (1992) 77–94.
 """
 struct AAFT <: Surrogate end
+
+function surrogenerator(x, method::AAFT, rng = Random.default_rng())
+    init = surrogenerator(x, RandomFourier(true), rng)
+    return SurrogateGenerator(method, x, init, rng)
+end
+
+function (rf::SurrogateGenerator{<:AAFT})()
+    x = rf.x
+    xs = sort(x)
+    s = rf.init()
+    s[sortperm(s)] .= xs
+    return s
+end
+
+export AAFT2
 struct AAFT2 <: Surrogate end
 
 function surrogenerator(x, method::AAFT2, rng = Random.default_rng())
+    n = length(x)
 
     # Forward Fourier transform plan
     forward = plan_rfft(x)
+
+    m = mean(x)
+
+    𝓕 = forward * (x .- m)
 
     init = (
         # A sorted version of `x`. Used when rescaling back to original values.
         x_sorted = sort(x),
 
         # A vector that holds permutation indices
-        ix = zeros(Int, length(x)),
+        ix = zeros(Int, n),
         
         # Inverse Fourier transform plan
-        inverse = plan_irfft(forward*x, length(x)),
+        inverse = plan_irfft(forward * x, n),
+
+        # Mean of `x`
+        m = m,
+
+        # Forward transform on mean-subtracted data
+        𝓕 = 𝓕,
 
         # The following variables are pre-computed here, so we don't re-allocate 
         # when calling the surrogate generator.
         # ----------------------------------------------------------------------
-        # Mean of `x`
-        m = mean(x),
-
-        # Forward transform on mean-subtracted data
-        𝓕 = forward*(x .- m),
-
-        # Amplitudes (compute here, so we don't allocate when generating)
         r = abs.(𝓕),
 
         # Phases  (compute here, so we don't allocate when generating)
-        ϕ = abs.(𝓕),
+        ϕ = angle.(𝓕),
 
         # Holds the new transform (after shuffling phases/amplitudes)
-        new_𝓕 = similar(𝓕),
+        shuffled𝓕 = similar(𝓕),
 
         # Randomized coefficients,
-        coeffs = zero(x),
+        coeffs = zero(𝓕),
+
+        n = n,
     )
 
-    return SurrogateGenerator(method, x, init, rng)
+    return SurrogateGenerator2(method, x, similar(x), init, rng)
 end
 
-function (sg::SurrogateGenerator{<:AAFT2})()
+function (sg::SurrogateGenerator2{<:AAFT2})()
     # Initialization data
-    x = sg.x
-    rng = sg.rng
+    s, rng = sg.s, sg.rng
 
-    init_fields = (:x_sorted, :ix, :inverse, :m, :𝓕, :r, :ϕ, :new_𝓕, :coeffs)
-        x_sorted, ix,  inverse, m, 𝓕, r, ϕ, new_𝓕, coeffs = 
+    init_fields = (:x_sorted, :ix, :inverse, :m, :r, :ϕ, :shuffled𝓕, :coeffs, :n)
+        x_sorted, ix,  inverse, m, r, ϕ, shuffled𝓕, coeffs, n = 
         getfield.(Ref(sg.init), init_fields)
 
     # A Fourier surrogate is the starting point for the AAFT surrogate. Generate 
     # one such surrogate and assign it to `sg.s`.
-    if rf.method.phases
-        # Assign randomized phases to `coeffs`
-        coeffs .= rand(sg.rng, Uniform(0, 2π), n)
+    
+    # `coeffs` := randomized phases
+    coeffs .= rand(rng, Uniform(0, 2π), length(shuffled𝓕))
 
-        # Updated Fourier transform, with shuffled phases
-        new_𝓕 .= r .* exp.(coeffs .* 1im)
-    else
-        # Assign randomized amplitudes to `coeffs`
-        coeffs .= r .* rand(rf.rng, Uniform(0, 2π), n)
-
-        # Updated Fourier transform, with shuffled amplitudes
-        new_𝓕 .= coeffs .* exp.(ϕ .* 1im)
-    end
-    sg.s .= inverse * new_𝓕 .+ m
+    # Updated Fourier transform, with shuffled phases
+    shuffled𝓕 .= r .* exp.(coeffs .* 1im)
+    
+    # Inverse Fourier transform
+    s .= (inverse * shuffled𝓕) .+ m
 
     # The indices that would sort the random Fourier phase surrogate
-    sortperm!(ix, sg.s)
+    sortperm!(ix, s)
 
     # Rescale back to original values to obtain AAFT surrogate.
-    sg.s[ix] .= x_sorted
+    s[ix] .= x_sorted
     
-    return sg.s
+    return s
 end
