@@ -23,6 +23,7 @@ Wavelets = "29a6e085-ba6d-5f35-a997-948ac2efa89a"
 [compat]
 AbstractFFTs = "1"
 DSP = "^0.5.2, 0.6, ^1, 0.7"
+DataFrames = "1"
 DelayEmbeddings = "2"
 Distances = "0.10, 1"
 Distributions = "0.21, 1, 0.23, 0.24, 0.25"
