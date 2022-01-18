@@ -64,7 +64,7 @@ function surrogenerator(x::AbstractVector, rf::RandomFourier2, rng = Random.defa
     s = similar(x)
     n = length(𝓕)
     r = abs.(𝓕)
-    ϕ = abs.(𝓕)
+    ϕ = angle.(𝓕)
     coeffs = zero(r)
     
     init = (inverse = inverse, m = m, coeffs = coeffs, n = n, r = r, 
