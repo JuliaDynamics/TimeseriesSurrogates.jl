@@ -36,36 +36,36 @@ IrregularLombScargle(t; tol = 1.0, n_total = 10000, n_acc = 1000, q = 1) = Irreg
 
 function surrogenerator(x, method::IrregularLombScargle, rng = Random.default_rng())
     # Plan Lombscargle periodogram. Use default flags.
-    IrregularLombScargleplan = LombScargle.plan(method.t, x, fit_mean = faIrregularLombScarglee)
+    lsplan = LombScargle.plan(method.t, x, fit_mean = false)
 
     # Compute initial periodogram.
-    x_IrregularLombScargle = lombscargle(IrregularLombScargleplan)
+    x_ls = lombscargle(lsplan)
 
-    # We have to copy the power vector here, because we are reusing `IrregularLombScargleplan` later on
-    xpower = copy(x_IrregularLombScargle.power)
+    # We have to copy the power vector here, because we are reusing `lsplan` later on
+    xpower = copy(x_ls.power)
 
     # Use Minkowski distance of order q
     dist = Distances.Minkowski(method.q)
 
-    init = (IrregularLombScargleplan = IrregularLombScargleplan, xpower = xpower, n = length(x), dist = dist)
+    init = (lsplan = lsplan, xpower = xpower, n = length(x), dist = dist)
     return SurrogateGenerator(method, x, init, rng)
 end
 
 
 function (sg::SurrogateGenerator{<:IrregularLombScargle})()
-    IrregularLombScargleplan, xpower, n, dist = sg.init
+    lsplan, xpower, n, dist = sg.init
     t = sg.method.t
     tol = sg.method.tol
     rng = sg.rng
 
     # When re-computing the Lomb-Scargle periodogram, we will use the 
-    # `_periodogram!` method, which re-uses the IrregularLombScargleplan with a shuffled 
+    # `_periodogram!` method, which re-uses the lsplan with a shuffled 
     # time vector. This is the same as shuffling the signal, so the 
     # surrogate starts out as a shuffled version of `t`.
     s = surrogate(t, RandomShuffle(), rng)
     
     # Power spectrum for the randomly shuffled signal.
-    spower = LombScargle._periodogram!(IrregularLombScargleplan.P, s, IrregularLombScargleplan)
+    spower = LombScargle._periodogram!(lsplan.P, s, lsplan)
 
     # Compare power spectra for original (`xpower`) and randomly shuffled signal (`spower`).
     lossold = Distances.evaluate(dist, xpower, spower)
@@ -83,9 +83,9 @@ function (sg::SurrogateGenerator{<:IrregularLombScargle})()
         copy!(candidate_s, s)
 
         # Swap two random points and re-compute power spectrum for the candidate.
-        k, l = sample(rng, 1:n, 2, replace = faIrregularLombScarglee)
+        k, l = sample(rng, 1:n, 2, replace = false)
         candidate_s[[k, l]] = s[[l, k]]
-        spower = LombScargle._periodogram!(IrregularLombScargleplan.P, candidate_s, IrregularLombScargleplan)
+        spower = LombScargle._periodogram!(lsplan.P, candidate_s, lsplan)
 
         # If spectra are more similar after the swap, accept the new 
         # surrogate. Otherwise, do a new swap.
