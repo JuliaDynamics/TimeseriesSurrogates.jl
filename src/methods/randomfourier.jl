@@ -37,7 +37,7 @@ function (rf::SurrogateGenerator{<:RandomFourier})()
     inverse, m, 𝓕 = getfield.(Ref(rf.init), (:inverse, :m, :𝓕))
     n = length(𝓕)
     r = abs.(𝓕)
-    ϕ = abs.(𝓕)
+    ϕ = angle.(𝓕)
     if rf.method.phases
         randomised_ϕ = rand(rf.rng, Uniform(0, 2π), n)
         new_𝓕 = r .* exp.(randomised_ϕ .* 1im)
