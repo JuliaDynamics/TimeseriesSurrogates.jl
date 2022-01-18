@@ -1,4 +1,4 @@
-using GLM, DataFrames
+
 
 export TFTDRandomFourier
 """
@@ -32,10 +32,16 @@ end
 
 const TFTD = TFTDRandomFourier
 
+# Efficient linear regression formula from dmbates julia discourse post (nov 2019)
+# https://discourse.julialang.org/t/efficient-way-of-doing-linear-regression/31232/27?page=2
+function linreg(x::AbstractVector{T}, y::AbstractVector{T}) where {T<:AbstractFloat}
+    (N = length(x)) == length(y) || throw(DimensionMismatch())
+    ldiv!(cholesky!(Symmetric([T(N) sum(x); zero(T) sum(abs2, x)], :U)), [sum(y), dot(x, y)])
+end
+
 function linear_trend(x)
-    df = DataFrame(x = x, t = 1:length(x))
-    linreg = lm(@formula(x ~ t), df)
-    trendᵢ(xᵢ) = coef(linreg)[1] + coef(linreg)[2] * xᵢ
+    l = linreg(0.0:1.0:length(x)-1.0 |> collect, x)
+    trendᵢ(xᵢ) = l[1] + l[2] * xᵢ
     return trendᵢ.(x)
 end
 
