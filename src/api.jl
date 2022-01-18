@@ -3,7 +3,14 @@ export surrogate, surrogenerator, Surrogate
 """Supertype of all surrogate methods."""
 abstract type Surrogate end
 
-struct SurrogateGenerator{S<:Surrogate, Xₓ, Xₛ, A, R<:AbstractRNG}
+struct SurrogateGenerator{S<:Surrogate, Xₓ, A, R<:AbstractRNG}
+    method::S # method with its input parameters
+    x::Xₓ      # input timeseries
+    init::A   # pre-initialized things that speed up process
+    rng::R    # random number generator object
+end
+
+struct SurrogateGenerator2{S<:Surrogate, Xₓ, Xₛ, A, R<:AbstractRNG}
     method::S # method with its input parameters
     x::Xₓ      # input timeseries
     s::Xₛ      # surrogate (usually same type as `x`, but not always)

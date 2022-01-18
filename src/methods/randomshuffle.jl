@@ -27,5 +27,28 @@ end
 
 function (rf::SurrogateGenerator{<:RandomShuffle})()
     n = length(rf.x)
-    rf.x[sample(rf.rng, 1:n, n; replace = false)]
+    idxs = zeros(Int, length(rf.x))
+    sample!(rf.rng, 1:n, idxs; replace = false)
+    @show idxs
+    rf.x[idxs]
+end
+
+# NEW API
+using Random
+export RandomShuffle2
+struct RandomShuffle2 <: Surrogate end
+
+function surrogenerator(x::AbstractVector, rf::RandomShuffle2, rng = Random.default_rng())
+    init = (
+        perms = zeros(Int, length(x)),
+        idxs = collect(1:length(x)),
+    )
+    return SurrogateGenerator2(rf, x, shuffle(rng, x), init, rng)
+end
+
+function (sg::SurrogateGenerator2{<:RandomShuffle2})()
+    sample!(sg.rng, sg.init.idxs, sg.init.perms; replace = false)
+    @show sg.init.perms
+    sg.s .= sg.x[sg.init.perms]
+    return sg.s
 end
