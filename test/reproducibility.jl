@@ -25,7 +25,7 @@ all_conceivable_methods = [
     TFTDRandomFourier(true)
     TFTDRandomFourier(false)
     CycleShuffle()
-    LS(t; tol = 10, n_total = 50000, n_acc = 10000)
+    IrregularLombScargle(t; tol = 10, n_total = 20000, n_acc = 5000)
 ]
 
 methodnames = [string(nameof(typeof(x))) for x in all_conceivable_methods]

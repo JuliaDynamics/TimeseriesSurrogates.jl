@@ -38,7 +38,7 @@ PseudoPeriodic
 PseudoPeriodicTwin
 WLS
 ShuffleDimensions
-LS
+IrregularLombScargle
 ```
 
 ### Utilities
