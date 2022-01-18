@@ -4,8 +4,8 @@ To derive a surrogate for unevenly sampled time series, we can use surrogate met
 
 ## Lomb-Scargle based surrogate
 
-The LS surrogate is a form of a constrained surrogate which takes the Lomb-Scargle periodogram to derive surrogates with similar phase distribution as the original time series.
-This function uses the simulated annealing algorithm to minimize the Minkowski distance between the original periodogram and the surrogate periodogram.
+The [`IrregularLombScargle`](@ref) surrogate is a form of a constrained surrogate which takes the Lomb-Scargle periodogram, which works on irregularly spaced data, to derive surrogates with similar phase distribution as the original time series.
+This function uses the simulated annealing algorithm[^SchmitzSchreiber1999] to minimize the Minkowski distance between the original periodogram and the surrogate periodogram.
 
 ```@example MAIN
 using TimeseriesSurrogates, CairoMakie
@@ -25,3 +25,5 @@ lines!(ax, t, s; label = "surrogate")
 axislegend(ax)
 fig
 ```
+
+[^SchmitzSchreiber1999]: A.Schmitz T.Schreiber (1999). "Testing for nonlinearity in unevenly sampled time series" [Phys. Rev E](https://journaIrregularLombScargle.aps.org/pre/pdf/10.1103/PhysRevE.59.4044)
