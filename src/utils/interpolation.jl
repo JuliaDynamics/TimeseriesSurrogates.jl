@@ -11,6 +11,22 @@ function interp(x::Vector, y::Vector, nsteps::Int)
     return collect(x_fills), y_fills
 end
 
+getrange(t, n) = LinRange(minimum(t), maximum(t), n)
+itp(x) = LinearInterpolation(1:length(x), x)
+interp(itp, tᵢ) = itp()
+
+"""
+    interp!(ȳ::Vector, itp)
+
+Interpolate using the pre-computed interpolation instance `itp` into 
+the pre-allocated vector `ȳ`.
+"""
+function interp!(ȳ::Vector, itp)
+    y_fills .= itp(x_fills)
+
+    return collect(x_fills), y_fills
+end
+
 """
 Linearly interpolates two vector x and y on a linear grid consisting of `nsteps`.
 """

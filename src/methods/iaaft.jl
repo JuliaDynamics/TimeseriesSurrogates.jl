@@ -125,3 +125,138 @@ function (sg::SurrogateGenerator{<:IAAFT})()
 
     return s
 end
+
+
+include("../utils/powerspectrum.jl")
+export IAAFT2
+
+struct IAAFT2 <: Surrogate
+    M::Int
+    tol::Real
+    W::Int
+
+    function IAAFT2(;M::Int = 100, tol::Real = 1e-6, W::Int = 75)
+        new(M, tol, W)
+    end
+end
+
+Base.show(io::IO, x::IAAFT2) = print(io, "IAAFT2(M = $(x.M), tol = $(x.tol), W = $(x.W))")
+
+using Interpolations
+getrange(t, n) = LinRange(minimum(t), maximum(t), n)
+itp(x) = LinearInterpolation(1:length(x), x)
+interp(itp, tᵢ) = itp()
+
+function interpolated_spectrum(spectrum, n)
+    intp_spectrum = zeros(n)
+    interpolated_spectrum!(intp_spectrum, spectrum, n)
+end
+
+function interpolated_spectrum!(intp_spectrum, spectrum, n)
+    t = 1:length(spectrum)
+    r = getrange(t, n)
+    iₓ = itp(spectrum)
+    intp_spectrum .= iₓ.(r)
+    return intp_spectrum
+end
+
+function surrogenerator(x, method::IAAFT2, rng = Random.default_rng())
+    m = mean(x)
+
+    # Pre-plan Fourier transforms
+    forward = plan_rfft(x)
+    inverse = plan_irfft(forward * x, length(x))
+
+    # Initial forward transform.
+    𝓕 = forward * x
+
+    # Amplitudes of the initial transform are kept 
+    # constant during iterations, so pre-allocate.
+    r = abs.(𝓕)
+
+    # Pre-allocate angles (these change during iteration)
+    ϕ = abs.(𝓕)
+
+    # Sorted values of the original time series are used for the rescaling step.
+    x̂ = sort(x)
+
+    # Initial power spectrum
+    xpower = prepare_spectrum(x)
+    powerspectrum_onesided!(xpower, x, forward)
+    xpowerbinned = interpolated_spectrum(xpower, method.W)
+    spowerbinned = interpolated_spectrum(xpower, method.W)
+
+    init = (
+        forward = forward, 
+        inverse = inverse, 
+        𝓕 = 𝓕, 
+        r = r, 
+        ϕ = ϕ, 
+        m = m, 
+        x̂ = x̂, 
+        xpower = xpower, 
+        xpowerbinned = xpowerbinned,
+        spowerbinned = spowerbinned,
+    )
+
+    return SurrogateGenerator2(method, x, similar(x), init, rng)
+end
+
+using Plots
+function (sg::SurrogateGenerator2{<:IAAFT2})()
+    init_fields = (:forward, :inverse, :𝓕, :r, :ϕ, :m, :x̂, :xpower, :xpowerbinned, :spowerbinned)
+    forward, inverse, 𝓕, r, ϕ, m, x̂, xpower, xpowerbinned, spowerbinned = getfield.(Ref(sg.init), init_fields)
+
+    x, s, rng = sg.x, sg.s, sg.rng
+    M, W = sg.method.M, sg.method.W
+    tol = sg.method.tol
+
+    # Pre-allocate surrogate periodogram
+    spower = copy(xpower)
+
+    # Keep track of difference between periodograms between iterations
+    diffs = zeros(Float64, 2)
+
+    # Surrogate starts out as a random permutation of `x`
+    n = length(x)
+    s .= x[sample(rng, 1:n, n)]
+
+    # Index vector used to sort in-place
+    ix = zeros(Int, length(x))
+
+    iter = 1
+    while iter <= M        
+        # Fourier transform of the surrogate. 
+        𝓕 .= forward * s
+        ϕ .= angle.(𝓕)
+        
+        # Replace amplitudes of the transform with the original amplitudes `r𝓕`,
+        # leavding phases untouched.
+        𝓕 .= r .* exp.(ϕ .* 1im)
+
+        # The surrogate is initially the real part of the inverse transform.
+        s .= inverse * 𝓕
+
+        # The inverse transform does not preserve the original values of the time series, 
+        # because the phases are randomized. We therefore rank-order `s` (sort it), 
+        # and replace its value with the sorted `x` values.
+        sortperm!(ix, s)
+        s[ix] .= x̂
+
+        # Compute periodogram for the current state of the surrogate `s`
+        powerspectrum_onesided!(spower, s, forward)
+        interpolated_spectrum!(spowerbinned, spower, W)
+
+        # Convergence check on periodogram using relative discrepancy criterion 
+        # from the paper.
+        if iter == 1
+            diffs[1] = sum((xpowerbinned .- xpowerbinned) .^ 2) / sum(xpowerbinned .^ 2)
+        else
+            diffs[2] = sum((xpowerbinned .- spowerbinned) .^ 2) / sum(xpowerbinned .^ 2)
+            abs(diffs[1] - diffs[2]) < tol ? break : diffs[1] = copy(diffs[2])
+        end
+
+        iter += 1
+    end
+    return s
+end
