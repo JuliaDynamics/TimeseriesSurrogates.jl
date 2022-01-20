@@ -103,3 +103,80 @@ function noiseradius(sg::SurrogateGenerator{<:PseudoPeriodic}, ρs, n = 1)
     # TODO: here we can directly find maximum and return it as a single number
     return l2n
 end
+
+
+
+
+
+
+
+export PseudoPeriodic2
+struct PseudoPeriodic2{T<:Real} <: Surrogate
+    d::Int
+    τ::Int
+    ρ::T
+    shift::Bool
+end
+PseudoPeriodic2(d, t, r) = PseudoPeriodic(d, t, r, true)
+
+function surrogenerator(x::AbstractVector, pp::PseudoPeriodic2, rng = Random.default_rng())
+    # in the following symbol `y` stands for `s` of the paper
+    d, τ = getfield.(Ref(pp), (:d, :τ))
+    N = length(x)
+    z = embed(x, d, τ)
+    Ñ = length(z)
+    w = zeros(eltype(z), Ñ-1) # weights vector
+    y = Dataset([z[1] for i in 1:N])
+    s = similar(x)
+    init = (y = y, w = w, z = z)
+    return SurrogateGenerator(pp, x, s, init, rng)
+end
+
+function (sg::SurrogateGenerator2{<:PseudoPeriodic2})()
+    y, z, w = getfield.(Ref(sg.init), (:y, :z, :w))
+    ρ, shift = getfield.(Ref(sg.method), (:ρ, :shift))
+    pseudoperiodic!(sg.s, y, sg.x, z, w, ρ, shift, sg.rng)
+end
+# Low-level method, also used in `noiseradius`
+function pseudoperiodic!(s, y, x, z, w, ρ, shift, rng)
+    N, Ñ = length.((x, z))
+    y[1] = shift ? rand(rng, z.data) : z[1]
+    @inbounds for i in 1:N-1
+        w .= (exp(-norm(z[t] - y[i])/ρ) for t in 1:Ñ-1)
+        j = sample(rng, 1:Ñ-1, pweights(w))
+        y[i+1] = z[j+1]
+    end
+    s .= y[:, 1]
+    return s
+end
+
+function noiseradius2(sg::SurrogateGenerator2{<:PseudoPeriodic2}, ρs, n = 1)
+    l2n = zero(ρs) # length-2 number of points existing in both timeseries
+    y, z, w = getfield.(Ref(sg.init), (:y, :z, :w))
+    x, s = sg.x, sg.s
+    N = length(sg.x)
+    @inbounds for _ in 1:n
+        for (ℓ, ρ) in enumerate(ρs)
+            s̄ = pseudoperiodic!(s, y, x, z, w, ρ, sg.method.shift, sg.rng)
+            for i in 1:N-1
+                # TODO: This can be optimized heavily: checking x[i+2] already tells us
+                # that we shouldn't check x[i+1] on the next iteration.
+                l2n[ℓ] += count(j -> s̄[j]==x[i] && s̄[j+1]==x[i+1] && s̄[j+2]!=x[i+2], 1:N-2)
+            end
+        end
+    end
+    # TODO: here we can directly find maximum and return it as a single number
+    return l2n
+end
+
+function noiseradius2(x::AbstractVector, d::Int, τ, ρs, n = 1)
+    l2n = _noiseradius2(x, d, τ, ρs, n)
+    return ρs[argmax(l2n)]
+end
+
+function _noiseradius2(x::AbstractVector, d::Int, τ, ρs, n = 1)
+    l2n = noiseradius(surrogenerator(x, PseudoPeriodic2(d, τ, ρs[1])), ρs, n)
+end
+
+
+export noiseradius2

@@ -60,19 +60,6 @@ struct PseudoPeriodicTwin{T<:Real, P<:Real, D<:PreMetric} <: Surrogate
     end
 end
 
-""" 
-    _prepare_embed(x::AbstractVector, d, τ) → Dataset
-    _prepare_embed(x::Dataset, d, τ) → Dataset
-
-Prepate input data for surrogate generation. If input is a vector, embed it using 
-the provided parameters. If input as a dataset, we assume it already represents an 
-orbit.
-"""
-function _prepare_embed end
-_prepare_embed(x::AbstractVector, d, τ) = embed(x, d, τ)
-_prepare_embed(x::Dataset, d, τ) = x
-
-
 function surrogenerator(x::Union{AbstractVector, Dataset}, pp::PseudoPeriodicTwin, rng = Random.default_rng())
     d, τ, δ, metric = getfield.(Ref(pp), (:d, :τ, :δ, :metric))
     ρ = getfield.(Ref(pp), (:ρ))
