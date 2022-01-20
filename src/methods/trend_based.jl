@@ -187,7 +187,6 @@ function (sg::SurrogateGenerator2{<:TFTDRandomFourier2})()
 
     # Compute forward transform and get its phases
     mul!(𝓕, forward, s) # 𝓕 .= forward * s is equivalent, but allocates
-    𝓕 .= forward * s
     ϕs .= angle.(𝓕)
 
     # Frequencies are ordered from lowest when taking the Fourier
