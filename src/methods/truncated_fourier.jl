@@ -227,3 +227,63 @@ function (taaft::SurrogateGenerator{<:TAAFT})()
     return s
 end
 
+export TAAFT2
+struct TAAFT2 <: Surrogate
+    fϵ::Real
+
+    function TAAFT2(fϵ::Real)
+        fϵ != 0 || throw(ArgumentError("`fϵ` must be on the interval [-1, 0) ∪ (0, 1] (positive if preserving high frequencies, negative if preserving low frequencies)"))
+        new(fϵ)
+    end
+end
+
+function surrogenerator(x, method::TAAFT2, rng = Random.default_rng())
+    init = (tfts_gen = surrogenerator(x, TFTS(method.fϵ), rng))
+    return SurrogateGenerator(method, x, init, rng)
+end
+
+function (taaft::SurrogateGenerator2{<:TAAFT2})()
+    sg = taaft.init.gen
+    
+    x, s = sg.x, sg.s
+    fϵ = sg.method.fϵ
+    L = length(x)
+
+    init_fields = (:forward, :inverse,
+        :rx, :ϕx, :n,
+        :𝓕new, :𝓕s, :ϕs)
+
+    forward, inverse,
+        rx, ϕx, n,
+        𝓕new, 𝓕s, ϕs = getfield.(Ref(sg.init), init_fields)
+
+    # Surrogate starts out as a random permutation of x
+    s .= x[StatsBase.sample(sg.rng, 1:L, L; replace = false)]
+    𝓕s .= forward * s
+    ϕs .= angle.(𝓕s)
+
+    # Updated spectrum is the old amplitudes with the mixed phases.
+    if fϵ > 0
+        # Frequencies are ordered from lowest when taking the Fourier
+        # transform, so by keeping the 1:n_ni first phases intact,
+        # we are only randomizing the high-frequency components of the
+        # signal.
+        n_preserve = ceil(Int, abs(fϵ * n))
+        #println("Preserving $(n_preserve/n*100) % of the frequencies (randomizing high frequencies)")
+        ϕs[1:n_preserve] .= ϕx[1:n_preserve]
+    elseif fϵ < 0
+        # Do the exact opposite to preserve high-frequencies
+        n_preserve = ceil(Int, abs(fϵ * n))
+        #println("Preserving $(n_preserve/n*100) % of the frequencies (randomizing low frequencies)")
+        ϕs[end-n_preserve+1:end] .= ϕx[end-n_preserve+1:end]
+    end
+
+    𝓕new .= rx .* exp.(ϕs .* 1im)
+    s .= inverse * 𝓕new
+    
+    s = sg()
+    s[sortperm(s)] .= sg.init.x_sorted
+    return s
+end
+
+
