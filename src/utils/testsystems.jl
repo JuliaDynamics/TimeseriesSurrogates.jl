@@ -124,12 +124,12 @@ Make a timeseries that is composed of `period` full sine wave periods, each with
 random frequency in the range given by `frange`, and added noise with std `σ`.
 The sampling time is `dt`.
 """
-function random_cycles(; periods=10, dt=π/20, σ = 0.05, frange = (1.0, 1.6))
+function random_cycles(rng = Random.default_rng(); periods=10, dt=π/20, σ = 0.05, frange = (1.0, 1.6))
     dt = π/20
     x = Float64[]
 
     for i in 1:periods
-        f = (frange[1]-frange[2])*rand() + frange[1]
+        f = (frange[1]-frange[2])*rand(rng) + frange[1]
         T = 2π/f
         t = 0:dt:T
         append!(x, sin.(f .* t))
