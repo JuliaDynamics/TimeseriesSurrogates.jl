@@ -139,7 +139,6 @@ function surrogenerator(x, method::IrregularLombScargle2, rng = Random.default_r
     # Use Minkowski distance of order q
     dist = Distances.Minkowski(method.q)
 
-
     # When re-computing the Lomb-Scargle periodogram, we will use the 
     # `_periodogram!` method, which re-uses the lsplan with a shuffled 
     # time vector. This is the same as shuffling the signal, so the 
@@ -162,7 +161,6 @@ end
 
 
 function (sg::SurrogateGenerator2{<:IrregularLombScargle2})()
-
     lsplan, xpower, n, dist, candidate = sg.init
     t, tol = sg.method.t, sg.method.tol
     x, s, rng = sg.x, sg.s, sg.rng
@@ -173,6 +171,7 @@ function (sg::SurrogateGenerator2{<:IrregularLombScargle2})()
     # Compare power spectra for original (`xpower`) and randomly shuffled signal (`spower`).
     lossold = Distances.evaluate(dist, xpower, spower)
 
+    range = 1:n
     i = j = 0
     while i < sg.method.n_total && j < sg.method.n_acc
         if mod(i, 2000) == 0
@@ -183,8 +182,9 @@ function (sg::SurrogateGenerator2{<:IrregularLombScargle2})()
         copy!(candidate, s)
 
         # Swap two random points and re-compute power spectrum for the candidate.
-        k, l = sample(rng, 1:n, 2, replace = false)
-        candidate[[k, l]] = s[[l, k]]
+        swap_elements!(candidate, s, rng, range)
+
+        # This is the bottleneck.
         spower = LombScargle._periodogram!(lsplan.P, candidate, lsplan)
 
         # If spectra are more similar after the swap, accept the new 
@@ -194,7 +194,6 @@ function (sg::SurrogateGenerator2{<:IrregularLombScargle2})()
         if lossnew < lossold
             lossnew <= tol && break
             s = copy(candidate)
-            #copyto!(s, candidate)
             lossold = lossnew
             j += 1
         end
@@ -211,4 +210,11 @@ function (sg::SurrogateGenerator2{<:IrregularLombScargle2})()
     
     # Re-scale back to original time series values.
     return x[perm]
+end
+
+function swap_elements!(candidate, s, rng, range)
+    k = sample(rng, range)
+    l = sample(rng, range)
+    candidate[k] = s[l]
+    candidate[l] = s[k]
 end

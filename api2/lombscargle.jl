@@ -5,18 +5,25 @@ using BenchmarkTools, Random
 ####################################
 rng = MersenneTwister(1234)
 rng2 = MersenneTwister(1234)
-n = 1000
-x = cos.(range(0, 20π, length = n)) .+ randn(n)*0.05
+n = 200
+x = AR1()[1:n]
 t = collect(1:n) .+ rand(n)
-lombscargle = surrogenerator(x, IrregularLombScargle(t, tol = 10), rng)
-lombscargle2 = surrogenerator(x, IrregularLombScargle2(t, tol = 10), rng2)
-lombscargle(); lombscargle2();
+lomb = surrogenerator(x, IrregularLombScargle(t, n_total = 10000, n_acc = 2000), rng);
+lomb2 = surrogenerator(x, IrregularLombScargle2(t, n_total = 10000, n_acc = 2000), rng2);
+lomb(); lomb2();
 
-lombscargle_allo  = @ballocated sg() setup = (sg = $lombscargle)
-lombscargle2_allo = @ballocated sg() setup = (sg = $lombscargle2)
-lombscargle_time  = @belapsed sg() setup = (sg = $lombscargle)
-lombscargle2_time = @belapsed sg() setup = (sg = $lombscargle2)
+lomb(); @btime sg() setup = (sg = $lomb)
+lomb2(); @btime sg() setup = (sg = $lomb2)
 
-lombscargle_allo = (lombscargle_allo -  lombscargle2_allo)/lombscargle_allo * 100
-lombscargle_time = (lombscargle_time -  lombscargle2_time)/lombscargle_time * 100
-@show lombscargle_allo, lombscargle_time
+# lomb_allo  = @ballocated sg() setup = (sg = $lomb)
+# lomb2_allo = @ballocated sg() setup = (sg = $lomb2)
+# lomb_time  = @belapsed sg() setup = (sg = $lomb)
+# lomb2_time = @belapsed sg() setup = (sg = $lomb2)
+
+# lomb_allo = (lomb_allo -  lomb2_allo)/lomb_allo * 100
+# lomb_time = (lomb_time -  lomb2_time)/lomb_time * 100
+# @show lomb_allo, lomb_time
+# Old: 5.062 s (9142792 allocations: 5.02 GiB)
+# New: 2.510 s (4541688 allocations: 2.51 GiB)
+# New: 2.506 s (4531694 allocations: 2.51 GiB)
+# 2.489 s (4531684 allocations: 2.51 GiB)
