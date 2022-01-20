@@ -9,6 +9,7 @@
 # The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using DSP
+using LinearAlgebra: mul!
 
 """
     prepare_spectrum(s) → Vector{Float64}
@@ -16,23 +17,9 @@ using DSP
 Pre-allocate a vector that will hold the one-sided power spectrum for a signal `s`,
 taking into account the number of points that will be used for the Fourier transform.
 """
-function prepare_spectrum(s)
-    n = DSP.nextfastfft(length(s))
-    spectrum = zeros(Float64, (n >> 1) + 1)
-
-    if n == length(s) && isa(s, StridedArray)
-        signal = copy(s) # no need to pad
-    else
-        # pad with zeros (overwrite the first length(s) elements of input, 
-        # then leave remaining zeros)
-        signal = zeros(Float64, n)
-        copyto!(signal, s)
-    end
-
-    return spectrum
+function prepare_spectrum(s, plan)
+    return plan * s
 end
-
-export powerspectrum_onesided!
 
 
 """
@@ -75,13 +62,14 @@ Let `n = DSP.nextfastfft(length(s))`. Modifies `spectrum` in-place, so `spectrum
 is reset to all zeros every time this function is called.
 
 - `forward` is a forward fft-plan for the signal.
+- `spectrum` is a pre-allocated `AbstractVector{<:Real}` that will hold the spectrum.
+    Has the length of the Fourier transform resulting from `forward * signal`.
 - `signal` is the signal, a `AbstractVector{<:Real}` of length `n`.
-- `spectrum` is a pre-allocated `AbstractVector{<:Real}` of length `(n >> 1) + 1)` into 
-    which the spectrum is computed.
 """
-function powerspectrum_onesided!(spectrum, signal, forward)
+function powerspectrum!(ℱp, spectrum, signal, forward)
     # Fourier transform of the signal, based on pre-computed plan `forward`.
-    ℱ = forward * signal
+    mul!(ℱp, forward, signal) #ℱp = forward * signal
+
     l = length(signal)
 
     # Reset spectrum, since we're doing multiple in-place additions to it.
@@ -89,7 +77,7 @@ function powerspectrum_onesided!(spectrum, signal, forward)
 
     # In-place computation of spectrum based on the transform `ℱ`
     n = nextfastfft(l)
-    _powerspectrum_from_fft!(spectrum, ℱ, n, l)
+    _powerspectrum_from_fft!(spectrum, ℱp, n, l)
 
     return spectrum
 end

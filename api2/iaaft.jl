@@ -5,9 +5,9 @@ using BenchmarkTools, Random
 ####################################
 rng = MersenneTwister(1234)
 rng2 = MersenneTwister(1234)
-x = AR1(3000, rand(), 0.5)
-iaaft = surrogenerator(x, IAAFT(M = 10), rng)
-iaaft2 = surrogenerator(x, IAAFT2(M = 10), rng2)
+x = random_cycles(rng, periods = 90)
+iaaft = surrogenerator(x, IAAFT(M = 50), rng)
+iaaft2 = surrogenerator(x, IAAFT2(M = 50), rng2)
 iaaft(); iaaft2();
 
 iaaft_allo  = @ballocated sg() setup = (sg = $iaaft);

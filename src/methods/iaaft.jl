@@ -128,6 +128,7 @@ end
 
 
 include("../utils/powerspectrum.jl")
+include("../utils/interpolation.jl")
 export IAAFT2
 
 struct IAAFT2 <: Surrogate
@@ -142,10 +143,6 @@ end
 
 Base.show(io::IO, x::IAAFT2) = print(io, "IAAFT2(M = $(x.M), tol = $(x.tol), W = $(x.W))")
 
-using Interpolations
-getrange(t, n) = LinRange(minimum(t), maximum(t), n)
-itp(x) = LinearInterpolation(1:length(x), x)
-interp(itp, tᵢ) = itp()
 
 function interpolated_spectrum(spectrum, n)
     intp_spectrum = zeros(n)
@@ -170,6 +167,9 @@ function surrogenerator(x, method::IAAFT2, rng = Random.default_rng())
     # Initial forward transform.
     𝓕 = forward * x
 
+    # For periodogram
+    𝓕p = prepare_spectrum(x, forward)
+
     # Amplitudes of the initial transform are kept 
     # constant during iterations, so pre-allocate.
     r = abs.(𝓕)
@@ -181,41 +181,42 @@ function surrogenerator(x, method::IAAFT2, rng = Random.default_rng())
     x̂ = sort(x)
 
     # Initial power spectrum
-    xpower = prepare_spectrum(x)
-    powerspectrum_onesided!(xpower, x, forward)
-    xpowerbinned = interpolated_spectrum(xpower, method.W)
-    spowerbinned = interpolated_spectrum(xpower, method.W)
+    #xpower = DSP.periodogram(x).power
+
+    # We'll re-use the plan both for periodograms and for Fourier transforms 
+    # during iterations.
+    xpower = zeros(length(𝓕)); powerspectrum!(𝓕p, xpower, x, forward)
+    spower = copy(xpower)
+
+    # Binned periodograms
+    xpowerᵦ = interpolated_spectrum(xpower, method.W)
+    spowerᵦ = interpolated_spectrum(spower, method.W)
 
     init = (
         forward = forward, 
         inverse = inverse, 
         𝓕 = 𝓕, 
+        𝓕p = 𝓕p,
         r = r, 
         ϕ = ϕ, 
         m = m, 
         x̂ = x̂, 
         xpower = xpower, 
-        xpowerbinned = xpowerbinned,
-        spowerbinned = spowerbinned,
+        spower = spower,
+        xpowerᵦ = xpowerᵦ,
+        spowerᵦ = spowerᵦ,
     )
 
     return SurrogateGenerator2(method, x, similar(x), init, rng)
 end
-
-using Plots
+using LinearAlgebra
 function (sg::SurrogateGenerator2{<:IAAFT2})()
-    init_fields = (:forward, :inverse, :𝓕, :r, :ϕ, :m, :x̂, :xpower, :xpowerbinned, :spowerbinned)
-    forward, inverse, 𝓕, r, ϕ, m, x̂, xpower, xpowerbinned, spowerbinned = getfield.(Ref(sg.init), init_fields)
+    init_fields = (:forward, :inverse, :𝓕, :𝓕p, :r, :ϕ, :m, :x̂, :xpower, :spower, :xpowerᵦ, :spowerᵦ)
+    forward, inverse, 𝓕, 𝓕p, r, ϕ, m, x̂, xpower, spower, xpowerᵦ, spowerᵦ = getfield.(Ref(sg.init), init_fields)
 
     x, s, rng = sg.x, sg.s, sg.rng
     M, W = sg.method.M, sg.method.W
     tol = sg.method.tol
-
-    # Pre-allocate surrogate periodogram
-    spower = copy(xpower)
-
-    # Keep track of difference between periodograms between iterations
-    diffs = zeros(Float64, 2)
 
     # Surrogate starts out as a random permutation of `x`
     n = length(x)
@@ -224,18 +225,28 @@ function (sg::SurrogateGenerator2{<:IAAFT2})()
     # Index vector used to sort in-place
     ix = zeros(Int, length(x))
 
+    # Keep track of difference between periodograms between iterations
+    sum_old, sum_new = 0.0, 0.0
+
     iter = 1
     while iter <= M        
-        # Fourier transform of the surrogate. 
-        𝓕 .= forward * s
-        ϕ .= angle.(𝓕)
+        # Fourier transform of the surrogate. The forward transformation can be done 
+        # in-place to avoid allocations.
+        mul!(𝓕, forward, s) # 𝓕 .= forward * s
         
-        # Replace amplitudes of the transform with the original amplitudes `r𝓕`,
+        # Replace amplitudes of the transform with the original amplitudes `r`,
         # leavding phases untouched.
+        ϕ .= angle.(𝓕)
         𝓕 .= r .* exp.(ϕ .* 1im)
 
+        # TODO: Unfortunately, we can't simply do ldiv! here to avoid allocations. 
+        # But, although FFTW does not yet have irfft!, it will probably have. 
+        # See https://github.com/JuliaMath/FFTW.jl/pull/222. 
+        # Once that PR is merged, we should replace the following line with 
+        # the in-place version.
+        ######################################################################
         # The surrogate is initially the real part of the inverse transform.
-        s .= inverse * 𝓕
+        s .= inverse * 𝓕 
 
         # The inverse transform does not preserve the original values of the time series, 
         # because the phases are randomized. We therefore rank-order `s` (sort it), 
@@ -243,20 +254,25 @@ function (sg::SurrogateGenerator2{<:IAAFT2})()
         sortperm!(ix, s)
         s[ix] .= x̂
 
-        # Compute periodogram for the current state of the surrogate `s`
-        powerspectrum_onesided!(spower, s, forward)
-        interpolated_spectrum!(spowerbinned, spower, W)
+        # Compute and interpolate spectrum for surrogate
+        powerspectrum!(𝓕p, spower, s, forward)
+        interpolated_spectrum!(spowerᵦ, spower, W)
 
-        # Convergence check on periodogram using relative discrepancy criterion 
-        # from the paper.
+        # Compute power spectrum for the current state of the surrogate `s` and 
+        # the original power spectrum.
         if iter == 1
-            diffs[1] = sum((xpowerbinned .- xpowerbinned) .^ 2) / sum(xpowerbinned .^ 2)
-        else
-            diffs[2] = sum((xpowerbinned .- spowerbinned) .^ 2) / sum(xpowerbinned .^ 2)
-            abs(diffs[1] - diffs[2]) < tol ? break : diffs[1] = copy(diffs[2])
+            sum_old = sum((xpowerᵦ .- xpowerᵦ) .^ 2) / sum(xpowerᵦ .^ 2)
+        else 
+            sum_new = sum((xpowerᵦ .- spowerᵦ) .^ 2) / sum(xpowerᵦ .^ 2)
+            if abs(sum_old - sum_new) < tol
+                iter = M + 1
+            else
+                sum_old = sum_new
+            end
         end
 
         iter += 1
     end
+
     return s
 end

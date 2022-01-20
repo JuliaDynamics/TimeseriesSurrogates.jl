@@ -1,3 +1,9 @@
+
+
+getrange(t, n) = LinRange(minimum(t), maximum(t), n)
+itp(x) = LinearInterpolation(1:length(x), x)
+interp(itp, tᵢ) = itp()
+
 """
 Linearly interpolates two vectors x and y on a linear grid consisting of `nsteps`.
 """
@@ -11,9 +17,15 @@ function interp(x::Vector, y::Vector, nsteps::Int)
     return collect(x_fills), y_fills
 end
 
-getrange(t, n) = LinRange(minimum(t), maximum(t), n)
-itp(x) = LinearInterpolation(1:length(x), x)
-interp(itp, tᵢ) = itp()
+"""
+Linearly interpolates two vector x and y on a linear grid consisting of `nsteps`.
+"""
+function interp(x, y, range::LinRange)
+    itp = interpolate((x,), y, Gridded(Linear()))
+    
+    # Interpolate at the given resolution
+    return itp(range)
+end
 
 """
     interp!(ȳ::Vector, itp)
@@ -25,14 +37,4 @@ function interp!(ȳ::Vector, itp)
     y_fills .= itp(x_fills)
 
     return collect(x_fills), y_fills
-end
-
-"""
-Linearly interpolates two vector x and y on a linear grid consisting of `nsteps`.
-"""
-function interp(x, y, range::LinRange)
-    itp = interpolate((x,), y, Gridded(Linear()))
-    
-    # Interpolate at the given resolution
-    return itp(range)
 end
