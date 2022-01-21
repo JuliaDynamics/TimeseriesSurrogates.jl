@@ -8,12 +8,10 @@ rng2 = MersenneTwister(1234)
 x = random_cycles(rng, periods = 90)[1:5000]
 rs = surrogenerator(x, RandomShuffle(), rng)
 rs2 = surrogenerator(x, RandomShuffle2(), rng2)
-rs(); rs2();
+rs(); rs2()
 
-rs_bt  = @btime sg() setup = (sg = $rs);
-rs2_bt = @btime sg() setup = (sg = $rf2);
-
-
+rs(); @btime sg() setup = (sg = $rs);
+rs2();  @btime sg() setup = (sg = $rs2);
 # rs_allo  = @ballocated sg() setup = (sg = $rs)
 # rs2_allo = @ballocated sg() setup = (sg = $rs2)
 # rs_time  = @belapsed sg() setup = (sg = $rs)
