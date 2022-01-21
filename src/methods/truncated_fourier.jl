@@ -50,88 +50,6 @@ function surrogenerator(x, method::TFTS, rng = Random.default_rng())
     inverse = plan_irfft(forward*x, length(x))
 
     # Pre-compute 𝓕
-    𝓕 = forward*x
-
-    # Polar coordinate representation of the Fourier transform
-    rx = abs.(𝓕)
-    ϕx = angle.(𝓕)
-    n = length(𝓕)
-
-    x_sorted = sort(x)
-
-    # These are updated during iteration procedure
-    𝓕new = Vector{Complex{Float64}}(undef, length(𝓕))
-    𝓕s = Vector{Complex{Float64}}(undef, length(𝓕))
-    ϕs = Vector{Complex{Float64}}(undef, length(𝓕))
-
-    init = (forward = forward, inverse = inverse,
-        rx = rx, ϕx = ϕx, n = n,
-        x_sorted = x_sorted,
-        𝓕new = 𝓕new, 𝓕s = 𝓕s, ϕs = ϕs)
-
-    return SurrogateGenerator(method, x, init, rng)
-end
-
-function (sg::SurrogateGenerator{<:TFTS})()
-    x = sg.x
-    fϵ = sg.method.fϵ
-    L = length(x)
-
-    init_fields = (:forward, :inverse,
-        :rx, :ϕx, :n,
-        :x_sorted,
-        :𝓕new, :𝓕s, :ϕs)
-
-    forward, inverse,
-        rx, ϕx, n,
-        x_sorted,
-        𝓕new, 𝓕s, ϕs = getfield.(Ref(sg.init), init_fields)
-
-    # Surrogate starts out as a random permutation of x
-    s = x[StatsBase.sample(sg.rng, 1:L, L; replace = false)]
-    𝓕s .= forward*s
-    ϕs .= angle.(𝓕s)
-
-    # Updated spectrum is the old amplitudes with the mixed phases.
-
-    if fϵ > 0
-        # Frequencies are ordered from lowest when taking the Fourier
-        # transform, so by keeping the 1:n_ni first phases intact,
-        # we are only randomizing the high-frequency components of the
-        # signal.
-        n_preserve = ceil(Int, abs(fϵ * n))
-        #println("Preserving $(n_preserve/n*100) % of the frequencies (randomizing high frequencies)")
-        ϕs[1:n_preserve] .= ϕx[1:n_preserve]
-    elseif fϵ < 0
-        # Do the exact opposite to preserve high-frequencies
-        n_preserve = ceil(Int, abs(fϵ * n))
-        #println("Preserving $(n_preserve/n*100) % of the frequencies (randomizing low frequencies)")
-        ϕs[end-n_preserve+1:end] .= ϕx[end-n_preserve+1:end]
-    end
-
-    𝓕new .= rx .* exp.(ϕs .* 1im)
-
-    return inverse*𝓕new
-end
-
-export TFTS2
-struct TFTS2 <: Surrogate
-    fϵ::Real
-
-    function TFTS2(fϵ::Real)
-        if !(0 < fϵ ≤ 1) && !(-1 ≤ fϵ < 0)
-            throw(ArgumentError("`fϵ` must be on the interval [-1, 0) ∪ (0, 1] (positive if preserving high frequencies, negative if preserving low frequencies)"))
-        end
-        new(fϵ)
-    end
-end
-
-function surrogenerator(x, method::TFTS2, rng = Random.default_rng())
-    # Pre-plan Fourier transforms
-    forward = plan_rfft(x)
-    inverse = plan_irfft(forward*x, length(x))
-
-    # Pre-compute 𝓕
     𝓕 = forward * x
 
     # Polar coordinate representation of the Fourier transform
@@ -148,10 +66,10 @@ function surrogenerator(x, method::TFTS2, rng = Random.default_rng())
         rx = rx, ϕx = ϕx, n = n,
         𝓕new = 𝓕new, 𝓕s = 𝓕s, ϕs = ϕs)
 
-    return SurrogateGenerator2(method, x, similar(x), init, rng)
+    return SurrogateGenerator(method, x, similar(x), init, rng)
 end
 
-function (sg::SurrogateGenerator2{<:TFTS2})()
+function (sg::SurrogateGenerator{<:TFTS})()
     x, s = sg.x, sg.s
     fϵ = sg.method.fϵ
     L = length(x)
@@ -170,19 +88,16 @@ function (sg::SurrogateGenerator2{<:TFTS2})()
     ϕs .= angle.(𝓕s)
 
     # Updated spectrum is the old amplitudes with the mixed phases.
-
     if fϵ > 0
         # Frequencies are ordered from lowest when taking the Fourier
         # transform, so by keeping the 1:n_ni first phases intact,
         # we are only randomizing the high-frequency components of the
         # signal.
         n_preserve = ceil(Int, abs(fϵ * n))
-        #println("Preserving $(n_preserve/n*100) % of the frequencies (randomizing high frequencies)")
         ϕs[1:n_preserve] .= ϕx[1:n_preserve]
     elseif fϵ < 0
         # Do the exact opposite to preserve high-frequencies
         n_preserve = ceil(Int, abs(fϵ * n))
-        #println("Preserving $(n_preserve/n*100) % of the frequencies (randomizing low frequencies)")
         ϕs[end-n_preserve+1:end] .= ϕx[end-n_preserve+1:end]
     end
 
@@ -191,8 +106,6 @@ function (sg::SurrogateGenerator2{<:TFTS2})()
     
     return s
 end
-
-
 
 """
     TAAFT(fϵ)
@@ -216,33 +129,11 @@ struct TAAFT <: Surrogate
 end
 
 function surrogenerator(x, method::TAAFT, rng = Random.default_rng())
-    init = surrogenerator(x, TFTS(method.fϵ), rng)
-    return SurrogateGenerator(method, x, init, rng)
-end
-
-function (taaft::SurrogateGenerator{<:TAAFT})()
-    sg = taaft.init
-    s = sg()
-    s[sortperm(s)] .= sg.init.x_sorted
-    return s
-end
-
-export TAAFT2
-struct TAAFT2 <: Surrogate
-    fϵ::Real
-
-    function TAAFT2(fϵ::Real)
-        fϵ != 0 || throw(ArgumentError("`fϵ` must be on the interval [-1, 0) ∪ (0, 1] (positive if preserving high frequencies, negative if preserving low frequencies)"))
-        new(fϵ)
-    end
-end
-
-function surrogenerator(x, method::TAAFT2, rng = Random.default_rng())
     init = (tfts_gen = surrogenerator(x, TFTS(method.fϵ), rng))
     return SurrogateGenerator(method, x, init, rng)
 end
 
-function (taaft::SurrogateGenerator2{<:TAAFT2})()
+function (taaft::SurrogateGenerator{<:TAAFT})()
     sg = taaft.init.gen
     
     x, s = sg.x, sg.s
