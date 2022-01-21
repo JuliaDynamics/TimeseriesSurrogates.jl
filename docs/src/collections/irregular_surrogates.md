@@ -16,7 +16,7 @@ N = 1000
 t = (1:N) - rand(N) 
 x = AR1(n_steps = N)
 
-ls = LS(t)
+ls = IrregularLombScargle(t)
 s = surrogate(x, ls)
 surroplot(x, s)
 
