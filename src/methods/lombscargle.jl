@@ -50,7 +50,7 @@ function surrogenerator(x, method::IrregularLombScargle, rng = Random.default_rn
     # `_periodogram!` method, which re-uses the lsplan with a shuffled 
     # time vector. This is the same as shuffling the signal, so the 
     # surrogate starts out as a shuffled version of `t`.
-    s = shuffle(method.t)
+    s = shuffle(rng, method.t)
 
     # Initialize a candidate surrogate.
     candidate = zero(s)
@@ -120,8 +120,7 @@ function (sg::SurrogateGenerator{<:IrregularLombScargle})()
 end
 
 function swap_elements!(candidate, s, rng, range)
-    k = sample(rng, range)
-    l = sample(rng, range)
+    k, l = sample(rng, range, 2, replace = false)
     candidate[k] = s[l]
     candidate[l] = s[k]
 end
