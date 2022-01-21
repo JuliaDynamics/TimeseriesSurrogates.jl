@@ -4,97 +4,6 @@ export BlockShuffle, CycleShuffle, CircShift
 # BlockSuffle
 #########################################################################
 """
-    BlockShuffle(n::Int) <: Surrogate
-
-A block shuffle surrogate constructed by dividing the time series
-into `n` blocks of roughly equal width at random indices (end
-blocks are wrapped around to the start of the time series).
-
-Block shuffle surrogates roughly preserve short-range temporal properties
-in the time series (e.g. correlations at lags less than the block length),
-but break any long-term dynamical information (e.g. correlations beyond
-the block length).
-
-Hence, these surrogates can be used to test any null hypothesis aimed at
-comparing short-range dynamical properties versus long-range dynamical
-properties of the signal.
-"""
-struct BlockShuffle <: Surrogate
-    n::Int
-end
-
-Base.show(io::IO, bs::BlockShuffle) = show(io, "BlockShuffle(n=$(bs.n))")
-
-# Split time series into ten pieces by default.
-BlockShuffle() = BlockShuffle(10)
-
-function get_uniform_blocklengths(L::Int, n::Int)
-    # Compute block lengths
-    N = floor(Int, L/n)
-    R = L % n
-    blocklengths = [N for i = 1:n]
-    for i = 1:R
-        blocklengths[i] += 1
-    end
-    return blocklengths
-end
-
-function surrogenerator(x::AbstractVector, bs::BlockShuffle, rng = Random.default_rng())
-    L = length(x)
-    bs.n < L || error("The number of blocks exceeds number of available points")
-    Ls = get_uniform_blocklengths(L, bs.n)
-    cs = cumsum(Ls)
-    # will hold a rotation version of x
-    xrot = similar(x)
-    T = eltype(xrot)
-    init = NamedTuple{(:L, :Ls, :cs, :xrot),Tuple{Int, Vector{Int}, Vector{Int}, Vector{T}}}((L, Ls, cs, xrot))
-    return SurrogateGenerator(bs, x, init, rng)
-end
-
-function (bs::SurrogateGenerator{<:BlockShuffle})()
-    # TODO: A circular custom array implementation would be much more elegant here
-    L = bs.init.L
-    Ls = bs.init.Ls
-    cs = bs.init.cs
-    xrot = bs.init.xrot
-    n = bs.method.n
-    x = bs.x
-
-    # Just create a temporarily randomly shifted array, so we don't need to mess
-    # with indexing twice.
-    circshift!(xrot, x, rand(bs.rng, 1:L))
-
-    # Block always must be shuffled (so ordered samples are not permitted)
-    draw_order = zeros(Int, n)
-    while any(draw_order .== 0) || all(draw_order .== 1:n)
-       StatsBase.sample!(bs.rng, 1:n, draw_order, replace = false)
-    end
-
-    # The surrogate.
-    # TODO: It would be faster to re-allocate, but blocks may
-    # be of different sizes and are shifted, so indexing gets messy.
-    # Just append for now.
-    T = eltype(x)
-    s = Vector{T}(undef, 0)
-    sizehint!(s, L)
-
-    startinds = [1; cs .+ 1]
-    @inbounds for i in draw_order
-        inds = startinds[i]:startinds[i]+Ls[i]-1
-        append!(s, xrot[inds])
-    end
-
-    return s
-end
-
-
-#########################################################################
-# TODO: New api
-#########################################################################
-export BlockShuffle2
-
-
-"""
     BlockShuffle2(n::Int; shift = false) <: Surrogate
 
 A block shuffle surrogate constructed by dividing the time series
@@ -113,21 +22,21 @@ Hence, these surrogates can be used to test any null hypothesis aimed at
 comparing short-range dynamical properties versus long-range dynamical
 properties of the signal.
 """
-struct BlockShuffle2{I <: Integer, B <: Bool} <: Surrogate
+struct BlockShuffle{I <: Integer, B <: Bool} <: Surrogate
     n::I
     shift::B
 
-    function BlockShuffle2(n::I; shift::B = false) where {I <: Integer, B <: Bool}
+    function BlockShuffle(n::I; shift::B = false) where {I <: Integer, B <: Bool}
         return new{I, B}(n, shift)
     end
 
     # Split time series into 10 pieces by default. Shifting disabled by default.
-    function BlockShuffle2()
+    function BlockShuffle()
         return new{Int, Bool}(10, false)
     end
 end
 
-function surrogenerator(x::AbstractVector, bs::BlockShuffle2, rng = Random.default_rng())
+function surrogenerator(x::AbstractVector, bs::BlockShuffle, rng = Random.default_rng())
     bs.n < length(x) || error("The number of blocks exceeds number of available points")
 
     # The lengths of the blocks (one block will have a differing length if length of 
@@ -157,7 +66,7 @@ function surrogenerator(x::AbstractVector, bs::BlockShuffle2, rng = Random.defau
     return SurrogateGenerator2(bs, x, s, init, rng)
 end
 
-function (sg::SurrogateGenerator2{<:BlockShuffle2})()
+function (sg::SurrogateGenerator{<:BlockShuffle})()
     init_fields = (:blocklengths, :startinds, :x_rotated, :draw_order)
     blocklengths, startinds, x_rotated, draw_order = getfield.(Ref(sg.init), init_fields)
     x, s, n = sg.x, sg.s, sg.method.n
@@ -244,43 +153,11 @@ function surrogenerator(x::AbstractVector, cs::CycleShuffle, rng = Random.defaul
     smooth = iseven(r) ? smooth[r÷2+1:end-r÷2] : smooth[r÷2+1:end-r÷2-1]
     peaks = findall(i -> smooth[i-1] < smooth[i] && smooth[i] > smooth[i+1], 2:N-1)
     blocks = [collect(peaks[i]:peaks[i+1]-1) for i in 1:length(peaks)-1]
-    init =  (blocks = blocks, s = copy(x), peak1 = peaks[1])
-    SurrogateGenerator(cs, x, init, rng)
-end
-
-function (sg::SurrogateGenerator{<:CycleShuffle})()
-    blocks, s, peak1 = sg.init
-    x = sg.x
-    shuffle!(sg.rng, blocks)
-    i = peak1
-    for b in blocks
-        s[(0:length(b)-1) .+ i] .= @view x[b]
-        i += length(b)
-    end
-    return s
-end
-
-export CycleShuffle2
-
-struct CycleShuffle2{T <: AbstractFloat} <: Surrogate
-    n::Int
-    σ::T
-end
-CycleShuffle2(n = 7, σ = 0.5) = CycleShuffle2{typeof(σ)}(n, σ)
-
-function surrogenerator(x::AbstractVector, cs::CycleShuffle2, rng = Random.default_rng())
-    n, N = cs.n, length(x)
-    g = DSP.gaussian(n, cs.σ)
-    smooth = DSP.conv(x, g)
-    r = length(smooth) - N
-    smooth = iseven(r) ? smooth[r÷2+1:end-r÷2] : smooth[r÷2+1:end-r÷2-1]
-    peaks = findall(i -> smooth[i-1] < smooth[i] && smooth[i] > smooth[i+1], 2:N-1)
-    blocks = [collect(peaks[i]:peaks[i+1]-1) for i in 1:length(peaks)-1]
     init =  (blocks = blocks, peak1 = peaks[1])
     SurrogateGenerator2(cs, x, similar(x), init, rng)
 end
 
-function (sg::SurrogateGenerator2{<:CycleShuffle2})()
+function (sg::SurrogateGenerator{<:CycleShuffle})()
     blocks, peak1 = sg.init
     x = sg.x
     s = sg.s
@@ -294,11 +171,12 @@ function (sg::SurrogateGenerator2{<:CycleShuffle2})()
     return s
 end
 
-
-
 #########################################################################
 # Timeshift
 #########################################################################
+random_shift(n::Integer, rng) = n
+random_shift(n::AbstractVector{<:Integer}, rng) = rand(rng, n)
+
 """
     CircShift(n) <: Surrogate
 Surrogates that are circularly shifted versions of the original timeseries.
@@ -312,27 +190,10 @@ struct CircShift{N} <: Surrogate
 end
 
 function surrogenerator(x, sd::CircShift, rng = Random.default_rng())
-    return SurrogateGenerator(sd, x, nothing, rng)
-end
-
-function (sg::SurrogateGenerator{<:CircShift})()
-    s = random_shift(sg.method.n, sg.rng)
-    return circshift(sg.x, s)
-end
-
-random_shift(n::Integer, rng) = n
-random_shift(n::AbstractVector{<:Integer}, rng) = rand(rng, n)
-
-export CircShift2
-struct CircShift2{N} <: Surrogate
-    n::N
-end
-
-function surrogenerator(x, sd::CircShift2, rng = Random.default_rng())
     return SurrogateGenerator2(sd, x, similar(x), nothing, rng)
 end
 
-function (sg::SurrogateGenerator2{<:CircShift2})()
+function (sg::SurrogateGenerator{<:CircShift})()
     x, s = sg.x, sg.s
     shift = random_shift(sg.method.n, sg.rng)
     circshift!(s, x, shift)
