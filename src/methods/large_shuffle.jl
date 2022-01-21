@@ -88,7 +88,7 @@ function (sg::SurrogateGenerator{<:BlockShuffle})()
     end
 
     # Shuffle blocks
-    shuffle!(draw_order)
+    shuffle!(sg.rng, draw_order)
 
     k = 1
     npts_sampled = 0
@@ -165,15 +165,15 @@ function surrogenerator(x::AbstractVector, cs::CycleShuffle, rng = Random.defaul
     peaks = findall(i -> smooth[i-1] < smooth[i] && smooth[i] > smooth[i+1], 2:N-1)
     blocks = [collect(peaks[i]:peaks[i+1]-1) for i in 1:length(peaks)-1]
     init =  (blocks = blocks, peak1 = peaks[1])
-    SurrogateGenerator(cs, x, similar(x), init, rng)
+    s = copy(x)
+    SurrogateGenerator(cs, x, s, init, rng)
 end
 
 function (sg::SurrogateGenerator{<:CycleShuffle})()
     blocks, peak1 = sg.init
     x = sg.x
     s = sg.s
-    rng = sg.rng
-    shuffle!(rng, blocks)
+    shuffle!(sg.rng, blocks)
     i = peak1
     for b in blocks
         s[(0:length(b)-1) .+ i] .= @view x[b]
