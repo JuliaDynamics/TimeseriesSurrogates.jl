@@ -14,7 +14,6 @@ function linear_trend(x)
     return trendᵢ.(x)
 end
 
-
 """
     TFTDRandomFourier()
 
@@ -117,5 +116,51 @@ function (sg::SurrogateGenerator{<:TFTDRandomFourier})()
     # this is an open PR in FFTW.
     s .= inverse*𝓕 .+ m .+ trend
 
+    return s
+end
+
+
+
+"""
+    TFTDAAFT()
+
+[`TFTDAAFT`](@ref)[^Lucio2012] are similar to [`TFTDRandomFourier`](@ref), but also re-scales 
+back to the original values of the time series, analogously to [`AAFT`](@ref) 
+
+[^Lucio2012]: Lucio, J. H., Valdés, R., & Rodríguez, L. R. (2012). Improvements to surrogate data methods for nonstationary time series. Physical Review E, 85(5), 056202.
+"""
+struct TFTDAAFT <: Surrogate
+    phases::Bool
+    fϵ
+
+    function TFTDAAFT(phases::Bool, fϵ = 0.05)
+        if !(0 < fϵ ≤ 1)
+            throw(ArgumentError("`fϵ` must be on the interval  (0, 1] (indicates fraction of lowest frequencies to be preserved)"))
+        end
+        new(phases, fϵ)
+    end
+end
+
+function surrogenerator(x::AbstractVector, rf::TFTDAAFT, rng = Random.default_rng())
+    init = (
+        gen = SurrogateGenerator(x, TFTS(rf.phases, rf.fϵ)),
+        x_sorted = sort(x),
+        ix = zeros(Int, length(x))
+    )
+
+    s = similar(x)
+    return SurrogateGenerator(rf, x, s, init, rng)
+end
+
+function (sg::SurrogateGenerator{<:TFTDAAFT})()
+    tfts_generator, ix, x_sorted = sg.init.gen, sg.init.ix, sg.init.x_sorted
+    s = sg.s
+
+    s .= tfts_generator()
+
+    sortperm!(ix, s)
+
+    # Rescale back to original values to obtain TFTDAAFT surrogate.
+    s[ix] .= x_sorted
     return s
 end
