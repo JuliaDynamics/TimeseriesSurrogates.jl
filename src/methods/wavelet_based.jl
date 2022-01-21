@@ -1,6 +1,7 @@
 export WLS
 using Wavelets
 
+
 """
     WLS(surromethod::Surrogate = IAAFT(), 
         rescale::Bool = true,
@@ -79,118 +80,6 @@ function surrogenerator(x::AbstractVector{T}, method::WLS, rng = Random.default_
     circshifted_smirr = zeros(T, size(W))
     R = zeros(size(W))
 
-    init = (wl = wl, W = W, Nscales = Nscales, L = L, 
-            sW = sW, sgs = sgs, sWmirr = sWmirr, 
-            circshifted_s = circshifted_s,
-            circshifted_smirr = circshifted_smirr,
-            x_sorted = x_sorted, R = R,
-    )
-    
-    return SurrogateGenerator(method, x, init, rng)
-end
- 
-function (sg::SurrogateGenerator{<:WLS})()
-    fds = (:wl, :W, :Nscales, :L, :sW, :sgs, :sWmirr, 
-        :circshifted_s, :circshifted_smirr,
-        :x_sorted, :R)
-
-    wl, W, Nscales, L, sW, sgs, sWmirr, 
-        circshifted_s, circshifted_smirr,
-        x_sorted, R = getfield.(Ref(sg.init), fds)
-
-    # Create surrogate versions of detail coefficients at each dyadic scale [first part of step (ii) in Keylock]   
-    for λ in 1:Nscales
-        sW[:, λ] .= sgs[λ]()
-    end
-    # Mirror the surrogate coefficients [last part of step (ii) in Keylock]   
-    sWmirr .= reverse(sW, dims = 1)
-
-    # In the original paper, surrogates and mirror images are matched to original 
-    # detail coefficients in a circular manner until some error criterion is 
-    # minimized. Then, the surrogate or its mirror image, depending on which provides 
-    # the best fit to the original coefficients, is chosen as the representative
-    # for a particular dyadic scale. Here, we instead use maximal correlation as 
-    # the criterion for matching.
-    optimal_shifts = zeros(Int, Nscales)
-    optimal_shifts_mirr = zeros(Int, Nscales)
-    maxcorrs = zeros(Nscales)
-    maxcorrs_mirr = zeros(Nscales)
-
-    for i in 0:L-1
-        circshift!(circshifted_s, sW, (i, 0))
-        circshift!(circshifted_smirr, sWmirr, (i, 0))
-
-        for λ in 1:Nscales
-            origW = W[:, λ]
-            c = cor(origW, circshifted_s[:, λ])
-            if c > maxcorrs[λ]
-                maxcorrs[λ] = c
-                optimal_shifts[λ] = i
-            end
-
-            c_mirr = cor(origW, circshifted_smirr[:, λ])
-            if c_mirr > maxcorrs_mirr[λ]
-                maxcorrs_mirr[λ] = c_mirr
-                optimal_shifts_mirr[λ] = i
-            end
-        end
-    end
-
-    # Decide which coefficients are retained (either surrogate or mirror surrogate coefficients)
-    for λ in 1:Nscales
-        if maxcorrs[λ] >= maxcorrs_mirr[λ]
-            R[:, λ] .= circshift(sW[:, λ], optimal_shifts[λ])
-        else 
-            R[:, λ] .= circshift(sWmirr[:, λ], optimal_shifts_mirr[λ])
-        end
-    end
-
-    s = imodwt(R, wl)
-
-    if sg.method.rescale
-        s[sortperm(s)] = x_sorted
-    end
-
-    return s
-end
-
-
-export WLS2
-struct WLS2{WT <: Wavelets.WT.OrthoWaveletClass, S <: Surrogate} <: Surrogate
-    surromethod::Surrogate # should preserve values of the original series
-    rescale::Bool
-    wt::WT
-
-    function WLS2(method::S = IAAFT(), rescale::Bool = true, wt::WT = Wavelets.WT.Daubechies{16}()) where {S <: Surrogate, WT <: Wavelets.WT.OrthoWaveletClass}
-        new{WT, S}(method, rescale, wt)
-    end
-end
-
-function surrogenerator(x::AbstractVector{T}, method::WLS2, rng = Random.default_rng()) where T
-    wl = wavelet(method.wt)
-    L = length(x)
-    x_sorted = sort(x)
-
-    # Wavelet coefficients (step [i] in Keylock)
-    W = modwt(x, wl)
-    Nscales = ndyadicscales(L)
-
-    # Will contain surrogate realizations of the wavelet coefficients 
-    # at each scale (step [ii] in Keylock). 
-    sW = zeros(T, size(W))
-
-    # We will also need a matrix to store the mirror images of the 
-    # surrogates (last part of step [ii])
-    sWmirr = zeros(T, size(W))
-
-    # Surrogate generators for each set of coefficients
-    sgs = [surrogenerator(W[:, i], method.surromethod, rng) for i = 1:Nscales]
-
-    # Temporary array for the circular shift error minimizing step 
-    circshifted_s = zeros(T, size(W))
-    circshifted_smirr = zeros(T, size(W))
-    R = zeros(size(W))
-
     s = similar(x)
 
     init = (wl = wl, W = W, Nscales = Nscales, L = L, 
@@ -200,10 +89,10 @@ function surrogenerator(x::AbstractVector{T}, method::WLS2, rng = Random.default
             x_sorted = x_sorted, R = R,
     )
     
-    return SurrogateGenerator2(method, x, s, init, rng)
+    return SurrogateGenerator(method, x, s, init, rng)
 end
 
-function (sg::SurrogateGenerator2{<:WLS2})()
+function (sg::SurrogateGenerator{<:WLS})()
     s = sg.s
 
     fds = (:wl, :W, :Nscales, :L, :sW, :sgs, :sWmirr, 
