@@ -1,5 +1,5 @@
 using LinearAlgebra
-export TFTDRandomFourier, TFTD
+export TFTDRandomFourier, TFTD, TFTDAAFT
 
 # Efficient linear regression formula from dmbates julia discourse post (nov 2019)
 # https://discourse.julialang.org/t/efficient-way-of-doing-linear-regression/31232/27?page=2
@@ -130,26 +130,25 @@ back to the original values of the time series, analogously to [`AAFT`](@ref)
 [^Lucio2012]: Lucio, J. H., Valdés, R., & Rodríguez, L. R. (2012). Improvements to surrogate data methods for nonstationary time series. Physical Review E, 85(5), 056202.
 """
 struct TFTDAAFT <: Surrogate
-    phases::Bool
     fϵ
 
-    function TFTDAAFT(phases::Bool, fϵ = 0.05)
+    function TFTDAAFT(fϵ = 0.05)
         if !(0 < fϵ ≤ 1)
             throw(ArgumentError("`fϵ` must be on the interval  (0, 1] (indicates fraction of lowest frequencies to be preserved)"))
         end
-        new(phases, fϵ)
+        new(fϵ)
     end
 end
 
-function surrogenerator(x::AbstractVector, rf::TFTDAAFT, rng = Random.default_rng())
+function surrogenerator(x::AbstractVector, method::TFTDAAFT, rng = Random.default_rng())
     init = (
-        gen = SurrogateGenerator(x, TFTS(rf.phases, rf.fϵ)),
+        gen = surrogenerator(x, TFTS(method.fϵ)),
         x_sorted = sort(x),
         ix = zeros(Int, length(x))
     )
 
     s = similar(x)
-    return SurrogateGenerator(rf, x, s, init, rng)
+    return SurrogateGenerator(method, x, s, init, rng)
 end
 
 function (sg::SurrogateGenerator{<:TFTDAAFT})()
@@ -157,10 +156,7 @@ function (sg::SurrogateGenerator{<:TFTDAAFT})()
     s = sg.s
 
     s .= tfts_generator()
-
     sortperm!(ix, s)
-
-    # Rescale back to original values to obtain TFTDAAFT surrogate.
     s[ix] .= x_sorted
     return s
 end

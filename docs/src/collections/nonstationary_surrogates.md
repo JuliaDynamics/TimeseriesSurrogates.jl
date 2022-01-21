@@ -107,3 +107,22 @@ surroplot(x, s)
 ```
 
 [^Lucio2012]: Lucio, J. H., Valdés, R., & Rodríguez, L. R. (2012). Improvements to surrogate data methods for nonstationary time series. Physical Review E, 85(5), 056202.
+
+
+### [`TFTDAAFT`](@ref)
+
+The [`TFTDAAFT`](@ref)[^Lucio2012] are similar to [`TFTDRandomFourier`](@ref) surrogates, but 
+also adds an additiona rescaling step, so that the time series has the same values as the original time series.
+
+```@example
+using TimeseriesSurrogates
+
+# Example signal
+n = 300; a = 0.7; A = 20; σ = 15
+x = cumsum(randn(n)) .+ [(1 + a*i) .+ A*sin(2π/10*i) for i = 1:n] .+
+    [A^2*sin(2π/2*i + π) for i = 1:n] .+ σ .* rand(n).^2;
+
+s = surrogate(x, TFTDRandomFourier(true, 0.02))
+surroplot(x, s)
+```
+
