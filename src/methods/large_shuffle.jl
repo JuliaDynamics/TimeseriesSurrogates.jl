@@ -25,8 +25,8 @@ end
 
 Base.show(io::IO, bs::BlockShuffle) = show(io, "BlockShuffle(n=$(bs.n))")
 
-# Split time series in two by default.
-BlockShuffle() = BlockShuffle(2)
+# Split time series into ten pieces by default.
+BlockShuffle() = BlockShuffle(10)
 
 function get_uniform_blocklengths(L::Int, n::Int)
     # Compute block lengths
@@ -91,60 +91,119 @@ end
 #########################################################################
 # TODO: New api
 #########################################################################
+export BlockShuffle2
 
-struct BlockShuffle2 <: Surrogate
-    n::Int
+
+"""
+    BlockShuffle2(n::Int; shift = false) <: Surrogate
+
+A block shuffle surrogate constructed by dividing the time series
+into `n` blocks of roughly equal width at random indices (end
+blocks are wrapped around to the start of the time series).
+
+If `shift` is `true`, then the input signal is circularly shifted prior 
+to picking blocks.
+
+Block shuffle surrogates roughly preserve short-range temporal properties
+in the time series (e.g. correlations at lags less than the block length),
+but break any long-term dynamical information (e.g. correlations beyond
+the block length).
+
+Hence, these surrogates can be used to test any null hypothesis aimed at
+comparing short-range dynamical properties versus long-range dynamical
+properties of the signal.
+"""
+struct BlockShuffle2{I <: Integer, B <: Bool} <: Surrogate
+    n::I
+    shift::B
+
+    function BlockShuffle2(n::I; shift::B = false) where {I <: Integer, B <: Bool}
+        return new{I, B}(n, shift)
+    end
+
+    # Split time series into 10 pieces by default. Shifting disabled by default.
+    function BlockShuffle2()
+        return new{Int, Bool}(10, false)
+    end
 end
 
 function surrogenerator(x::AbstractVector, bs::BlockShuffle2, rng = Random.default_rng())
-    L = length(x)
-    bs.n < L || error("The number of blocks exceeds number of available points")
-    Ls = get_uniform_blocklengths(L, bs.n)
-    cs = cumsum(Ls)
-    # will hold a rotation version of x
-    xrot = similar(x)
+    bs.n < length(x) || error("The number of blocks exceeds number of available points")
+
+    # The lengths of the blocks (one block will have a differing length if length of 
+    # time series in not a multiple of the number of blocks, so )
+    blocklengths = get_uniform_blocklengths(length(x), bs.n)
+
+    # The start index of each block.
+    startinds = startinds = [1; cumsum(blocklengths) .+ 1]
+
+    # The data from which we will sample. This array may be circularly shifted.
+    x_rotated = copy(x)
+
+    # The order in which we will draw the blocks. Will be shuffled every time 
+    # a new surrogate is generated.
+    draw_order = collect(1:bs.n)
+
+    init = (
+        blocklengths = blocklengths, 
+        startinds = startinds,
+        x_rotated = x_rotated,
+        draw_order = draw_order,
+    )
+
+    # The surrogate.
     s = similar(x)
-    T = eltype(xrot)
-    init = NamedTuple{(:L, :Ls, :cs, :xrot),Tuple{Int, Vector{Int}, Vector{Int}, Vector{T}}}((L, Ls, cs, xrot))
+
     return SurrogateGenerator2(bs, x, s, init, rng)
 end
 
-function (bs::SurrogateGenerator2{<:BlockShuffle2})()
-    # TODO: A circular custom array implementation would be much more elegant here
-    L = bs.init.L
-    Ls = bs.init.Ls
-    cs = bs.init.cs
-    xrot = bs.init.xrot
-    n = bs.method.n
-    x = bs.x
-    s = bs.s
+function (sg::SurrogateGenerator2{<:BlockShuffle2})()
+    init_fields = (:blocklengths, :startinds, :x_rotated, :draw_order)
+    blocklengths, startinds, x_rotated, draw_order = getfield.(Ref(sg.init), init_fields)
+    x, s, n = sg.x, sg.s, sg.method.n
 
-    # Just create a temporarily randomly shifted array, so we don't need to mess
-    # with indexing twice.
-    circshift!(xrot, x, rand(bs.rng, 1:L))
-
-    # Block always must be shuffled (so ordered samples are not permitted)
-    draw_order = zeros(Int, n)
-    while any(draw_order .== 0) || all(draw_order .== 1:n)
-       StatsBase.sample!(bs.rng, 1:n, draw_order, replace = false)
+    # Circular shift, if desired
+    if sg.method.shift
+        circshift!(x_rotated, x, rand(sg.rng, 1:length(x)))
     end
 
-    # The surrogate.
-    # TODO: It would be faster to re-allocate, but blocks may
-    # be of different sizes and are shifted, so indexing gets messy.
-    # Just append for now.
-    T = eltype(x)
-    # Todo: don't redefine s here, actually keep track of indices
-    s = Vector{T}(undef, 0)
-    sizehint!(s, L)
+    # Shuffle blocks
+    shuffle!(draw_order)
 
-    startinds = [1; cs .+ 1]
-    @inbounds for i in draw_order
-        inds = startinds[i]:startinds[i]+Ls[i]-1
-        append!(s, xrot[inds])
+    k = 1
+    npts_sampled = 0
+    for i in draw_order
+        # The index of the data point which this block starts (in `x_rotated`)
+        sᵢ = startinds[i]
+
+        # The length of this block.
+        l = blocklengths[i]
+        
+        # Indices of the block which is sampled.
+        ix_from = sᵢ:(sᵢ + l - 1)
+
+        # Indices in `s` into which this block will be placed.
+        ix_into = (npts_sampled + 1):(npts_sampled + 1 + l - 1)
+        
+        # Do the assignment in-place behind a code barrier. This about
+        # 3x as efficients as doing an elementwise assignment and 
+        # doesn't allocate.
+        assign_block_to_surrogate!(s, x_rotated, ix_into, ix_from)
+
+        npts_sampled += l
     end
-
+    #@assert all(sort(s) .== sort(x_rotated))
     return s
+end
+
+function assign_block_to_surrogate!(s, x_rotated, ix_into, ix_from)
+    @assert length(ix_into) == length(ix_from)
+    n = length(ix_into)
+    @inbounds for k = 1:n
+        ito = ix_into[k]
+        ifr = ix_from[k]
+        s[ito] = x_rotated[ifr]
+    end
 end
 
 #########################################################################
