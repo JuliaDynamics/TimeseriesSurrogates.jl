@@ -129,12 +129,18 @@ struct TAAFT <: Surrogate
 end
 
 function surrogenerator(x, method::TAAFT, rng = Random.default_rng())
-    init = (tfts_gen = surrogenerator(x, TFTS(method.fϵ), rng))
-    return SurrogateGenerator(method, x, init, rng)
+    init = (
+        gen = surrogenerator(x, TFTS(method.fϵ), rng),
+        x_sorted = sort(x),
+    )
+    
+    s = similar(x)
+    return SurrogateGenerator(method, x, s, init, rng)
 end
 
 function (taaft::SurrogateGenerator{<:TAAFT})()
     sg = taaft.init.gen
+    x_sorted = taaft.init.x_sorted
     
     x, s = sg.x, sg.s
     fϵ = sg.method.fϵ
@@ -173,7 +179,7 @@ function (taaft::SurrogateGenerator{<:TAAFT})()
     s .= inverse * 𝓕new
     
     s = sg()
-    s[sortperm(s)] .= sg.init.x_sorted
+    s[sortperm(s)] .= x_sorted
     return s
 end
 

@@ -3,6 +3,17 @@ export BlockShuffle, CycleShuffle, CircShift
 #########################################################################
 # BlockSuffle
 #########################################################################
+function get_uniform_blocklengths(L::Int, n::Int)
+    # Compute block lengths
+    N = floor(Int, L/n)
+    R = L % n
+    blocklengths = [N for i = 1:n]
+    for i = 1:R
+        blocklengths[i] += 1
+    end
+    return blocklengths
+end
+
 """
     BlockShuffle2(n::Int; shift = false) <: Surrogate
 
@@ -63,7 +74,7 @@ function surrogenerator(x::AbstractVector, bs::BlockShuffle, rng = Random.defaul
     # The surrogate.
     s = similar(x)
 
-    return SurrogateGenerator2(bs, x, s, init, rng)
+    return SurrogateGenerator(bs, x, s, init, rng)
 end
 
 function (sg::SurrogateGenerator{<:BlockShuffle})()
@@ -154,7 +165,7 @@ function surrogenerator(x::AbstractVector, cs::CycleShuffle, rng = Random.defaul
     peaks = findall(i -> smooth[i-1] < smooth[i] && smooth[i] > smooth[i+1], 2:N-1)
     blocks = [collect(peaks[i]:peaks[i+1]-1) for i in 1:length(peaks)-1]
     init =  (blocks = blocks, peak1 = peaks[1])
-    SurrogateGenerator2(cs, x, similar(x), init, rng)
+    SurrogateGenerator(cs, x, similar(x), init, rng)
 end
 
 function (sg::SurrogateGenerator{<:CycleShuffle})()
@@ -190,7 +201,7 @@ struct CircShift{N} <: Surrogate
 end
 
 function surrogenerator(x, sd::CircShift, rng = Random.default_rng())
-    return SurrogateGenerator2(sd, x, similar(x), nothing, rng)
+    return SurrogateGenerator(sd, x, similar(x), nothing, rng)
 end
 
 function (sg::SurrogateGenerator{<:CircShift})()

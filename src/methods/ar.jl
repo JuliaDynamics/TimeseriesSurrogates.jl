@@ -45,9 +45,9 @@ function surrogenerator(x, method::AutoRegressive, rng = Random.default_rng())
     return SurrogateGenerator(method, x, s, init, rng)
 end
 
-function (sg::SurrogateGenerator{<:AutoRegressive2})()
+function (sg::SurrogateGenerator{<:AutoRegressive})()
     N, φ, d = sg.init.N, sg.init.φ, sg.init.d
-    return autoregressive2!(sg.s, d, N, φ, sg.rng)
+    return autoregressive!(sg.s, d, N, φ, sg.rng)
 end
 
 function autoregressive!(s, d::Normal{T}, N, φ, rng) where {T}

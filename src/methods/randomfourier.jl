@@ -39,7 +39,7 @@ function surrogenerator(x::AbstractVector, rf::RandomFourier, rng = Random.defau
     
     init = (inverse = inverse, m = m, coeffs = coeffs, n = n, r = r, 
             ϕ = ϕ, shuffled𝓕 = shuffled𝓕)
-    return SurrogateGenerator2(rf, x, s, init, rng)
+    return SurrogateGenerator(rf, x, s, init, rng)
 end
 
 function (sg::SurrogateGenerator{<:RandomFourier})()

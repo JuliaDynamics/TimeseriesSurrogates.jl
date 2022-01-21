@@ -30,7 +30,7 @@ struct IrregularLombScargle{T<:AbstractVector, S<:Real} <: Surrogate
     n_acc::Int
     q::Int
 end
-IrregularLombScargle(t; tol = 1.0, n_total = 10000, n_acc = 1000, q = 1) = IrregularLombScargle2(t, tol, n_total, n_acc, q)
+IrregularLombScargle(t; tol = 1.0, n_total = 10000, n_acc = 1000, q = 1) = IrregularLombScargle(t, tol, n_total, n_acc, q)
 
 
 function surrogenerator(x, method::IrregularLombScargle, rng = Random.default_rng())

@@ -32,7 +32,7 @@ function surrogenerator(x::AbstractVector, rf::RandomShuffle, rng = Random.defau
         idxs = idxs,
     )
 
-    return SurrogateGenerator2(rf, x, similar(x), init, rng)
+    return SurrogateGenerator(rf, x, similar(x), init, rng)
 end
 
 function (sg::SurrogateGenerator{<:RandomShuffle})()

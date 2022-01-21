@@ -1,6 +1,5 @@
 export IAAFT
 
-Base.show(io::IO, x::IAAFT) = print(io, "IAAFT(M=$(x.M), tol=$(x.tol), W=$(x.W))")
 
 include("../utils/powerspectrum.jl")
 include("../utils/interpolation.jl")

@@ -128,7 +128,7 @@ function surrogenerator(x::Union{AbstractVector, Dataset}, pp::PseudoPeriodicTwi
     s = Vector{PT}(undef, Nx)
 
     init = (pts = pts, Nx = Nx, Npts = Npts, dists = dists, R = R, twins = twins, W = W)
-    return SurrogateGenerator2(pp, x, s, init, rng)
+    return SurrogateGenerator(pp, x, s, init, rng)
 end
 
 
