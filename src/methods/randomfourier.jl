@@ -49,11 +49,9 @@ function (sg::SurrogateGenerator{<:RandomFourier})()
     s, rng, phases = sg.s, sg.rng, sg.method.phases
 
     if phases
-        # coeffs := randomised_ϕ 
         coeffs .= rand(rng, Uniform(0, 2π), n)
         shuffled𝓕 .= r .* exp.(coeffs .* 1im)
     else
-        # coeffs := randomised_r
         coeffs .= r .* rand(rng, Uniform(0, 2π), n)
         shuffled𝓕 .= coeffs .* exp.(ϕ .* 1im)
     end
