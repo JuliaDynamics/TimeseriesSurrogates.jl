@@ -120,7 +120,8 @@ function (sg::SurrogateGenerator{<:IrregularLombScargle})()
 end
 
 function swap_elements!(candidate, s, rng, range)
-    k, l = sample(rng, range, 2, replace = false)
+    k = sample(rng, range)
+    l = sample(rng, range)
     candidate[k] = s[l]
     candidate[l] = s[k]
 end
