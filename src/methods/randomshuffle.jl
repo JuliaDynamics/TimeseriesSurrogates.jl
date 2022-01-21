@@ -1,4 +1,6 @@
+using Random
 export RandomShuffle
+
 """
     RandomShuffle() <: Surrogate
 
@@ -22,21 +24,6 @@ identically distributed random variables[^Theiler1991, ^Lancaster2018].
 struct RandomShuffle <: Surrogate end
 
 function surrogenerator(x::AbstractVector, rf::RandomShuffle, rng = Random.default_rng())
-    return SurrogateGenerator(rf, x, nothing, rng)
-end
-
-function (rf::SurrogateGenerator{<:RandomShuffle})()
-    n = length(rf.x)
-    idxs = sample(rf.rng, 1:n, n; replace = false)
-    rf.x[idxs]
-end
-
-# NEW API
-using Random
-export RandomShuffle2
-struct RandomShuffle2 <: Surrogate end
-
-function surrogenerator(x::AbstractVector, rf::RandomShuffle2, rng = Random.default_rng())
     n = length(x)
     idxs = collect(1:n)
 
@@ -48,12 +35,12 @@ function surrogenerator(x::AbstractVector, rf::RandomShuffle2, rng = Random.defa
     return SurrogateGenerator2(rf, x, similar(x), init, rng)
 end
 
-function (sg::SurrogateGenerator2{<:RandomShuffle2})()
+function (sg::SurrogateGenerator{<:RandomShuffle})()
     # Get relevant fields from surrogate generator.
     x, s, rng = sg.x, sg.s, sg.rng
     permutation, idxs  = getfield.(Ref(sg.init), (:permutation, :idxs))
     n = length(x)
-    #permutation = sample(rng, 1:n, n; replace = false)
+    
     # Draw a new permutation of the data
     sample!(rng, idxs, permutation; replace = false)
     s .= x[permutation]
