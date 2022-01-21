@@ -1,4 +1,5 @@
 export AAFT
+
 """
     AAFT()
 
@@ -16,22 +17,6 @@ monotonic nonlinear transformation of a linear Gaussian process
 struct AAFT <: Surrogate end
 
 function surrogenerator(x, method::AAFT, rng = Random.default_rng())
-    init = surrogenerator(x, RandomFourier(true), rng)
-    return SurrogateGenerator(method, x, init, rng)
-end
-
-function (rf::SurrogateGenerator{<:AAFT})()
-    x = rf.x
-    xs = sort(x)
-    s = rf.init()
-    s[sortperm(s)] .= xs
-    return s
-end
-
-export AAFT2
-struct AAFT2 <: Surrogate end
-
-function surrogenerator(x, method::AAFT2, rng = Random.default_rng())
     n = length(x)
 
     # Forward Fourier transform plan
@@ -74,10 +59,10 @@ function surrogenerator(x, method::AAFT2, rng = Random.default_rng())
         n = n,
     )
 
-    return SurrogateGenerator2(method, x, similar(x), init, rng)
+    return SurrogateGenerator(method, x, similar(x), init, rng)
 end
 
-function (sg::SurrogateGenerator2{<:AAFT2})()
+function (sg::SurrogateGenerator{<:AAFT})()
     # Initialization data
     s, rng = sg.s, sg.rng
 
