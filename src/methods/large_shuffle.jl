@@ -15,7 +15,7 @@ function get_uniform_blocklengths(L::Int, n::Int)
 end
 
 """
-    BlockShuffle2(n::Int; shift = false) <: Surrogate
+    BlockShuffle(n::Int; shift = false) <: Surrogate
 
 A block shuffle surrogate constructed by dividing the time series
 into `n` blocks of roughly equal width at random indices (end
