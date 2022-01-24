@@ -3,7 +3,7 @@ using LombScargle, Distances
 export IrregularLombScargle
 
 """
-    IrregularLombScargle(t; tol = 1, n_total = 10000, n_acc = 1000, q = 1)
+    IrregularLombScargle(t; tol = 1, n_total = 100000, n_acc = 50000, q = 1)
 
 [`IrregularLombScargle`](@ref) surrogates surrogates for unevenly sampled time series 
 with supporting time steps `t`, generated using the simulated annealing algorithm 
@@ -30,7 +30,7 @@ struct IrregularLombScargle{T<:AbstractVector, S<:Real} <: Surrogate
     n_acc::Int
     q::Int
 end
-IrregularLombScargle(t; tol = 1.0, n_total = 10000, n_acc = 1000, q = 1) = IrregularLombScargle(t, tol, n_total, n_acc, q)
+IrregularLombScargle(t; tol = 1.0, n_total = 100000, n_acc = 50000, q = 1) = IrregularLombScargle(t, tol, n_total, n_acc, q)
 
 
 function surrogenerator(x, method::IrregularLombScargle, rng = Random.default_rng())
