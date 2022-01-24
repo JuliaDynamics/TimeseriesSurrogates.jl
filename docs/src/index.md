@@ -29,9 +29,10 @@ CycleShuffle
 CircShift
 RandomFourier
 TFTDRandomFourier
+TDTDAAFT
+TDTDIAAFT
 TFTS
 AAFT
-TDTDAAFT
 TAAFT
 IAAFT
 AutoRegressive
