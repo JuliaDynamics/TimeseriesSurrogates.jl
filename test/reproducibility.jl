@@ -22,6 +22,8 @@ all_conceivable_methods = [
     TAAFT(-0.05)
     RandomFourier(true)
     RandomFourier(false)
+    PartialRandomization(0.3)
+    PartialRandomization(0.8)
     TFTDRandomFourier(true)
     TFTDRandomFourier(false)
     CycleShuffle()
