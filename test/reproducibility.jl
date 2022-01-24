@@ -24,6 +24,8 @@ all_conceivable_methods = [
     RandomFourier(false)
     TFTDRandomFourier(true)
     TFTDRandomFourier(false)
+    TFTDAAFT(0.03)
+    TFTDIAAFT(0.03)
     CycleShuffle()
     IrregularLombScargle(t; tol = 10, n_total = 20000, n_acc = 5000)
 ]

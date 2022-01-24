@@ -31,6 +31,7 @@ RandomFourier
 TFTDRandomFourier
 TFTS
 AAFT
+TDTDAAFT
 TAAFT
 IAAFT
 AutoRegressive

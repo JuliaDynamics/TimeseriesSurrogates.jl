@@ -1,5 +1,5 @@
 using LinearAlgebra
-export TFTDRandomFourier, TFTD
+export TFTDRandomFourier, TFTD, TFTDAAFT, TFTDIAAFT
 
 # Efficient linear regression formula from dmbates julia discourse post (nov 2019)
 # https://discourse.julialang.org/t/efficient-way-of-doing-linear-regression/31232/27?page=2
@@ -14,9 +14,8 @@ function linear_trend(x)
     return trendᵢ.(x)
 end
 
-
 """
-    TFTDRandomFourier()
+    TFTDRandomFourier(phases::Bool = true, fϵ = 0.05)
 
 The `TFTDRandomFourier` surrogate was proposed by Lucio et al. (2012)[^Lucio2012] as 
 a combination of truncated Fourier surrogates[^Nakamura2006] ([`TFTS`](@ref)) and 
@@ -116,6 +115,154 @@ function (sg::SurrogateGenerator{<:TFTDRandomFourier})()
     # Unfortunately, we can't do inverse transform in-place yet, but 
     # this is an open PR in FFTW.
     s .= inverse*𝓕 .+ m .+ trend
+
+    return s
+end
+
+"""
+    TFTDAAFT()
+
+[`TFTDAAFT`](@ref)[^Lucio2012] are similar to [`TFTDRandomFourier`](@ref), but also re-scales 
+back to the original values of the time series, analogously to [`AAFT`](@ref) 
+
+[^Lucio2012]: Lucio, J. H., Valdés, R., & Rodríguez, L. R. (2012). Improvements to surrogate data methods for nonstationary time series. Physical Review E, 85(5), 056202.
+"""
+struct TFTDAAFT <: Surrogate
+    fϵ
+
+    function TFTDAAFT(fϵ = 0.05)
+        if !(0 < fϵ ≤ 1)
+            throw(ArgumentError("`fϵ` must be on the interval  (0, 1] (indicates fraction of lowest frequencies to be preserved)"))
+        end
+        new(fϵ)
+    end
+end
+
+function surrogenerator(x::AbstractVector, method::TFTDAAFT, rng = Random.default_rng())    
+    init = (
+        gen = surrogenerator(x, TFTS(method.fϵ), rng),
+        ix = zeros(Int, length(x)),
+        x_sorted = sort(x),
+    )
+    s = similar(x)
+
+    return SurrogateGenerator(method, x, s, init, rng)
+end
+
+function (sg::SurrogateGenerator{<:TFTDAAFT})()
+    x, s = sg.s, sg.x
+    tfts_gen, ix, x_sorted = sg.init.gen, sg.init.ix, sg.init.x_sorted
+    
+    s .= tfts_gen()
+    sortperm!(ix, s)
+    s[ix] .= x_sorted
+
+    return s
+end
+
+"""
+    TFTDIAAFT()
+
+[`TFTDIAAFT`](@ref)[^Lucio2012] are similar to [`TFTDAAFT`](@ref), but adds an iterative 
+procedure to better match the periodograms of the surrogate and the original time series, 
+analogously to how [`IAAFT`](@ref) improves upon [`AAFT`](@ref).
+
+[^Lucio2012]: Lucio, J. H., Valdés, R., & Rodríguez, L. R. (2012). Improvements to surrogate data methods for nonstationary time series. Physical Review E, 85(5), 056202.
+"""
+struct TFTDIAAFT <: Surrogate
+    fϵ
+    M::Int
+    tol::Real
+    W::Int
+
+    function TFTDIAAFT(fϵ = 0.05; M::Int = 100, tol::Real = 1e-6, W::Int = 75)
+        if !(0 < fϵ ≤ 1)
+            throw(ArgumentError("`fϵ` must be on the interval  (0, 1] (indicates fraction of lowest frequencies to be preserved)"))
+        end
+        new(fϵ, M, tol, W)
+    end
+end
+
+function surrogenerator(x::AbstractVector, method::TFTDIAAFT, rng = Random.default_rng())
+    # Surrogate starts out as a TFTDRandomFourier surrogate
+    gen = surrogenerator(x, TFTDRandomFourier(true, method.fϵ), rng)
+    ϕ = similar(gen.init.ϕs)
+
+    # Pre-allocate forward transform for periodogram; can be re-used.
+    𝓕, x̂, forward = gen.init.𝓕, gen.init.x̂, gen.init.forward
+    𝓕p = prepare_spectrum(x̂, forward)
+
+    # Initial power spectra and their interpolated versions.
+    xpower = zeros(length(𝓕)); 
+    powerspectrum!(𝓕p, xpower, x̂, forward)
+    spower = copy(xpower)
+    xpowerᵦ = interpolated_spectrum(xpower, method.W)
+    spowerᵦ = interpolated_spectrum(spower, method.W)
+
+    init = (
+        gen = gen,
+        ix = zeros(Int, length(x)),
+        x_sorted = sort(x),
+        𝓕p = 𝓕p,
+        xpower = xpower, 
+        spower = spower,
+        xpowerᵦ = xpowerᵦ,
+        spowerᵦ = spowerᵦ,
+    )
+
+    s = similar(x)
+    return SurrogateGenerator(method, x, s, init, rng)
+end
+
+function (sg::SurrogateGenerator{<:TFTDIAAFT})()
+    x, s, rng = sg.x, sg.s, sg.rng
+    fϵ, M, W, tol = sg.method.fϵ, sg.method.M, sg.method.W, sg.method.tol
+    n_preserve = ceil(Int, abs(fϵ * length(x)))
+
+    tftd_gen = sg.init.gen
+    𝓕, forward, ϕs, ϕx, rx, trend, x̂ = getfield.(Ref(tftd_gen.init), (:𝓕, :forward, :ϕx, :ϕs, :rx, :trend, :x̂))
+    x_sorted, ix, 𝓕p, xpower, spower, xpowerᵦ, spowerᵦ = getfield.(
+        Ref(sg.init), (:x_sorted, :ix, :𝓕p, :xpower, :spower, :xpowerᵦ, :spowerᵦ)
+    )
+
+    sum_old, sum_new = 0.0, 0.0
+    iter = 1
+
+    # Surrogate starts out as a TFTDRandomFourier realization of `x`.
+    s .= tftd_gen()
+
+    while iter <= M
+        # Detrend and take transform (steps (vii-viii) in Lucio et al.)
+        s .= s .- trend
+        mul!(𝓕, forward, s)
+
+        # Rescaling the power spectrum, keeping some percentage of lowermost 
+        # frequencies, then re-trending (steps vii-x in Lucio et al.)
+        ϕs .= angle.(𝓕)
+        ϕs[1:n_preserve] .= @view ϕx[1:n_preserve]
+        𝓕 .= rx .* exp.(ϕs .* 1im)
+        s .= s .+ trend
+        
+        # Adjusting amplitudes
+        sortperm!(ix, s)
+        s[ix] .= x_sorted
+
+        # Compare power spectra
+        powerspectrum!(𝓕p, spower, s, forward)
+        interpolated_spectrum!(spowerᵦ, spower, W)
+        if iter == 1
+            sum_old = sum((xpowerᵦ .- xpowerᵦ) .^ 2) / sum(xpowerᵦ .^ 2)
+        else 
+            sum_new = sum((xpowerᵦ .- spowerᵦ) .^ 2) / sum(xpowerᵦ .^ 2)
+            if abs(sum_old - sum_new) < tol
+                iter = M + 1
+            else
+                sum_old = sum_new
+            end
+        end
+
+        iter += 1
+    end
 
     return s
 end

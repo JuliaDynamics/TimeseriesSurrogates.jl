@@ -161,6 +161,20 @@ end
     end
 end
 
+@testset "TFTDAAFT" begin
+    tftdaaft = TFTDAAFT(0.03)
+    s = surrogate(x, tftdaaft)
+    @test length(s) == length(x)
+    @test sort(x) ≈ sort(s)
+end
+
+@testset "TFTDIAAFT" begin
+    tftdiaaft = TFTDAAFT(0.05)
+    s = surrogate(x, tftdiaaft)
+    @test length(s) == length(x)
+    @test sort(x) ≈ sort(s)
+end
+
 @testset "Circ/Cycle shuffle" begin
 	x = random_cycles()
 	s = surrogate(x, CycleShuffle())
