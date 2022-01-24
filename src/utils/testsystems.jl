@@ -1,4 +1,5 @@
-export NLNS, NSAR2, AR1, randomwalk, SNLST, random_cycles
+export NLNS, NSAR2, AR1, randomwalk, SNLST, random_cycles, colored_noise
+using Random, Distributions
 
 """
     AR1(n_steps, x₀, k)
@@ -139,3 +140,26 @@ function random_cycles(rng = Random.default_rng(); periods=10, dt=π/20, σ = 0.
     x .+= randn(N)/20
     return x
 end
+
+"""
+    colored_noise(n, ρ, σ = 0.1, transform = true)
+
+Generate `n` points of colored noise. `ρ` is the desired correlation 
+between adjacent samples. The noise is drawn from a normal distribution
+with zero mean and standard deviation `σ`. If `transform  = true`, then 
+transform data using aquadratic nonlinear static distortion.
+"""
+function colored_noise(n, ρ = 0.8, σ = 0.1, transform = true, rng = Random.default_rng())
+    𝒩 = Normal(0, σ)
+    x = zeros(n)
+    x[1] = rand(rng, 𝒩)
+    for i = 2:n
+        x[i] = ρ*x[i-1] + sqrt(1 - ρ^2)*rand(rng, 𝒩)
+    end
+    if transform 
+        x .= x .* sqrt.(x .^ 2)
+    end
+    
+    return x .- mean(x)
+end
+
