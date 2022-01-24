@@ -166,12 +166,10 @@ function (taaft::SurrogateGenerator{<:TAAFT})()
         # we are only randomizing the high-frequency components of the
         # signal.
         n_preserve = ceil(Int, abs(fϵ * n))
-        #println("Preserving $(n_preserve/n*100) % of the frequencies (randomizing high frequencies)")
         ϕs[1:n_preserve] .= ϕx[1:n_preserve]
     elseif fϵ < 0
         # Do the exact opposite to preserve high-frequencies
         n_preserve = ceil(Int, abs(fϵ * n))
-        #println("Preserving $(n_preserve/n*100) % of the frequencies (randomizing low frequencies)")
         ϕs[end-n_preserve+1:end] .= ϕx[end-n_preserve+1:end]
     end
 
