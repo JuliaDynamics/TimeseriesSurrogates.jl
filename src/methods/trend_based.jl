@@ -111,7 +111,7 @@ function (sg::SurrogateGenerator{<:TFTDRandomFourier})()
     # Updated spectrum is the old amplitudes with the mixed phases.
     𝓕 .= rx .* exp.(ϕs .* 1im)
 
-    # Unfortunately, we can't do inverse transform in-place yet, but 
+    # TODO: Unfortunately, we can't do inverse transform in-place yet, but 
     # this is an open PR in FFTW.
     s .= inverse*𝓕 .+ m .+ trend
 
