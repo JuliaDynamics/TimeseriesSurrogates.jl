@@ -158,7 +158,7 @@ function (taaft::SurrogateGenerator{<:TAAFT})()
 
     # Surrogate starts out as a random permutation of x
     StatsBase.sample!(sg.rng, idxs, perm, replace = false)
-    permute_x_into_s!(s, x, perm) 
+    permuted_x_into_s!(s, x, perm)
     𝓕s .= forward * s
     ϕs .= angle.(𝓕s)
 
@@ -184,7 +184,7 @@ function (taaft::SurrogateGenerator{<:TAAFT})()
 end
 
 
-function permute_x_into_s!(s, x, perm) 
+function permuted_x_into_s!(s, x, perm) 
     k = 1
     for i in perm
         s[k] = x[i]
