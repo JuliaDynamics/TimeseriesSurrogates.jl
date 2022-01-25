@@ -27,6 +27,27 @@ end
     @test all([s[i] ∈ x for i = 1:N])
 end
 
+@testset "PartialRandomization" begin
+    pr = PartialRandomization(0.2)
+    s = surrogate(x, pr)
+
+    @test length(s) == length(x)
+
+    @test_throws AssertionError PartialRandomization(-0.01)
+    @test_throws AssertionError PartialRandomization(1.01)
+end
+
+@testset "PartialRandomizationAAFT" begin
+    praaft = PartialRandomizationAAFT(0.5)
+    s = surrogate(x, praaft)
+
+    @test length(s) == length(x)
+    @test sort(x) ≈ sort(s)
+
+    @test_throws AssertionError PartialRandomizationAAFT(-0.01)
+    @test_throws AssertionError PartialRandomizationAAFT(1.01)
+end
+
 @testset "Periodic" begin
 	pp = PseudoPeriodic(3, 25, 0.05)
 	s = surrogate(x, pp)

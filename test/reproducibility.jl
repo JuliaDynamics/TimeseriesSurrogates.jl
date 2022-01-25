@@ -9,6 +9,8 @@ t = (0:N-1) + rand(N)
 all_conceivable_methods = [
     WLS()
     WLS(AAFT())
+    PartialRandomization(0.3)
+    PartialRandomization(0.8)
     PseudoPeriodic(3, 25, 0.05)
     BlockShuffle()
     BlockShuffle(4)
