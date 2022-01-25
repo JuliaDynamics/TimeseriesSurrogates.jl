@@ -60,7 +60,7 @@ function pseudoperiodic!(s, y, x, z, w, ρ, shift, rng)
         j = sample(rng, 1:Ñ-1, pweights(w))
         y[i+1] = z[j+1]
     end
-    s .= y[:, 1]
+    for (i, p) in enumerate(y); s[i] = p[1]; end
     return s
 end
 
