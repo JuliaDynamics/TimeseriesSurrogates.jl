@@ -28,9 +28,9 @@ To generate a surrogate, call `sg` as a function with no arguments, e.g.:
 ```julia
 sg = surrogenerator(x, method)
 for i in 1:1000
-    sg()
+    s = sg()
     # do stuff with s and or x
-    result[i] = stuff(sg.s)
+    result[i] = stuff
 end
 ```
 """
