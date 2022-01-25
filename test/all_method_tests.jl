@@ -52,6 +52,13 @@ end
     @test_throws AssertionError PartialRandomizationAAFT(-0.01)
     @test_throws AssertionError PartialRandomizationAAFT(1.01)
 end
+    
+@testset "RandomCascade" begin
+    randomcascade = RandomCascade()
+    s = surrogate(x, randomcascade)
+
+    @test length(s) == length(x)
+end
 
 @testset "Periodic" begin
 	pp = PseudoPeriodic(3, 25, 0.05)

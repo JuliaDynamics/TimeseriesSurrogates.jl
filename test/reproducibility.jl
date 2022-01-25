@@ -14,6 +14,7 @@ all_conceivable_methods = [
     WLS(rescale = false)
     WLS(CircShift(N), f = nothing)
     WLS(BlockShuffle(10), f = Statistics.cor)
+    RandomCascade()
     PseudoPeriodic(3, 25, 0.05)
     BlockShuffle()
     BlockShuffle(4)
