@@ -1,4 +1,4 @@
-using Random
+using Random, Statistics
 N = 500
 ts = cumsum(randn(N))
 ts_nan = cumsum(randn(N))
@@ -7,8 +7,11 @@ x = cos.(range(0, 20π, length = N)) .+ randn(N)*0.05
 t = (0:N-1) + rand(N)
 
 all_conceivable_methods = [
-    WLS()
-    WLS(AAFT())
+    WLS(rescale = false)
+    WLS(AAFT(), rescale = true)
+    WLS(rescale = false)
+    WLS(CircShift(N), f = nothing)
+    WLS(BlockShuffle(10), f = Statistics.cor)
     RandomCascade()
     PseudoPeriodic(3, 25, 0.05)
     BlockShuffle()
