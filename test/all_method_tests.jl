@@ -19,12 +19,45 @@ x = cos.(range(0, 20π, length = N)) .+ randn(N)*0.05
 end
 
 @testset "WLS" begin
-    wts = WLS()
-    wts = WLS(AAFT())
-    s = surrogate(x, wts)
+    wts_norescale = WLS(AAFT(), rescale = false)
+    wts_rescale = WLS(AAFT())
+
+    s_norescale = surrogate(x, wts_norescale)
+    s_rescale = surrogate(x, wts_rescale)
+    @test length(s_norescale) == length(x)
+    @test length(s_rescale) == length(x)
+
+    # If rescaling, the surrogate will have the same values as the original
+    @test sort(x) ≈ sort(s_rescale)
+    
+end
+
+@testset "PartialRandomization" begin
+    pr = PartialRandomization(0.2)
+    s = surrogate(x, pr)
 
     @test length(s) == length(x)
-    @test all([s[i] ∈ x for i = 1:N])
+
+    @test_throws AssertionError PartialRandomization(-0.01)
+    @test_throws AssertionError PartialRandomization(1.01)
+end
+
+@testset "PartialRandomizationAAFT" begin
+    praaft = PartialRandomizationAAFT(0.5)
+    s = surrogate(x, praaft)
+
+    @test length(s) == length(x)
+    @test sort(x) ≈ sort(s)
+
+    @test_throws AssertionError PartialRandomizationAAFT(-0.01)
+    @test_throws AssertionError PartialRandomizationAAFT(1.01)
+end
+    
+@testset "RandomCascade" begin
+    randomcascade = RandomCascade()
+    s = surrogate(x, randomcascade)
+
+    @test length(s) == length(x)
 end
 
 @testset "Periodic" begin
