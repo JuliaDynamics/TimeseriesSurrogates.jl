@@ -12,7 +12,7 @@ using DSP
 using LinearAlgebra: mul!
 
 """
-    prepare_spectrum(s) → Vector{Float64}
+    prepare_spectrum(s, plan) → y::Vector
 
 Pre-allocate a vector that will hold the one-sided power spectrum for a signal `s`,
 taking into account the number of points that will be used for the Fourier transform.
