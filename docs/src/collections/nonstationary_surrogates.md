@@ -129,8 +129,8 @@ surroplot(x, s)
 
 ### [`TFTDIAAFT`](@ref)
 
-The [`TFTDIAAFT`](@ref)[^Lucio2012] are similar to [`TFTDRandomFourier`](@ref) surrogates, but 
-also adds an additiona rescaling step, so that the time series has the same values as the original time series.
+The [`TFTDIAAFT`](@ref)[^Lucio2012] are similar to [`TFTDAAFT`](@ref) surrogates, but adds 
+an iterative process to better match the power spectra of the original signal and the surrogate (anlogous to how the [`IAAFT`](@ref) method improves upon the [`AAFT`](@ref) method).
 
 ```@example
 using TimeseriesSurrogates
