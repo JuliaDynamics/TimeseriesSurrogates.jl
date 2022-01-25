@@ -10,8 +10,7 @@ end
 
 function linear_trend(x)
     l = linreg(0.0:1.0:length(x)-1.0 |> collect, x)
-    trendᵢ(xᵢ) = l[1] + l[2] * xᵢ
-    return trendᵢ.(x)
+    return [l[1] + l[2]*a for a in x]
 end
 
 
@@ -112,7 +111,7 @@ function (sg::SurrogateGenerator{<:TFTDRandomFourier})()
     # Updated spectrum is the old amplitudes with the mixed phases.
     𝓕 .= rx .* exp.(ϕs .* 1im)
 
-    # Unfortunately, we can't do inverse transform in-place yet, but 
+    # TODO: Unfortunately, we can't do inverse transform in-place yet, but 
     # this is an open PR in FFTW.
     s .= inverse*𝓕 .+ m .+ trend
 
