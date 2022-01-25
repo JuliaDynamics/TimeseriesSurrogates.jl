@@ -8,17 +8,19 @@ The [`IrregularLombScargle`](@ref) surrogate is a form of a constrained surrogat
 This function uses the simulated annealing algorithm[^SchmitzSchreiber1999] to minimize the Minkowski distance between the original periodogram and the surrogate periodogram.
 
 ```@example MAIN
-using TimeseriesSurrogates, CairoMakie
+using TimeseriesSurrogates, CairoMakie, Random
 
-# Example data: random AR(1) process with a time axis with unevenly 
+# Example data: random AR1 process with a time axis with unevenly 
 # spaced time steps
-N = 1000
+rng = Random.MersenneTwister(1234)
+x = AR1(n_steps = 300)
+N = length(x)
 t = (1:N) - rand(N) 
-x = AR1(n_steps = N)
 
-ls = IrregularLombScargle(t)
-s = surrogate(x, ls)
-surroplot(x, s)
+# Use simulated annealing based on convergence of Lomb-Scargle periodograms
+# The time series is relatively long, so set tolerance a bit higher than default.
+ls = IrregularLombScargle(t, n_total = 100000, n_acc = 50000, tol = 5.0)
+s = surrogate(x, ls, rng)
 
 fig, ax = lines(t, x; label = "original")
 lines!(ax, t, s; label = "surrogate")

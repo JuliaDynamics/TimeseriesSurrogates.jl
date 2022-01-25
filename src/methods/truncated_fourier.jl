@@ -132,6 +132,8 @@ function surrogenerator(x, method::TAAFT, rng = Random.default_rng())
     init = (
         gen = surrogenerator(x, TFTS(method.fϵ), rng),
         x_sorted = sort(x),
+        idxs = collect(1:length(x)),
+        perm = zeros(Int, length(x)),
     )
     
     s = similar(x)
@@ -140,7 +142,7 @@ end
 
 function (taaft::SurrogateGenerator{<:TAAFT})()
     sg = taaft.init.gen
-    x_sorted = taaft.init.x_sorted
+    x_sorted, idxs, perm = taaft.init.x_sorted, taaft.init.idxs, taaft.init.perm
     
     x, s = sg.x, sg.s
     fϵ = sg.method.fϵ
@@ -155,7 +157,8 @@ function (taaft::SurrogateGenerator{<:TAAFT})()
         𝓕new, 𝓕s, ϕs = getfield.(Ref(sg.init), init_fields)
 
     # Surrogate starts out as a random permutation of x
-    s .= x[StatsBase.sample(sg.rng, 1:L, L; replace = false)]
+    StatsBase.sample!(sg.rng, idxs, perm, replace = false)
+    permuted_x_into_s!(s, x, perm)
     𝓕s .= forward * s
     ϕs .= angle.(𝓕s)
 
@@ -166,21 +169,25 @@ function (taaft::SurrogateGenerator{<:TAAFT})()
         # we are only randomizing the high-frequency components of the
         # signal.
         n_preserve = ceil(Int, abs(fϵ * n))
-        #println("Preserving $(n_preserve/n*100) % of the frequencies (randomizing high frequencies)")
-        ϕs[1:n_preserve] .= ϕx[1:n_preserve]
+        ϕs[1:n_preserve] .= @view ϕx[1:n_preserve]
     elseif fϵ < 0
         # Do the exact opposite to preserve high-frequencies
         n_preserve = ceil(Int, abs(fϵ * n))
-        #println("Preserving $(n_preserve/n*100) % of the frequencies (randomizing low frequencies)")
-        ϕs[end-n_preserve+1:end] .= ϕx[end-n_preserve+1:end]
+        ϕs[end-n_preserve+1:end] .= @view ϕx[end-n_preserve+1:end]
     end
 
     𝓕new .= rx .* exp.(ϕs .* 1im)
     s .= inverse * 𝓕new
     
-    s = sg()
     s[sortperm(s)] .= x_sorted
     return s
 end
 
 
+function permuted_x_into_s!(s, x, perm) 
+    k = 1
+    for i in perm
+        s[k] = x[i]
+        k += 1
+    end
+end

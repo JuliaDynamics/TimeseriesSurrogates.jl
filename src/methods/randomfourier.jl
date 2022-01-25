@@ -55,7 +55,7 @@ function (sg::SurrogateGenerator{<:RandomFourier})()
         coeffs .= r .* rand(rng, Uniform(0, 2π), n)
         shuffled𝓕 .= coeffs .* exp.(ϕ .* 1im)
     end
-    s .= inverse*shuffled𝓕 .+ m
+    s .= inverse * shuffled𝓕 .+ m
     return s
 end
 

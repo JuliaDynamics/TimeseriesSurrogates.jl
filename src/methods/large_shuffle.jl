@@ -15,7 +15,7 @@ function get_uniform_blocklengths(L::Int, n::Int)
 end
 
 """
-    BlockShuffle2(n::Int; shift = false) <: Surrogate
+    BlockShuffle(n::Int; shift = false) <: Surrogate
 
 A block shuffle surrogate constructed by dividing the time series
 into `n` blocks of roughly equal width at random indices (end
@@ -55,7 +55,7 @@ function surrogenerator(x::AbstractVector, bs::BlockShuffle, rng = Random.defaul
     blocklengths = get_uniform_blocklengths(length(x), bs.n)
 
     # The start index of each block.
-    startinds = startinds = [1; cumsum(blocklengths) .+ 1]
+    startinds = vcat(1, cumsum(blocklengths) .+ 1)
 
     # The data from which we will sample. This array may be circularly shifted.
     x_rotated = copy(x)

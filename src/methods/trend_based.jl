@@ -1,5 +1,5 @@
 using LinearAlgebra
-export TFTDRandomFourier, TFTD, TFTDAAFT, TFTDIAAFT
+export TFTDRandomFourier, TFTD
 
 # Efficient linear regression formula from dmbates julia discourse post (nov 2019)
 # https://discourse.julialang.org/t/efficient-way-of-doing-linear-regression/31232/27?page=2
@@ -10,9 +10,9 @@ end
 
 function linear_trend(x)
     l = linreg(0.0:1.0:length(x)-1.0 |> collect, x)
-    trendᵢ(xᵢ) = l[1] + l[2] * xᵢ
-    return trendᵢ.(x)
+    return [l[1] + l[2]*a for a in x]
 end
+
 
 """
     TFTD(phases::Bool = true, fϵ = 0.05)
@@ -48,9 +48,8 @@ struct TFTDRandomFourier <: Surrogate
         new(phases, fϵ)
     end
 end
-const TFTD = TFTDRandomFourier
-TFTD() = TFTD(true)
-TFTD(fϵ::Real) = TFTD(true, fϵ)
+
+const TFTD2 = TFTDRandomFourier
 
 function surrogenerator(x::AbstractVector, rf::TFTDRandomFourier, rng = Random.default_rng())
     # Detrended time series
@@ -101,8 +100,7 @@ function (sg::SurrogateGenerator{<:TFTDRandomFourier})()
     sample!(sg.rng, idxs, permutation; replace = false)
     s .= @view x̂[permutation]
 
-    # Compute forward transform and get its phases
-    mul!(𝓕, forward, s) # 𝓕 .= forward * s is equivalent, but allocates
+    mul!(𝓕, forward, s)
     ϕs .= angle.(𝓕)
 
     # Frequencies are ordered from lowest when taking the Fourier
@@ -115,7 +113,7 @@ function (sg::SurrogateGenerator{<:TFTDRandomFourier})()
     # Updated spectrum is the old amplitudes with the mixed phases.
     𝓕 .= rx .* exp.(ϕs .* 1im)
 
-    # Unfortunately, we can't do inverse transform in-place yet, but 
+    # TODO: Unfortunately, we can't do inverse transform in-place yet, but 
     # this is an open PR in FFTW.
     s .= inverse*𝓕 .+ m .+ trend
 

@@ -36,12 +36,8 @@ function surrogenerator(x::AbstractVector, rf::RandomShuffle, rng = Random.defau
 end
 
 function (sg::SurrogateGenerator{<:RandomShuffle})()
-    # Get relevant fields from surrogate generator.
     x, s, rng = sg.x, sg.s, sg.rng
     permutation, idxs  = getfield.(Ref(sg.init), (:permutation, :idxs))
-    n = length(x)
-    
-    # Draw a new permutation of the data
     sample!(rng, idxs, permutation; replace = false)
     s .= x[permutation]
     return s
