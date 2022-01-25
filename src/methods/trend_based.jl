@@ -10,8 +10,7 @@ end
 
 function linear_trend(x)
     l = linreg(0.0:1.0:length(x)-1.0 |> collect, x)
-    trendᵢ(xᵢ) = l[1] + l[2] * xᵢ
-    return trendᵢ.(x)
+    return [l[1] + l[2]*a for a in x]
 end
 
 
