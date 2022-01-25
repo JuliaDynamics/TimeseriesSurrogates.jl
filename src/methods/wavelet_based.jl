@@ -160,3 +160,107 @@ function (sg::SurrogateGenerator{<:WLS})()
     return s
 end
 
+"""
+     RandomCascade(paddingmode::String = "zeros")
+
+ A random cascade wavelet surrogate (Paluš, 2008)[^Paluš2008].
+
+ If the input signal length is not a power of 2, the signal must be 
+ padded before the surrogate is constructed. `paddingmode` determines 
+ how the signal is padded. Currently supported padding modes: "zeros".
+
+ The final surrogate (constructed from the padded signal) is subset
+ to match the length of the original signal.
+
+
+ [^Paluš2008]: Paluš, Milan (2008). Bootstrapping Multifractals: Surrogate Data from Random Cascades on Wavelet Dyadic Trees. Physical Review Letters, 101(13), 134101–. doi:10.1103/PhysRevLett.101.134101
+ """
+ struct RandomCascade{WT <: Wavelets.WT.OrthoWaveletClass} <: Surrogate
+     wt::WT
+     paddingmode::String
+
+     function RandomCascade(; wt::WT = Wavelets.WT.Daubechies{16}(), paddingmode::String = "zeros") where {WT <: Wavelets.WT.OrthoWaveletClass}
+         new{WT}(wt, paddingmode)
+     end
+ end
+
+ function surrogenerator(x::AbstractVector{T}, method::RandomCascade, rng = Random.default_rng()) where T
+     nlevels = ndyadicscales(length(x))
+     mode = method.paddingmode
+
+     # Pad input so that input to discrete wavelet transform has length which is a power of 2
+     x̃ = zeros(2^(nlevels + 1))
+     if mode == "zeros"
+         copyto!(x̃, x)
+     else
+         throw(ArgumentError("""`paddingmode` must be one of ["zeros"]"""))
+     end
+
+     wl = wavelet(method.wt)
+
+     # Wavelet coefficients (step [i] in Keylock)
+     c = dwt(x̃, wl, nlevels)
+
+     # Surrogate coefficients will be partly identical to original coefficients, 
+     # so we simply copy them and replace the necessary coefficients later.
+     cₛ = copy(c)
+
+     # Multiplication factors and index vectors can be pre-allocated for
+     # levels 2:nlevels-1; they are overwritten for each new surrogate.
+     Ms = [zeros(dyadicdetailn(j-1)) for j = 2:nlevels-1]
+     ixs = [zeros(Int, dyadicdetailn(j-1)) for j = 2:nlevels-1]
+
+     init = (
+         wl = wl,
+         c = c, 
+         cₛ = cₛ,
+         nlevels = nlevels,
+         s̃ = similar(x̃),
+         Ms = Ms,
+         ixs = ixs,
+     )
+
+     return SurrogateGenerator(method, x, similar(x), init, rng)
+ end
+
+ function (sg::SurrogateGenerator{<:RandomCascade})()
+     s, rng = sg.s, sg.rng
+     c, cₛ, s̃, wl, nlevels, Ms, ixs = 
+         sg.init.c, sg.init.cₛ, sg.init.s̃, sg.init.wl, sg.init.nlevels, sg.init.Ms, sg.init.ixs
+
+     cₛ[dyadicdetailrange(0)] = @view c[dyadicdetailrange(0)]
+     cₛ[dyadicdetailrange(1)] = @view c[dyadicdetailrange(1)]
+
+     for (l, j) = enumerate(2:nlevels-1)
+         cⱼ₋₁ = @view c[dyadicdetailrange(j - 1)]
+         cⱼ = @view c[dyadicdetailrange(j)]
+
+         M = Ms[l]
+         ct = 1
+         @inbounds for k = 1:length(cⱼ₋₁)
+             if k % 2 == 0
+                 M[ct] = cⱼ[2*k] / cⱼ₋₁[k]
+             else 
+                 M[ct] = cⱼ[2*(k+1)] / cⱼ₋₁[k+1]
+             end
+             ct += 1
+         end
+
+         shuffle!(rng, M)
+         new_coeffs!(M, cⱼ₋₁)
+         ix = ixs[l]
+         sortperm!(ix, M)
+         cₛ[dyadicdetailrange(j-1)] .= @view cⱼ₋₁[ix]
+     end
+     s̃ .= idwt(cₛ, wl, nlevels)
+
+     # Surrogate length must match length of original signal.
+     s .= @view s̃[1:length(s)]
+     return s
+ end
+
+ function new_coeffs!(M, cⱼ₋₁)
+     @inbounds for k = 1:length(cⱼ₋₁)
+         M[k] = M[k] * cⱼ₋₁[k]
+     end
+ end
