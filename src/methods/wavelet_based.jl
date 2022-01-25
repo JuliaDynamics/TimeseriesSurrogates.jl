@@ -167,7 +167,7 @@ A random cascade wavelet surrogate (Paluš, 2008)[^Paluš2008].
 
 If the input signal length is not a power of 2, the signal must be 
 padded before the surrogate is constructed. `paddingmode` determines 
-how the signal is padded. Currently supported padding modes: "zeros".
+how the signal is padded. Currently supported padding modes: `"zeros"`.
 
 The final surrogate (constructed from the padded signal) is subset
 to match the length of the original signal.
