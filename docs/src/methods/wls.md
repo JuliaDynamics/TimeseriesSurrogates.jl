@@ -121,6 +121,3 @@ surroplot(x, s)
 ```
 
 To generate surrogates that preserve linear properties of the original signal, AAFT or IAAFT shuffling is required.
-
-
-

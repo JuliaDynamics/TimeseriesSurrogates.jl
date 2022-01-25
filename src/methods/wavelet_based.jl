@@ -1,7 +1,6 @@
 export WLS
 using Wavelets, Statistics
 
-
 """
     WLS(shufflemethod::Surrogate = IAAFT();
         f::Union{Nothing, Function} = Statistics.cor,
