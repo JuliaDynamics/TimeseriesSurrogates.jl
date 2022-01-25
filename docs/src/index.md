@@ -37,6 +37,7 @@ AutoRegressive
 PseudoPeriodic
 PseudoPeriodicTwin
 WLS
+RandomCascade
 ShuffleDimensions
 IrregularLombScargle
 ```
