@@ -19,12 +19,17 @@ x = cos.(range(0, 20π, length = N)) .+ randn(N)*0.05
 end
 
 @testset "WLS" begin
-    wts = WLS()
-    wts = WLS(AAFT())
-    s = surrogate(x, wts)
+    wts_norescale = WLS(AAFT(), rescale = false)
+    wts_rescale = WLS(AAFT())
 
-    @test length(s) == length(x)
-    @test all([s[i] ∈ x for i = 1:N])
+    s_norescale = surrogate(x, wts_norescale)
+    s_rescale = surrogate(x, wts_rescale)
+    @test length(s_norescale) == length(x)
+    @test length(s_rescale) == length(x)
+
+    # If rescaling, the surrogate will have the same values as the original
+    @test sort(x) ≈ sort(s_rescale)
+    
 end
 
 @testset "Periodic" begin
