@@ -28,6 +28,9 @@ BlockShuffle
 CycleShuffle
 CircShift
 RandomFourier
+TFTDRandomFourier
+PartialRandomization
+PartialRandomizationAAFT
 TFTS
 TFTD
 TFTDAAFT
@@ -39,6 +42,7 @@ AutoRegressive
 PseudoPeriodic
 PseudoPeriodicTwin
 WLS
+RandomCascade
 ShuffleDimensions
 IrregularLombScargle
 ```
