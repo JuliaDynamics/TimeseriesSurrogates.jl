@@ -179,7 +179,6 @@ function (taaft::SurrogateGenerator{<:TAAFT})()
     𝓕new .= rx .* exp.(ϕs .* 1im)
     s .= inverse * 𝓕new
     
-    s = sg()
     s[sortperm(s)] .= x_sorted
     return s
 end
