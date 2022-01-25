@@ -27,6 +27,14 @@ end
     @test all([s[i] ∈ x for i = 1:N])
 end
 
+@testset "RandomCascade" begin
+    randomcascade = RandomCascade()
+    s = surrogate(x, randomcascade)
+
+    @test length(s) == length(x)
+end
+
+
 @testset "Periodic" begin
 	pp = PseudoPeriodic(3, 25, 0.05)
 	s = surrogate(x, pp)
