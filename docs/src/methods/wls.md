@@ -25,7 +25,7 @@ x = cumsum(randn(n)) .+
     [0.5*t for t = 1:n];
 
 # Rescale surrogate back to original values
-method = WLS(IAAFT(), true)
+method = WLS(IAAFT(), rescale = true)
 s = surrogate(x, method);
 p = surroplot(x, s)
 ```
@@ -46,7 +46,7 @@ x = cumsum(randn(n)) .+
     [0.5*t for t = 1:n];
 
 # Don't rescale back to original time series.
-method = WLS(IAAFT(), false)
+method = WLS(IAAFT(), rescale = false)
 s = surrogate(x, method);
 p = surroplot(x, s)
 ```
@@ -74,11 +74,10 @@ x = cumsum(randn(n)) .+
     σ .* rand(n).^2 .+ 
     [0.5*t for t = 1:n];
 
-method = WLS(RandomShuffle())
+method = WLS(RandomShuffle(), rescale = false)
 s = surrogate(x, method);
 p = surroplot(x, s)
 ```
-
 
 Block shuffling the detail coefficients better preserve local properties
 because the shuffling is not completely random, but still does not 
@@ -96,10 +95,9 @@ x = cumsum(randn(n)) .+
     σ .* rand(n).^2 .+ 
     [0.5*t for t = 1:n];
 
-s = surrogate(x, WLS(BlockShuffle(10)));
+s = surrogate(x, WLS(BlockShuffle(10), rescale = false));
 p = surroplot(x, s)
 ```
-
 
 Random Fourier phase shuffling the detail coefficients does a decent job at preserving
 the autocorrelation.
@@ -116,11 +114,8 @@ x = cumsum(randn(n)) .+
     σ .* rand(n).^2 .+ 
     [0.5*t for t = 1:n];
 
-s = surrogate(x, WLS(RandomFourier()));
+s = surrogate(x, WLS(RandomFourier(), rescale = false));
 surroplot(x, s)
 ```
 
 To generate surrogates that preserve linear properties of the original signal, AAFT or IAAFT shuffling is required.
-
-
-
