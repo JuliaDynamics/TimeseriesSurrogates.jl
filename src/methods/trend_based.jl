@@ -49,7 +49,7 @@ struct TFTDRandomFourier <: Surrogate
     end
 end
 
-const TFTD2 = TFTDRandomFourier
+const TFTD = TFTDRandomFourier
 
 function surrogenerator(x::AbstractVector, rf::TFTDRandomFourier, rng = Random.default_rng())
     # Detrended time series
