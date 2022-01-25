@@ -108,6 +108,23 @@ end
     @test_throws ArgumentError TFTS(0)
 end
 
+@testset "TFTDAAFT" begin
+    tftdaaft = TFTDAAFT(0.03)
+    s = surrogate(x, tftdaaft)
+    @test length(s) == length(x)
+    @test sort(x) ≈ sort(s)
+    @test_throws ArgumentError TFTD(0)
+    @test_throws ArgumentError TFTD(1.2)
+end
+
+@testset "TFTDIAAFT" begin
+    tftdiaaft = TFTDAAFT(0.05)
+    s = surrogate(x, tftdiaaft)
+    @test length(s) == length(x)
+    @test sort(x) ≈ sort(s)
+    @test_throws ArgumentError TFTD(0)
+    @test_throws ArgumentError TFTD(1.2)
+end
 
 @testset "TAAFT" begin
     method_preserve_lofreq = TAAFT(0.05)

@@ -28,8 +28,10 @@ BlockShuffle
 CycleShuffle
 CircShift
 RandomFourier
-TFTDRandomFourier
 TFTS
+TFTD
+TFTDAAFT
+TFTDIAAFT
 AAFT
 TAAFT
 IAAFT

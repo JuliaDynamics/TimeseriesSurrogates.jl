@@ -1,6 +1,6 @@
 # Surrogates for nonstationary time series
 
-## Truncated FT/AAFT surrogates
+## Truncated Fourier surrogates
 
 ### [`TFTS`](@ref)
 
@@ -87,9 +87,9 @@ In principle, any trend could be removed/added to the signal. For now, the only
 option is to remove a best-fit linear trend obtained by ordinary least squares 
 regression.
 
-### [`TFTDRandomFourier`](@ref)
+### [`TFTD`](@ref)
 
-The [`TFTDRandomFourier`](@ref) surrogate is a random Fourier surrogate where 
+The [`TFTD`](@ref) surrogate is a random Fourier surrogate where 
 the lowest frequencies are preserved during surrogate generation, and a 
 linear trend is removed during preprosessing and added again after the 
 surrogate has been generated. 
@@ -107,3 +107,40 @@ surroplot(x, s)
 ```
 
 [^Lucio2012]: Lucio, J. H., Valdés, R., & Rodríguez, L. R. (2012). Improvements to surrogate data methods for nonstationary time series. Physical Review E, 85(5), 056202.
+
+
+### [`TFTDAAFT`](@ref)
+
+The [`TFTDAAFT`](@ref)[^Lucio2012] are similar to [`TFTDRandomFourier`](@ref) surrogates, but 
+also adds an additiona rescaling step, so that the time series has the same values as the original time series.
+
+```@example
+using TimeseriesSurrogates
+
+# Example signal
+n = 300; a = 0.7; A = 20; σ = 15
+x = cumsum(randn(n)) .+ [(1 + a*i) .+ A*sin(2π/10*i) for i = 1:n] .+
+    [A^2*sin(2π/2*i + π) for i = 1:n] .+ σ .* rand(n).^2;
+
+# Keep 2 % of lowermost frequencies.
+s = surrogate(x, TFTDAAFT(0.02))
+surroplot(x, s)
+```
+
+### [`TFTDIAAFT`](@ref)
+
+The [`TFTDIAAFT`](@ref)[^Lucio2012] are similar to [`TFTDRandomFourier`](@ref) surrogates, but 
+also adds an additiona rescaling step, so that the time series has the same values as the original time series.
+
+```@example
+using TimeseriesSurrogates
+
+# Example signal
+n = 300; a = 0.7; A = 20; σ = 15
+x = cumsum(randn(n)) .+ [(1 + a*i) .+ A*sin(2π/10*i) for i = 1:n] .+
+    [A^2*sin(2π/2*i + π) for i = 1:n] .+ σ .* rand(n).^2;
+
+# Keep 5% of lowermost frequences
+s = surrogate(x, TFTDIAAFT(0.05))
+surroplot(x, s)
+```
