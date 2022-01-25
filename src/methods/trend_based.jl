@@ -1,5 +1,5 @@
 using LinearAlgebra
-export TFTDRandomFourier, TFTD
+export TFTDRandomFourier, TFTD, TFTDAAFT, TFTDIAAFT
 
 # Efficient linear regression formula from dmbates julia discourse post (nov 2019)
 # https://discourse.julialang.org/t/efficient-way-of-doing-linear-regression/31232/27?page=2
