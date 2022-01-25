@@ -129,7 +129,7 @@ surroplot(x, s)
 
 ### [`TFTDIAAFT`](@ref)
 
-The [`TFTDIAAFT`](@ref)[^Lucio2012] are similar to [`TFTDAAFT`](@ref) surrogates, but adds 
+The [`TFTDIAAFT`](@ref)[^Lucio2012] are similar to [`TFTDAAFT`](@ref) surrogates, but uses
 an iterative process to better match the power spectra of the original signal and the surrogate (anlogous to how the [`IAAFT`](@ref) method improves upon the [`AAFT`](@ref) method).
 
 ```@example
