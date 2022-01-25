@@ -170,7 +170,7 @@ function (taaft::SurrogateGenerator{<:TAAFT})()
     elseif fϵ < 0
         # Do the exact opposite to preserve high-frequencies
         n_preserve = ceil(Int, abs(fϵ * n))
-        ϕs[end-n_preserve+1:end] .= ϕx[end-n_preserve+1:end]
+        ϕs[end-n_preserve+1:end] .= @view ϕx[end-n_preserve+1:end]
     end
 
     𝓕new .= rx .* exp.(ϕs .* 1im)
