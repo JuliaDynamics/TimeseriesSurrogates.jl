@@ -1,6 +1,7 @@
 export WLS
 using Wavelets
 
+
 """
     WLS(surromethod::Surrogate = IAAFT(), 
         rescale::Bool = true,
@@ -79,6 +80,8 @@ function surrogenerator(x::AbstractVector{T}, method::WLS, rng = Random.default_
     circshifted_smirr = zeros(T, size(W))
     R = zeros(size(W))
 
+    s = similar(x)
+
     init = (wl = wl, W = W, Nscales = Nscales, L = L, 
             sW = sW, sgs = sgs, sWmirr = sWmirr, 
             circshifted_s = circshifted_s,
@@ -86,10 +89,12 @@ function surrogenerator(x::AbstractVector{T}, method::WLS, rng = Random.default_
             x_sorted = x_sorted, R = R,
     )
     
-    return SurrogateGenerator(method, x, init, rng)
+    return SurrogateGenerator(method, x, s, init, rng)
 end
- 
+
 function (sg::SurrogateGenerator{<:WLS})()
+    s = sg.s
+
     fds = (:wl, :W, :Nscales, :L, :sW, :sgs, :sWmirr, 
         :circshifted_s, :circshifted_smirr,
         :x_sorted, :R)
@@ -102,6 +107,7 @@ function (sg::SurrogateGenerator{<:WLS})()
     for λ in 1:Nscales
         sW[:, λ] .= sgs[λ]()
     end
+
     # Mirror the surrogate coefficients [last part of step (ii) in Keylock]   
     sWmirr .= reverse(sW, dims = 1)
 
@@ -145,11 +151,12 @@ function (sg::SurrogateGenerator{<:WLS})()
         end
     end
 
-    s = imodwt(R, wl)
+    s .= imodwt(R, wl)
 
     if sg.method.rescale
-        s[sortperm(s)] = x_sorted
+        s[sortperm(s)] .= x_sorted
     end
 
     return s
 end
+

@@ -121,23 +121,23 @@ function surrogenerator(x::Union{AbstractVector, Dataset}, pp::PseudoPeriodicTwi
     
     # Sampling weights (exclude the point itself)
     W = [pweights(exp.(-dists[setdiff(1:Npts, i), i] / ρ)) for i = 1:Npts]
-    
+
+    # The surrogate will be a vector of vectors (if pts is a Dataset, then
+    # the eltype is SVector).
+    PT = eltype(pts.data)
+    s = Vector{PT}(undef, Nx)
+
     init = (pts = pts, Nx = Nx, Npts = Npts, dists = dists, R = R, twins = twins, W = W)
-    return SurrogateGenerator(pp, x, init, rng)
+    return SurrogateGenerator(pp, x, s, init, rng)
 end
 
 
 function (sg::SurrogateGenerator{<:PseudoPeriodicTwin})()
     pts, Nx, Npts, twins, W = getfield.(Ref(sg.init), (:pts, :Nx, :Npts, :twins, :W))
     ρ = getfield.(Ref(sg.method), (:ρ))
-    
-    # The surrogate will be a vector of vectors (if pts is a Dataset, then
-    # the eltype is SVector).
-    PT = eltype(pts.data)
-    s = Vector{PT}(undef, Nx)
-    
-    # Randomly pick a point from the state space as the starting point 
-    # for the surrogate.
+    s = sg.s
+
+    # Randomly pick a point from the state space as the starting point for the surrogate.
     n = 1
     i = rand(sg.rng, 1:Npts)
     s[n] = pts[i]
@@ -146,7 +146,7 @@ function (sg::SurrogateGenerator{<:PseudoPeriodicTwin})()
         # Look for possible twins of the point xᵢ. If any twin exists, jump to one of them 
         # with probability 1/nⱼ, where nⱼ are the number of twins for the point xᵢ.
         if haskey(twins, i)
-            # sample uniformly over possible target twins (meaning 1/nⱼ) by default
+            # sample uniformly (with probability 1/ntargettwins) over possible target twins
             j = twins[i][rand(sg.rng, 1:length(twins[i]))]
             s[n] = pts[j]
             i = j
@@ -158,7 +158,7 @@ function (sg::SurrogateGenerator{<:PseudoPeriodicTwin})()
         # further away are less likely to be selected. The sampling probability 
         # of the next point xⱼ decreases exponentially with increasing distance
         # from the current point xᵢ. Probabilities for jumping from xᵢ to any other 
-        # point have been pre-computed, and is stored in W[i].
+        # point have been pre-computed, and are stored in W[i].
         j = sample(sg.rng, 1:Npts, W[i])
         s[n] = pts[j]
         i = j

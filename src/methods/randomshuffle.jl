@@ -1,4 +1,6 @@
+using Random
 export RandomShuffle
+
 """
     RandomShuffle() <: Surrogate
 
@@ -22,10 +24,21 @@ identically distributed random variables[^Theiler1991, ^Lancaster2018].
 struct RandomShuffle <: Surrogate end
 
 function surrogenerator(x::AbstractVector, rf::RandomShuffle, rng = Random.default_rng())
-    return SurrogateGenerator(rf, x, nothing, rng)
+    n = length(x)
+    idxs = collect(1:n)
+
+    init = (
+        permutation = zeros(Int, n),
+        idxs = idxs,
+    )
+
+    return SurrogateGenerator(rf, x, similar(x), init, rng)
 end
 
-function (rf::SurrogateGenerator{<:RandomShuffle})()
-    n = length(rf.x)
-    rf.x[sample(rf.rng, 1:n, n; replace = false)]
+function (sg::SurrogateGenerator{<:RandomShuffle})()
+    x, s, rng = sg.x, sg.s, sg.rng
+    permutation, idxs  = getfield.(Ref(sg.init), (:permutation, :idxs))
+    sample!(rng, idxs, permutation; replace = false)
+    s .= x[permutation]
+    return s
 end

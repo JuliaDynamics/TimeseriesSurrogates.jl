@@ -1,4 +1,5 @@
 export RandomFourier, FT
+
 """
     RandomFourier(phases = true) <: Surrogate
 
@@ -29,21 +30,32 @@ function surrogenerator(x::AbstractVector, rf::RandomFourier, rng = Random.defau
     inverse = plan_irfft(forward*x, length(x))
     m = mean(x)
     𝓕 = forward*(x .- m)
-    init = (inverse = inverse, m = m, 𝓕 = 𝓕)
-    return SurrogateGenerator(rf, x, init, rng)
-end
-
-function (rf::SurrogateGenerator{<:RandomFourier})()
-    inverse, m, 𝓕 = getfield.(Ref(rf.init), (:inverse, :m, :𝓕))
+    shuffled𝓕 = zero(𝓕)
+    s = similar(x)
     n = length(𝓕)
     r = abs.(𝓕)
     ϕ = angle.(𝓕)
-    if rf.method.phases
-        randomised_ϕ = rand(rf.rng, Uniform(0, 2π), n)
-        new_𝓕 = r .* exp.(randomised_ϕ .* 1im)
-    else
-        randomised_r = r .* rand(rf.rng, Uniform(0, 2π), n)
-        new_𝓕 = randomised_r .* exp.(ϕ .* 1im)
-    end
-    return inverse*new_𝓕 .+ m
+    coeffs = zero(r)
+    
+    init = (inverse = inverse, m = m, coeffs = coeffs, n = n, r = r, 
+            ϕ = ϕ, shuffled𝓕 = shuffled𝓕)
+    return SurrogateGenerator(rf, x, s, init, rng)
 end
+
+function (sg::SurrogateGenerator{<:RandomFourier})()
+    inverse, m, coeffs, n, r, ϕ, shuffled𝓕 = 
+        getfield.(Ref(sg.init), 
+        (:inverse, :m, :coeffs, :n, :r, :ϕ, :shuffled𝓕))
+    s, rng, phases = sg.s, sg.rng, sg.method.phases
+
+    if phases
+        coeffs .= rand(rng, Uniform(0, 2π), n)
+        shuffled𝓕 .= r .* exp.(coeffs .* 1im)
+    else
+        coeffs .= r .* rand(rng, Uniform(0, 2π), n)
+        shuffled𝓕 .= coeffs .* exp.(ϕ .* 1im)
+    end
+    s .= inverse * shuffled𝓕 .+ m
+    return s
+end
+
