@@ -29,6 +29,8 @@ CycleShuffle
 CircShift
 RandomFourier
 TFTDRandomFourier
+PartialRandomization
+PartialRandomizationAAFT
 TFTS
 AAFT
 TAAFT

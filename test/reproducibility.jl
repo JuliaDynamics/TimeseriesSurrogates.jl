@@ -7,6 +7,8 @@ x = cos.(range(0, 20π, length = N)) .+ randn(N)*0.05
 t = (0:N-1) + rand(N)
 
 all_conceivable_methods = [
+    PartialRandomization(0.3)
+    PartialRandomization(0.8)
     WLS(rescale = false)
     WLS(AAFT(), rescale = true)
     WLS(rescale = false)
