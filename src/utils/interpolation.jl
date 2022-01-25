@@ -1,6 +1,6 @@
 
 
-getrange(t, n) = LinRange(minimum(t), maximum(t), n)
+getrange(t, n) = range(minimum(t); stop = maximum(t), length = n)
 itp(x) = LinearInterpolation(1:length(x), x)
 interp(itp, tᵢ) = itp()
 
