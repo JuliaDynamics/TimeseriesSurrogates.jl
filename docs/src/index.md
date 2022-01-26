@@ -32,6 +32,9 @@ TFTDRandomFourier
 PartialRandomization
 PartialRandomizationAAFT
 TFTS
+TFTD
+TFTDAAFT
+TFTDIAAFT
 AAFT
 TAAFT
 IAAFT
