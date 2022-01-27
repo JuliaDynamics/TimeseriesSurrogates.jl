@@ -1,51 +1,28 @@
 # Surrogates for nonstationary time series
 
+Several of the methods provided by TimeseriesSurrogates.jl can be used to 
+construct surrogates for nonstationary time series, which the following examples illustrate.
+
 ## Truncated Fourier surrogates
 
 ### [`TFTS`](@ref)
 
-Truncated Fourier transform surrogates ([`TFTS`](@ref)) preserve some portion of the 
-frequency spectrum of the original signal. Here, we randomize the 95% highest 
-frequencies, while keeping the 5% lowermost frequencies intact.
+By retaining the lowermost frequencies of the frequency spectrum, 
+([`TFTS`](@ref)) surrogates preserve long-term trends in the signals.
 
 ```@example
 using TimeseriesSurrogates
-n = 300
-a = 0.7
-A = 20
-σ = 15
+n = 300; a = 0.7; A = 20; σ = 15
 x = cumsum(randn(n)) .+ [(1 + a*i) .+ A*sin(2π/10*i) for i = 1:n] .+
     [A^2*sin(2π/2*i + π) for i = 1:n] .+ σ .* rand(n).^2;
 
-
-fϵ = 0.05
-s_tfts = surrogate(x, TFTS(fϵ))
-surroplot(x, s_tfts)
-```
-
-One may also choose to preserve the opposite end of the frequency spectrum. Below,
-we randomize the 20% lowermost frequencies, while keeping the 80% highest frequencies
-intact.
-
-```@example
-using TimeseriesSurrogates
-n = 300
-a = 0.7
-A = 20
-σ = 15
-x = cumsum(randn(n)) .+ [(1 + a*i) .+ A*sin(2π/10*i) for i = 1:n] .+
-    [A^2*sin(2π/2*i + π) for i = 1:n] .+ σ .* rand(n).^2;
-
-fϵ = -0.2
-s_tfts = surrogate(x, TFTS(fϵ))
-surroplot(x, s_tfts)
+# Preserve 5 % lowermost frequencies.
+surroplot(x, surrogate(x, TFTS(0.05)))
 ```
 
 ### [`TAAFT`](@ref)
 
-Truncated AAFT surrogates ([`TAAFT`](@ref)) are similar to TFTS surrogates, but adds the 
-extra step of rescaling back to the original values of the signal, so that the original 
-signal and the surrogates consists of the same values.
+Truncated AAFT surrogates ([`TAAFT`](@ref)) are similar to TFTS surrogates, but also rescales back to the original values of the signal, so that the original signal and the surrogates consists of the same values. This, however, may introduce some bias, as demonstrated below.
 
 
 ```@example
@@ -76,6 +53,7 @@ surroplot(x, s_taaft_hi)
 
 ## Truncated FT surrogates with trend removal/addition
 
+One solution is to combine truncated Fourier surrogates with detrending/retrending. 
 For time series with strong trends, Lucio et al. (2012)[^Lucio2012] proposes variants 
 of the truncated Fourier-based surrogates wherein the trend is removed prior to
 surrogate generation, and then added to the surrogate again after it has been generated. 
@@ -92,7 +70,8 @@ regression.
 The [`TFTD`](@ref) surrogate is a random Fourier surrogate where 
 the lowest frequencies are preserved during surrogate generation, and a 
 linear trend is removed during preprosessing and added again after the 
-surrogate has been generated. 
+surrogate has been generated. The [`TFTD`](@ref) surrogates do a decent 
+job at preserving long term trends.
 
 ```@example
 using TimeseriesSurrogates
@@ -108,11 +87,9 @@ surroplot(x, s)
 
 [^Lucio2012]: Lucio, J. H., Valdés, R., & Rodríguez, L. R. (2012). Improvements to surrogate data methods for nonstationary time series. Physical Review E, 85(5), 056202.
 
-
 ### [`TFTDAAFT`](@ref)
 
-The [`TFTDAAFT`](@ref)[^Lucio2012] are similar to [`TFTDRandomFourier`](@ref) surrogates, but 
-also adds an additional rescaling step, so that the time series has the same values as the original time series.
+The detrend-retrend extension of [`TAAFT`](@ref) is the [`TFTDAAFT`](@ref) method. The [`TFTDAAFT`](@ref) method adds a rescaling step to the [`TFTD`](@ref) method, ensuring that the surrogate and the original time series consist of the same values. Long-term trends in the data are also decently preserved by [`TFTDAAFT`](@ref), but like [`TFTDAAFT`](@ref), there is some bias.
 
 ```@example
 using TimeseriesSurrogates
@@ -129,7 +106,7 @@ surroplot(x, s)
 
 ### [`TFTDIAAFT`](@ref)
 
-[`TFTDIAAFT`](@ref)[^Lucio2012] surrogates are similar to [`TFTDAAFT`](@ref) surrogates, but uses
+[`TFTDIAAFT`](@ref)[^Lucio2012] surrogates are similar to [`TFTDAAFT`](@ref) surrogates, but the [`TFTDIAAFT`](@ref)[^Lucio2012] method also uses
 an iterative process to better match the power spectra of the original signal and the surrogate (analogous to how the [`IAAFT`](@ref) method improves upon the [`AAFT`](@ref) method).
 
 ```@example

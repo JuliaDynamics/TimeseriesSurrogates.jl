@@ -1,4 +1,20 @@
 *Changelog is kept with respect to version 1.0. This software follows SymVer2.0*
+
+# 2.0
+
+## API changes
+- `SurrogateGenerator`s now have a field `s` into which surrogates are generated, avoiding
+    unneccessary memory allocations. The 
+- The wavelet (`WLS`) surrogate constructor now uses keywords arguments instead of 
+    positional arguments for some parameters.
+
+
+## New features
+- New surrogate methods: `PartialRandomization`, `PartialRandomizationAAFT`, `TFTDAAFT`, 
+    `TFTDIAAFT`, and `RandomCascade`.
+- Using the `f` keyword, it is now possible to select whether circular shifting at 
+    each wavelet coefficient level should be performed for `WLS` surrogates.
+
 # 1.3
 
 ## New features

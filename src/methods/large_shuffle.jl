@@ -21,8 +21,8 @@ A block shuffle surrogate constructed by dividing the time series
 into `n` blocks of roughly equal width at random indices (end
 blocks are wrapped around to the start of the time series).
 
-If `shift` is `true`, then the input signal is circularly shifted prior 
-to picking blocks.
+If `shift` is `true`, then the input signal is circularly shifted by a 
+random number of steps prior to picking blocks.
 
 Block shuffle surrogates roughly preserve short-range temporal properties
 in the time series (e.g. correlations at lags less than the block length),
@@ -192,9 +192,9 @@ random_shift(n::AbstractVector{<:Integer}, rng) = rand(rng, n)
     CircShift(n) <: Surrogate
 Surrogates that are circularly shifted versions of the original timeseries.
 
-`n` can be an integer (meaning to shift for `n` indices), or any vector of integers,
-which which means that each surrogate is shifted by an integer,
-selected randomly among the entries in `n`.
+`n` can be an integer (the surrogate is the original time series shifted 
+by `n` indices), or any vector of integers, which which means that each 
+surrogate is shifted by an integer selected randomly among the entries in `n`.
 """
 struct CircShift{N} <: Surrogate
     n::N

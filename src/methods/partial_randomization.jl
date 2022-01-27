@@ -7,6 +7,7 @@ surrogates, but during the phase randomization step, instead of drawing phases f
 phases are drawn from `[0, 2π]*α`, where `α ∈ [0, 1]`. The authors refers to `α` as the 
 "degree" of phase randomization, where `α = 0` means `0 %` randomization and 
 `α = 1` means `100 %` randomization.
+
 [^Ortega1998]: Ortega, Guillermo J.; Louis, Enrique (1998). Smoothness Implies Determinism in Time Series: A Measure Based Approach. Physical Review Letters, 81(20), 4345–4348. doi:10.1103/PhysRevLett.81.4345
 """
 struct PartialRandomization{T} <: Surrogate
@@ -50,12 +51,14 @@ end
 
 """
     PartialRandomizationAAFT(α = 0.5) <: Surrogate
+
 `PartialRandomizationAAFF` surrogates are similar to [`PartialRandomization`](@ref) 
 surrogates[^Ortega1998], but adds a rescaling step, so that the surrogate has 
 the same values as the original time series (analogous to the rescaling done for
 [`AAFT`](@ref) surrogates).
 Partial randomization surrogates have, to the package authors' knowledge, not been 
 published in scientific literature.
+
 [^Ortega1998]: Ortega, Guillermo J.; Louis, Enrique (1998). Smoothness Implies Determinism in Time Series: A Measure Based Approach. Physical Review Letters, 81(20), 4345–4348. doi:10.1103/PhysRevLett.81.4345
 """
 struct PartialRandomizationAAFT{T} <: Surrogate
