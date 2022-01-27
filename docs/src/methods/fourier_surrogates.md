@@ -33,27 +33,27 @@ surroplot(ts, s)
  [`PartialRandomization`](@ref) surrogates are similar to random phase surrogates, 
  but allows for tuning the "degree" of phase randomization.
 
- ```@example MAIN
- using TimeseriesSurrogates, CairoMakie
- ts = AR1() # create a realization of a random AR(1) process
+```@example MAIN
+using TimeseriesSurrogates, CairoMakie
+ts = AR1() # create a realization of a random AR(1) process
 
- # 50 % randomization of the phases
- s = surrogate(ts, PartialRandomization(0.5))
+# 50 % randomization of the phases
+s = surrogate(ts, PartialRandomization(0.5))
 
- surroplot(ts, s)
- ```
+surroplot(ts, s)
+```
 
- ### With rescaling
+### With rescaling
 
- [`PartialRandomizationAAFT`](@ref) adds a rescaling step to the [`PartialRandomization`](@ref) surrogates to obtain surrogates that contain the same values as the original time 
- series.
+[`PartialRandomizationAAFT`](@ref) adds a rescaling step to the [`PartialRandomization`](@ref) surrogates to obtain surrogates that contain the same values as the original time 
+series.
 
- ```@example MAIN
- using TimeseriesSurrogates, CairoMakie
- ts = AR1() # create a realization of a random AR(1) process
+```@example MAIN
+using TimeseriesSurrogates, CairoMakie
+ts = AR1() # create a realization of a random AR(1) process
 
- # 50 % randomization of the phases
- s = surrogate(ts, PartialRandomizationAAFT(0.7))
+# 50 % randomization of the phases
+s = surrogate(ts, PartialRandomizationAAFT(0.7))
 
- surroplot(ts, s)
- ```
+surroplot(ts, s)
+```

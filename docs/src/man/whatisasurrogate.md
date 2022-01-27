@@ -4,14 +4,14 @@
 
 The method of [surrogate testing](https://en.wikipedia.org/wiki/Surrogate_data_testing)
 is a statistical method for testing whether a given input timeseries `x` satisfies a specific hypothesis or not.
-Surrogate testing can be used to test, for example, whether a timeseries that appears noisy represents a nonlinear dynamical system, or it instead comes from a purely stochastic and uncorrelated process.
+Surrogate testing can be used to test, for example, whether a timeseries that appears noisy represents a nonlinear dynamical system, or if it instead comes from a purely stochastic and uncorrelated process.
 For the suitable hypothesis to test for, see the documentation strings of provided `<: Surrogate` methods.
 
 The actual hypothesis testing is done by computing an appropriate discriminatory statistic for the input timeseries and the surrogates.
 If the statistic differs greatly between surrogate and input, then the formulated hypothesis can be rejected.
 For an overview of surrogate methods and the hypotheses they can test, see the review from Lancaster et al. (2018)[^Lancaster2018].
 
-Notice that of course another application of surrogate timeseries is to simply generate more timeseries with similar properties as `x`.
+Another application of surrogate timeseries is to simply generate more timeseries with similar properties as `x`.
 
 
 

@@ -26,7 +26,7 @@ randomization of the detail coefficients at each dyadic scale.
 The following methods have been discussed in the literature (more may exist): 
 
 - Random permutations of wavelet coefficients within each scale (Breakspear et al., 2003). To get this behaviour, use `WLS(x, RandomShuffle(), rescale = false, f = nothing)`.
-- Cyclic rotation of wavelet coefficients within each scale (Breakspear et al., 2003).  To get this behaviour, use `WLS(x, Circshift(length(x)), rescale = false, f = nothing)`.
+- Cyclic rotation of wavelet coefficients within each scale (Breakspear et al., 2003).  To get this behaviour, use `WLS(x, Circshift(1:length(x)), rescale = false, f = nothing)`.
 - Block resampling of wavelet coefficients within each scale (Breakspear et al., 2003). To get this behaviour, use `WLS(x, BlockShuffle(nblocks, randomize = true), rescale = false, f = nothing)`.
 - IAAFT resampling of wavelet coefficients within each scale (Keylock, 2006). To get this behaviour, use `WLS(x, IAAFT(), rescale = true, f = Statistics.cor)`.
     This method preserves the local mean and variance structure of the signal, but 
@@ -265,15 +265,17 @@ end
 """
     RandomCascade(paddingmode::String = "zeros")
 
-A random cascade wavelet surrogate (Paluš, 2008)[^Paluš2008].
+A random cascade multifractal wavelet surrogate (Paluš, 2008)[^Paluš2008].
 
 If the input signal length is not a power of 2, the signal must be 
 padded before the surrogate is constructed. `paddingmode` determines 
 how the signal is padded. Currently supported padding modes: `"zeros"`.
-
 The final surrogate (constructed from the padded signal) is subset
 to match the length of the original signal.
 
+Random cascade surrogate preserve multifractal properties of the input 
+time series, that is, interactions among dyadic scales and nonlinear 
+dependencies[^Paluš2008].
 
 [^Paluš2008]: Paluš, Milan (2008). Bootstrapping Multifractals: Surrogate Data from Random Cascades on Wavelet Dyadic Trees. Physical Review Letters, 101(13), 134101–. doi:10.1103/PhysRevLett.101.134101
 """
