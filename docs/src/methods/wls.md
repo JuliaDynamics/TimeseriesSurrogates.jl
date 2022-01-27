@@ -2,17 +2,18 @@
 
 ## `WLS`
 
-`WLS` surrogates are constructed by taking the maximal overlap 
+[`WLS`](@ref) surrogates are constructed by taking the maximal overlap 
 discrete wavelet transform (MODWT) of the signal, shuffling detail 
 coefficients across dyadic scales, then inverting the transform to 
 obtain the surrogate. 
 
-### IAAFT shuffling detail coefficients
+### Wavelet-IAAFT (WIAAFT) surrogates
 
 In [Keylock (2006)](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.73.036707), 
-IAAAFT shuffling is used, yielding surrogates that preserve the local mean and 
+IAAFT shuffling is used, yielding surrogates that preserve the local mean and 
 variance of the original signal, but randomizes nonlinear properties of the signal.
-This also preserves nonstationarities in the signal.
+This also preserves nonstationarities in the signal. To construct WIAAFT surrogates,
+rescaling must be enabled. 
 
 ```@example MAIN
 using TimeseriesSurrogates, Random
