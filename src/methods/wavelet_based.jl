@@ -26,7 +26,7 @@ randomization of the detail coefficients at each dyadic scale.
 The following methods have been discussed in the literature (more may exist): 
 
 - Random permutations of wavelet coefficients within each scale (Breakspear et al., 2003). To get this behaviour, use `WLS(x, RandomShuffle(), rescale = false, f = nothing)`.
-- Cyclic rotation of wavelet coefficients within each scale (Breakspear et al., 2003).  To get this behaviour, use `WLS(x, Circshift(length(x)), rescale = false, f = nothing)`.
+- Cyclic rotation of wavelet coefficients within each scale (Breakspear et al., 2003).  To get this behaviour, use `WLS(x, Circshift(1:length(x)), rescale = false, f = nothing)`.
 - Block resampling of wavelet coefficients within each scale (Breakspear et al., 2003). To get this behaviour, use `WLS(x, BlockShuffle(nblocks, randomize = true), rescale = false, f = nothing)`.
 - IAAFT resampling of wavelet coefficients within each scale (Keylock, 2006). To get this behaviour, use `WLS(x, IAAFT(), rescale = true, f = Statistics.cor)`.
     This method preserves the local mean and variance structure of the signal, but 
