@@ -42,7 +42,6 @@ PAGES = [
         "Pseudo-periodic" => "methods/pps.md",
         "Wavelet-based" => "methods/wls.md",
         "Pseudo-periodic twin" => "methods/ppts.md",
-        "Wavelet-based" => "methods/wls.md",
         "Multidimensional surrogates" => "methods/multidim.md",
         "Surrogates for irregular timeseries" => "collections/irregular_surrogates.md",
         "Surrogates for nonstationary timeseries" => "collections/nonstationary_surrogates.md"
