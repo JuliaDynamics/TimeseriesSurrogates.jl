@@ -192,9 +192,9 @@ random_shift(n::AbstractVector{<:Integer}, rng) = rand(rng, n)
     CircShift(n) <: Surrogate
 Surrogates that are circularly shifted versions of the original timeseries.
 
-`n` can be an integer (meaning to shift for `n` indices), or any vector of integers,
-which which means that each surrogate is shifted by an integer,
-selected randomly among the entries in `n`.
+`n` can be an integer (the surrogate is the original time series shifted 
+by `n` indices), or any vector of integers, which which means that each 
+surrogate is shifted by an integer selected randomly among the entries in `n`.
 """
 struct CircShift{N} <: Surrogate
     n::N
