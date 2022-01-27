@@ -20,8 +20,8 @@ for every surrogate. Optionally you can provide an `rng::AbstractRNG` object tha
 control the random number generation and hence establish reproducibility of the
 generated surrogates. By default `Random.default_rng()` is used.
 
-Notice that the generated surrogates are overwriting an in-place a common
-vector container. Use copy if you need to actually store multiple surrogates.
+Notice that the generated surrogates overwrite, in-place, a common vector container.
+Use copy if you need to actually store multiple surrogates.
 
 To generate a surrogate, call `sg` as a function with no arguments, e.g.:
 
