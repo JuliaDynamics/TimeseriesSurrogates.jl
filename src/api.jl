@@ -14,7 +14,7 @@ end
 """
     surrogenerator(x, method::Surrogate [, rng]) → sg::SurrogateGenerator
 
-Initialize a generator that creates surrogates of `x` on demand, based on given `method`.
+Initialize a generator that creates surrogates of `x` on demand, based on the given `method`.
 This is efficient, because for most methods some things can be initialized and reused
 for every surrogate. Optionally you can provide an `rng::AbstractRNG` object that will
 control the random number generation and hence establish reproducibility of the
