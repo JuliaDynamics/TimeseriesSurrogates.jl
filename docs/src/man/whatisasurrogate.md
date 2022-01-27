@@ -11,7 +11,7 @@ The actual hypothesis testing is done by computing an appropriate discriminatory
 If the statistic differs greatly between surrogate and input, then the formulated hypothesis can be rejected.
 For an overview of surrogate methods and the hypotheses they can test, see the review from Lancaster et al. (2018)[^Lancaster2018].
 
-Notice that of course another application of surrogate timeseries is to simply generate more timeseries with similar properties as `x`.
+Another application of surrogate timeseries is to simply generate more timeseries with similar properties as `x`.
 
 
 
