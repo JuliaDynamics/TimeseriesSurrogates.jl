@@ -15,7 +15,6 @@ variance of the original signal, but randomizes nonlinear properties of the sign
 This also preserves nonstationarities in the signal. To construct WIAAFT surrogates,
 rescaling must be enabled. 
 
-<!--- TODO: actually implement the final iteration step --->
 *Note: the final iterative procedure of the WIAAFT surrogate method, after the rescaling step, 
 is not performed in our current implementation, so surrogates might differ a bit from results
 in Keylock (2006). For now, you have to do the iterative rescaling manually if desired.*. 
