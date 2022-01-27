@@ -10,7 +10,7 @@
 
 
 ## New features
-- New surrogate methods: `PartialRandomization`, `PartialRandomizationAAFT`, `TFTDAAFT, 
+- New surrogate methods: `PartialRandomization`, `PartialRandomizationAAFT`, `TFTDAAFT`, 
     `TFTDIAAFT`, and `RandomCascade`.
 - Using the `f` keyword, it is now possible to select whether circular shifting at 
     each wavelet coefficient level should be performed for `WLS` surrogates.
