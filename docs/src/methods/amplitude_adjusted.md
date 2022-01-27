@@ -13,7 +13,8 @@ surroplot(ts, s)
 
 ## Iterative AAFT (IAAFT)
 
-The IAAFT surrogates add an iterative step to the AAFT algorithm improve convergence.
+The IAAFT surrogates add an iterative step to the AAFT algorithm to improve similarity
+of the power spectra of the original time series and the surrogates.
 
 ```@example MAIN
 using TimeseriesSurrogates, CairoMakie, Makie
