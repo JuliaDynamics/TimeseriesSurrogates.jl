@@ -38,7 +38,6 @@ PAGES = [
     "Example applications" => [
         "Shuffle-based" => "methods/randomshuffle.md",
         "Fourier-based" => "methods/fourier_surrogates.md",
-        "Amplitude-adjusted FT" => "methods/amplitude_adjusted.md",
         "Wavelet-based" => "methods/wls.md",
         "Pseudo-periodic" => "methods/pps.md",
         "Pseudo-periodic twin" => "methods/ppts.md",
