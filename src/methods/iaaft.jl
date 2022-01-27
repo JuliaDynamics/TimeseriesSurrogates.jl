@@ -10,7 +10,7 @@ export IAAFT
 
 An iteratively adjusted amplitude-adjusted-fourier-transform surrogate[^SchreiberSchmitz1996].
 
-IAAFT surrogate have the same linear correlation, or periodogram, and also
+IAAFT surrogates have the same linear correlation, or periodogram, and also
 preserves the amplitude distribution of the original data, but are improved relative
 to AAFT through iterative adjustment (which runs for a maximum of `M` steps).
 During the iterative adjustment, the periodograms of the original signal and the
