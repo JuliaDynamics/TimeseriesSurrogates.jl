@@ -1,7 +1,7 @@
 export PartialRandomization, PartialRandomizationAAFT
 
 """
-    PartialRandomization(α = 0.5) <: Surrogate
+    PartialRandomization(α = 0.5)
 `PartialRandomization` surrogates[^Ortega1998] are similar to [`RandomFourier`](@ref) phase 
 surrogates, but during the phase randomization step, instead of drawing phases from `[0, 2π]`,
 phases are drawn from `[0, 2π]*α`, where `α ∈ [0, 1]`. The authors refers to `α` as the 
@@ -50,7 +50,7 @@ function (sg::SurrogateGenerator{<:PartialRandomization})()
 end
 
 """
-    PartialRandomizationAAFT(α = 0.5) <: Surrogate
+    PartialRandomizationAAFT(α = 0.5)
 
 `PartialRandomizationAAFF` surrogates are similar to [`PartialRandomization`](@ref) 
 surrogates[^Ortega1998], but adds a rescaling step, so that the surrogate has 
