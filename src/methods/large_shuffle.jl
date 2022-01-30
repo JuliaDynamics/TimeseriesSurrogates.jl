@@ -15,7 +15,7 @@ function get_uniform_blocklengths(L::Int, n::Int)
 end
 
 """
-    BlockShuffle(n::Int; shift = false) <: Surrogate
+    BlockShuffle(n::Int; shift = false)
 
 A block shuffle surrogate constructed by dividing the time series
 into `n` blocks of roughly equal width at random indices (end
@@ -130,7 +130,7 @@ end
 # CycleShuffle
 #########################################################################
 """
-    CycleShuffle(n::Int = 7, σ = 0.5) <: Surrogate
+    CycleShuffle(n::Int = 7, σ = 0.5)
 
 Cycle shuffled surrogates[^Theiler1995] that identify successive local peaks in the data and shuffle the
 cycles in-between the peaks. Similar to [`BlockShuffle`](@ref), but here
@@ -189,7 +189,7 @@ random_shift(n::Integer, rng) = n
 random_shift(n::AbstractVector{<:Integer}, rng) = rand(rng, n)
 
 """
-    CircShift(n) <: Surrogate
+    CircShift(n)
 Surrogates that are circularly shifted versions of the original timeseries.
 
 `n` can be an integer (the surrogate is the original time series shifted 

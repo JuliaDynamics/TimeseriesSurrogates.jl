@@ -1,7 +1,7 @@
 export RandomFourier, FT
 
 """
-    RandomFourier(phases = true) <: Surrogate
+    RandomFourier(phases = true)
 
 A surrogate that randomizes the Fourier components
 of the signal in some manner. If `phases==true`, the phases are randomized,
