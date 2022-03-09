@@ -31,31 +31,36 @@ The method of surrogate data [@Theiler:1991] is a way to generate data that pres
 
 TimeseriesSurrogates.jl is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a GitHub organization dedicated to creating high quality scientific software for studying dynamical system.
 
-# Statement of Need
-Surrogate data has been used in several thousand publications so far (citation number of [@Theiler:1991] is more than 4,000) and hence the community is in clear need of such methods. Existing software packages for surrogate generation provide much less methods than available in the literature, and with less-than optimal performance (see Comparison section below). TimeseriesSurrogates.jl provides more than double the amount of methods given by other packages in more than 100x the speed.
-
+# Statement of need
+Surrogate data has been used in several thousand publications so far (citation number of [@Theiler:1991] is more than 4,000) and hence the community is in clear need of such methods. Existing software packages for surrogate generation provide much fewer methods than available in the literature, and with less-than optimal performance (see Comparison section below). TimeseriesSurrogates.jl provides more than double the amount of methods given by other packages, with runtimes similar to and up to an order of magnitude faster than existing surrogate packages in other languages.
 
 # Available surrogate methods
 
-# TODO: There are several methods missing here
-
 | Method | Description | Reference |
 |---|---|---|
+| `AutoRegressive`  | Autoregressive model based surrogates | |
 | `RandomShuffling` | random shuffling of individual data points | [@Theiler:1991] |
 | `BlockShuffle`  | random shuffling of blocks of data points  | [@Theiler:1991] |
-| `RandomFourier`  | randomization of phases of Fourier transform of the signal  | [@Theiler:1991] |
-| `CycleShuffle`  | randomization of phases of Fourier transform of the signal  | [@Theiler:1995] |
 | `CircShift`  | circularly shift the signal  | |
+| `RandomFourier`  | randomization of phases of Fourier transform of the signal  | [@Theiler:1991] |
+| `PartialRandomization`  | Fourier randomization, but tuning of the "degree" of randomization| [@Ortega:1998] |
+| `PartialRandomizationAAFT`  | Partial Fourier randomization, but rescaling back to original values | This paper. |
+| `CycleShuffle`  | randomization of phases of Fourier transform of the signal  | [@Theiler:1995] |
 | `ShuffleDimensions`  | circularly shift the signal  | This paper. |
 | `AAFT`  | amplitude adjusted `RandomFourier`  | [@Theiler:1991] |
 | `IAAFT`  | iterative amplitude adjusted `RandomFourier`  | [@SchreiberSchmitz:1996] |
-| `TFTS`  | truncated Fourier transform phase randomization  | [@Nakamura:2006] |
-| `TAAFT`  | iterative `TFTS` | [@Nakamura:2006] |
-| `WLS`  | wavelet-based methods using maximal overlap discrete wavelet transforms | [@Keylock:2006] |
+| `TFTS`  | Truncated Fourier transform surrogates   | [@Miralles2015] |
+| `TAAFT`  | Truncated AAFT surrogates   | [@Nakamura:2006] |
+| `TFTDRandomFourier`  | Detrended and retrended truncated Fourier surrogates   | [@Lucio:2012] |
+| `TFTDAAFT`  | Detrended and retrended truncated AAFT surrogates   | [@Lucio:2012] |
+| `TFTDIAAFT`  | Detrended and retrended truncated AAFT surrogates with iterative adjustment   | [@Lucio:2012] |
+| `WLS`  | flexible wavelet-based methods using maximal overlap discrete wavelet transforms | [@Keylock:2006] |
+| `RandomCascade`  | random cascade multifractal surrogates | [@Palus:2008] |
 | `WIAAFT`  | wavelet-based iterative amplitude adjusted transforms | [@Keylock:2006] |
 | `PseudoPeriodic`  | randomization of phases of Fourier transform of the signal  | [@Small:2001] |
-| `PseudoPeriodicTwin`  | combination of pseudoperiodic and twin surrogates  | [Miralles2015] |
-| `LS`  | Lomb-Scargle periodogram based surrogates for irregular time grids  | [Schmitz:1999] |
+| `PseudoPeriodicTwin`  | combination of pseudoperiodic and twin surrogates  | [@Miralles2015] |
+| `LS`  | Lomb-Scargle periodogram based surrogates for irregular time grids  | [@Schmitz:1999] 
+
 
 Documentation strings for the various methods describe the usage intended by the original authors of the methods.
 Example applications are showcased in the [package documentation](https://juliadynamics.github.io/TimeseriesSurrogates.jl/dev/).
@@ -78,7 +83,7 @@ s = surrogate(x, method, rng)
 ```
 
 The function `surrogate` is straight-forward to use, but it does not allow maximum performance.
-The reason for this is that when trying to make a second surrogate from `x` and the same method, there are many structures and computations that could be pre-initialized and/or reused for all surrogates. This is especially relevant for real-world applications where one typically makes thousands of surrogates from a given method.
+The reason for this is that when trying to make a second surrogate from `x` and the same method, there are many structures and computations that could be pre-initialized and/or reused for all surrogates. This is especially relevant for real-world applications where one typically makes thousands of surrogates with a given method.
 To address this, we provide a second level of interface, the `surrogenerator` function.
 It works as follows: first the user initializes a "surrogate generator" structure:
 ```julia
@@ -94,14 +99,15 @@ for i in 1:100
 end
 ```
 
+We have optimized the surrogate generators for most methods in TimeseriesSurrogates.jl to be as performant as possible, while consuming as little memory as possible. Several methods do not allocate memory at all when using the surrogate generator structure.
+
 # Comparison
-# TODO: 
-we have more methods than the matlab and python packages. 
 
-The average time to generate surrogates in TimeseriesSurrogates.jl is faster or roughly equivalent to 
-the MATLAB surrogate code provided by Lancaster et al. (2018)[@Lancaster:2018], though comparisons are not exact, due to differing implementations and tuning options. Timings for commonly used surrogate methods that are common to both libraries are shown in Figure 1.
+The average time to generate surrogates in TimeseriesSurrogates.jl is in the best case about an order of magnitude faster than, and in the worst case, roughly equivalent to, the MATLAB surrogate code provided by Lancaster et al. (2018)[@Lancaster:2018], though comparisons are not exact, due to differing implementations and tuning options. 
+Timings for commonly used surrogate methods that are common to both libraries are shown in Figure 1. 
+Because TimeseriesSurrogates.jl provides many more methods not implemented in other packages, a comprehensive comparison of runtimes is not possible, but due to our optimized surrogate generators, we expect good performance relative to future implementations in other languages.
 
-![Figure 1: Mean time (in seconds, based on 100 realizations) to generate a single surrogate using a pre-initialized generators for currently implemented surrogate methods in TimeseriesSurrogates.jl,  using default parameters, with the maximum number of iterations for the IAAFT algorithm is set to 100. MATLAB timing are generated using the code provided by Lancaster et al. (2018)[@Lancaster:2018]. Julia and MATLAB scripts to reproduce timings are available in the GitHub repo for this paper. Note: timings for the pseudoperiodic surrogates in matlab include embedding lag and dimension finding, which has been included in the preprocessing step in the Julia version.](figs/timings.png)
+![Figure 1: Mean time (in seconds, based on 100 realizations) to generate a single surrogate using a pre-initialized generators in TimeseriesSurrogates.jl, using default parameters, with the maximum number of iterations for the IAAFT algorithm set to 100. MATLAB timings are generated using the code provided by Lancaster et al. (2018)[@Lancaster:2018], which does not provide standardized initialization tools to speed up surrogate generation. Note: timings for the pseudoperiodic surrogates in MATLAB include embedding lag and dimension finding, which has been included in the preprocessing step in the Julia version. Scripts to reproduce Julia and MATLAB timings are available in the GitHub repo for this paper.](figs/timings.png)
 
 # Acknowledgements
 
