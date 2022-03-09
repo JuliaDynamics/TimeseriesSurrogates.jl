@@ -1,7 +1,8 @@
 using DelayEmbeddings, StatsBase, LinearAlgebra
 export PseudoPeriodic, noiseradius
+
 """
-    PseudoPeriodic(d, τ, ρ, shift=true) <: Surrogate
+    PseudoPeriodic(d, τ, ρ, shift = true)
 
 Create surrogates suitable for pseudo-periodic signals. They retain the periodic structure
 of the signal, while inter-cycle dynamics that are either deterministic or correlated
@@ -40,17 +41,18 @@ function surrogenerator(x::AbstractVector, pp::PseudoPeriodic, rng = Random.defa
     Ñ = length(z)
     w = zeros(eltype(z), Ñ-1) # weights vector
     y = Dataset([z[1] for i in 1:N])
+    s = similar(x)
     init = (y = y, w = w, z = z)
-    return SurrogateGenerator(pp, x, init, rng)
+    return SurrogateGenerator(pp, x, s, init, rng)
 end
 
 function (sg::SurrogateGenerator{<:PseudoPeriodic})()
     y, z, w = getfield.(Ref(sg.init), (:y, :z, :w))
     ρ, shift = getfield.(Ref(sg.method), (:ρ, :shift))
-    pseudoperiodic!(y, sg.x, z, w, ρ, shift, sg.rng)
+    pseudoperiodic!(sg.s, y, sg.x, z, w, ρ, shift, sg.rng)
 end
 # Low-level method, also used in `noiseradius`
-function pseudoperiodic!(y, x, z, w, ρ, shift, rng)
+function pseudoperiodic!(s, y, x, z, w, ρ, shift, rng)
     N, Ñ = length.((x, z))
     y[1] = shift ? rand(rng, z.data) : z[1]
     @inbounds for i in 1:N-1
@@ -58,14 +60,15 @@ function pseudoperiodic!(y, x, z, w, ρ, shift, rng)
         j = sample(rng, 1:Ñ-1, pweights(w))
         y[i+1] = z[j+1]
     end
-    return y[:, 1]
+    for (i, p) in enumerate(y); s[i] = p[1]; end
+    return s
 end
 
 """
     noiseradius(x::AbstractVector, d::Int, τ, ρs, n = 1) → ρ
+
 Use the proposed* algorithm of[^Small2001] to estimate optimal `ρ` value for
 [`PseudoPeriodic`](@ref) surrogates, where `ρs` is a vector of possible `ρ` values.
-
 *The paper is ambiguous about exactly what to calculate. Here we count how many times
 we have pairs of length-2 that are identical in `x` and its surrogate, but **are not**
 also part of pairs of length-3.
@@ -88,15 +91,15 @@ end
 function noiseradius(sg::SurrogateGenerator{<:PseudoPeriodic}, ρs, n = 1)
     l2n = zero(ρs) # length-2 number of points existing in both timeseries
     y, z, w = getfield.(Ref(sg.init), (:y, :z, :w))
-    x = sg.x
+    x, s = sg.x, sg.s
     N = length(sg.x)
     @inbounds for _ in 1:n
         for (ℓ, ρ) in enumerate(ρs)
-            s = pseudoperiodic!(y, x, z, w, ρ, sg.method.shift, sg.rng)
+            s̄ = pseudoperiodic!(s, y, x, z, w, ρ, sg.method.shift, sg.rng)
             for i in 1:N-1
                 # TODO: This can be optimized heavily: checking x[i+2] already tells us
                 # that we shouldn't check x[i+1] on the next iteration.
-                l2n[ℓ] += count(j -> s[j]==x[i] && s[j+1]==x[i+1] && s[j+2]!=x[i+2], 1:N-2)
+                l2n[ℓ] += count(j -> s̄[j]==x[i] && s̄[j+1]==x[i+1] && s̄[j+2]!=x[i+2], 1:N-2)
             end
         end
     end

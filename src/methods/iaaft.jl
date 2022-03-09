@@ -1,10 +1,16 @@
 export IAAFT
+
+
+include("../utils/powerspectrum.jl")
+include("../utils/interpolation.jl")
+export IAAFT
+
 """
     IAAFT(M = 100, tol = 1e-6, W = 75)
 
 An iteratively adjusted amplitude-adjusted-fourier-transform surrogate[^SchreiberSchmitz1996].
 
-IAAFT surrogate have the same linear correlation, or periodogram, and also
+IAAFT surrogates have the same linear correlation, or periodogram, and also
 preserves the amplitude distribution of the original data, but are improved relative
 to AAFT through iterative adjustment (which runs for a maximum of `M` steps).
 During the iterative adjustment, the periodograms of the original signal and the
@@ -27,97 +33,100 @@ struct IAAFT <: Surrogate
     end
 end
 
-Base.show(io::IO, x::IAAFT) = print(io, "IAAFT(M=$(x.M), tol=$(x.tol), W=$(x.W))")
+Base.show(io::IO, x::IAAFT) = print(io, "IAAFT(M = $(x.M), tol = $(x.tol), W = $(x.W))")
 
-function surrogenerator(x, method::IAAFT, rng = Random.default_rng())
-    # Pre-plan Fourier transforms
-    forward = plan_rfft(x)
-    inverse = plan_irfft(forward*x, length(x))
 
-    # Pre-compute stuff that can be used for different surrogate realizations
-    m = mean(x)
-    x_sorted = sort(x)
-    𝓕 = forward*(x .- m)
-    r_original = abs.(𝓕)
-
-    # Coarse-grain the periodograms when comparing them between iterations.
-    px = DSP.periodogram(x)
-    range = LinRange(0.0, 0.5, method.W)
-    px_binned = interp(px.freq, px.power, range)
-
-    # These are updated during iteration procedure
-    𝓕new = Vector{Complex{Float64}}(undef, length(𝓕))
-    𝓕sorted = Vector{Complex{Float64}}(undef, length(𝓕))
-    ϕsorted = Vector{Complex{Float64}}(undef, length(𝓕))
-
-    init = (forward = forward, inverse = inverse, m = m, 𝓕 = 𝓕, r_original = r_original,
-            px_binned = px_binned, range = range, x_sorted = x_sorted,
-            𝓕new = 𝓕new, 𝓕sorted =  𝓕sorted, ϕsorted = ϕsorted)
-
-    return SurrogateGenerator(method, x, init, rng)
+function interpolated_spectrum(spectrum, n)
+    intp_spectrum = zeros(n)
+    interpolated_spectrum!(intp_spectrum, spectrum, n)
 end
 
-function (sg::SurrogateGenerator{<:IAAFT})()
-    init_fields = (:forward, :inverse, :m, :𝓕, :r_original,
-                    :px_binned, :range,
-                    :x_sorted,
-                    :𝓕new, :𝓕sorted, :ϕsorted)
-    forward, inverse, m, 𝓕, r_original,
-        px_binned, range,
-        x_sorted,
-        𝓕new, 𝓕sorted, ϕsorted = getfield.(Ref(sg.init), init_fields)
+function interpolated_spectrum!(intp_spectrum, spectrum, n)
+    t = 1:length(spectrum)
+    r = getrange(t, n)
+    iₓ = itp(spectrum)
+    intp_spectrum .= iₓ.(r)
+    return intp_spectrum
+end
 
-    x = sg.x
-    M = sg.method.M
+function surrogenerator(x, method::IAAFT, rng = Random.default_rng())
+    m = mean(x)
+    x_sorted = sort(x)
+    forward = plan_rfft(x)
+    inverse = plan_irfft(forward * x, length(x))
+    𝓕 = forward * x
+    r = abs.(𝓕)
+    ϕ = abs.(𝓕)
+    ix = zeros(Int, length(x))
+
+    # Periodograms
+    𝓕p = prepare_spectrum(x, forward)
+    xpower = zeros(length(𝓕)); powerspectrum!(𝓕p, xpower, x, forward)
+    spower = copy(xpower)
+
+    # Binned periodograms
+    xpowerᵦ = interpolated_spectrum(xpower, method.W)
+    spowerᵦ = interpolated_spectrum(spower, method.W)
+
+    init = (
+        forward = forward, 
+        inverse = inverse, 
+        𝓕 = 𝓕, 
+        𝓕p = 𝓕p,
+        r = r, 
+        ϕ = ϕ, 
+        m = m, 
+        x_sorted = x_sorted, 
+        xpower = xpower, 
+        spower = spower,
+        xpowerᵦ = xpowerᵦ,
+        spowerᵦ = spowerᵦ,
+        ix = ix,
+    )
+
+    return SurrogateGenerator(method, x, similar(x), init, rng)
+end
+using LinearAlgebra
+function (sg::SurrogateGenerator{<:IAAFT})()
+    init_fields = (:forward, :inverse, :𝓕, :𝓕p, :r, :ϕ, :m, :x_sorted, :xpower, :spower, :xpowerᵦ, :spowerᵦ, :ix)
+    forward, inverse, 𝓕, 𝓕p, r, ϕ, m, x_sorted, xpower, spower, xpowerᵦ, spowerᵦ, ix = getfield.(Ref(sg.init), init_fields)
+
+    x, s, rng = sg.x, sg.s, sg.rng
+    M, W = sg.method.M, sg.method.W
     tol = sg.method.tol
 
-    # Keep track of difference between periodograms between iterations
-    diffs = zeros(Float64, 2)
-
-    # RANK ORDERING.
-    # Create some Gaussian noise, and find the indices that sorts it with
-    # increasing amplitude. Then sort the original time series according to
-    # the indices rendering the Gaussian noise sorted.
+    # Surrogate starts out as a random permutation of `x`
     n = length(x)
-    g = rand(sg.rng, Normal(), n)
-    ts_sorted = x[sortperm(g)]
+    s .= x[sample(rng, 1:n, n)]
 
-    # The surrogate
-    s = Vector{Float64}(undef, n)
-
+    sum_old, sum_new = 0.0, 0.0
     iter = 1
-    success = false
-    while iter <= M
-        # Take the Fourier transform of `ts_sorted` and get the phase angles of
-        # the resulting complex numbers.
-        𝓕sorted .= forward * ts_sorted
-        ϕsorted .= angle.(𝓕sorted)
+    while iter <= M        
+        mul!(𝓕, forward, s)
+        ϕ .= angle.(𝓕)
+        𝓕 .= r .* exp.(ϕ .* 1im)
 
-        # The new spectrum preserves the amplitudes of the Fourier transform of
-        # the original time series, but randomises the phases (because the
-        # phases are derived from the *randomly sorted* version of the original
-        # time series).
-        𝓕new .= r_original .* exp.(ϕsorted .* 1im)
+        # TODO: Unfortunately, we can't simply do ldiv! here to avoid allocations. 
+        # But, although FFTW does not yet have irfft!, it will probably have. 
+        # See https://github.com/JuliaMath/FFTW.jl/pull/222. 
+        # Once that PR is merged, we should replace the following line with 
+        # the in-place version.
+        ######################################################################
+        s .= inverse * 𝓕 
+        sortperm!(ix, s)
+        s[ix] .= x_sorted
 
-        # Now, let the surrogate time series be the values of the original time
-        # series, but sorted according to the new spectrum. The shuffled series
-        # is generated by taking the inverse Fourier transform of the spectrum
-        # consisting of the original amplitudes, but having randomised phases.
-        s .= real.(inverse * 𝓕new) # ifft normalises by default
-
-        # map original values onto shuffle
-        s[sortperm(s)] = x_sorted
-        ts_sorted .= s
-
-        # Convergence check on periodogram
-        ps = DSP.periodogram(s)
-        ps_binned = interp(ps.freq, ps.power, range)
-
+        powerspectrum!(𝓕p, spower, s, forward)
+        interpolated_spectrum!(spowerᵦ, spower, W)
         if iter == 1
-            diffs[1] = sum((px_binned[2] .- ps_binned[2]).^2) / sum(px_binned[2].^2)
-        else
-            diffs[2] = sum((px_binned[2] .- ps_binned[2]).^2) / sum(px_binned[2].^2)
-            abs(diffs[1] - diffs[2]) < tol ? break : diffs[1] = copy(diffs[2])
+            sum_old = sum((xpowerᵦ .- xpowerᵦ) .^ 2) / sum(xpowerᵦ .^ 2)
+        else 
+            sum_new = sum((xpowerᵦ .- spowerᵦ) .^ 2) / sum(xpowerᵦ .^ 2)
+            if abs(sum_old - sum_new) < tol
+                iter = M + 1
+            else
+                sum_old = sum_new
+            end
         end
 
         iter += 1

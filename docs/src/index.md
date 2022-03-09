@@ -28,7 +28,13 @@ BlockShuffle
 CycleShuffle
 CircShift
 RandomFourier
+TFTDRandomFourier
+PartialRandomization
+PartialRandomizationAAFT
 TFTS
+TFTD
+TFTDAAFT
+TFTDIAAFT
 AAFT
 TAAFT
 IAAFT
@@ -36,11 +42,12 @@ AutoRegressive
 PseudoPeriodic
 PseudoPeriodicTwin
 WLS
+RandomCascade
 ShuffleDimensions
-LS
+IrregularLombScargle
 ```
 
-### Utils
+### Utilities
 
 ```@docs
 noiseradius
@@ -48,7 +55,19 @@ noiseradius
 
 ## Visualization
 
-TimeseriesSurrogates.jl provides the function `surroplot(x, s)`, which comes into scope when `using Plots`. This function is used in the example applications.
+TimeseriesSurrogates.jl has defined a simple function `surroplot(x, s)`.
+This comes into scope when `using Makie` (you also need a plotting backend).
+
+To load the function, do:
+```@example MAIN
+using TimeseriesSurrogates
+using CairoMakie, Makie
+using TimeseriesSurrogates, CairoMakie, Makie
+ts = AR1() # create a realization of a random AR(1) process
+s = surrogate(ts, AAFT())
+fig = surroplot(ts, s)
+save("surroplot.png", fig); # hide
+```
 
 ## Installation
 

@@ -29,26 +29,37 @@ AutoRegressive(n::Int) = AutoRegressive(n, LPCLevinson())
 
 function surrogenerator(x, method::AutoRegressive, rng = Random.default_rng())
     φ, e = lpc(x, method.n, method.m)
-    init = (d = Normal(0, std(x)), φ = φ)
-    return SurrogateGenerator(method, x, init, rng)
+    N, f = length(x), length(φ)
+    d = Normal(0, std(x))
+
+    init = (
+        d = d, 
+        φ = φ,
+        N = N,
+    )
+
+    # The surrogate
+    T = typeof(d).parameters[1]
+    s = zeros(T, N + f)
+
+    return SurrogateGenerator(method, x, s, init, rng)
 end
 
 function (sg::SurrogateGenerator{<:AutoRegressive})()
-    N, φ, d = length(sg.x), sg.init.φ, sg.init.d
-    return autoregressive(d, N, φ, sg.rng)
+    N, φ, d = sg.init.N, sg.init.φ, sg.init.d
+    return autoregressive!(sg.s, d, N, φ, sg.rng)
 end
 
-function autoregressive(d::Normal{T}, N, φ, rng) where {T}
+function autoregressive!(s, d::Normal{T}, N, φ, rng) where {T}
     f = length(φ)
-    z = zeros(T, N+f)
-    @inbounds for i in 1:f; z[i] = rand(rng, d); end
-    @inbounds for i in f+1:length(z)
-        s = zero(T)
+    @inbounds for i in 1:f; s[i] = rand(rng, d); end
+    @inbounds for i in f+1:length(s)
+        s̃ = zero(T)
         for j in 1:f
-            s += φ[j]*z[i-j]
+            s̃ += φ[j] * s[i - j]
         end
-        s += rand(rng, d)
-        z[i] = s
+        s̃ += rand(rng, d)
+        s[i] = s̃
     end
-    return view(z, f+1:N+f)
+    return view(s, f+1:N+f)
 end

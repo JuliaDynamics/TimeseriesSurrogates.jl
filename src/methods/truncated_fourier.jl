@@ -50,14 +50,12 @@ function surrogenerator(x, method::TFTS, rng = Random.default_rng())
     inverse = plan_irfft(forward*x, length(x))
 
     # Pre-compute 𝓕
-    𝓕 = forward*x
+    𝓕 = forward * x
 
     # Polar coordinate representation of the Fourier transform
     rx = abs.(𝓕)
     ϕx = angle.(𝓕)
     n = length(𝓕)
-
-    x_sorted = sort(x)
 
     # These are updated during iteration procedure
     𝓕new = Vector{Complex{Float64}}(undef, length(𝓕))
@@ -66,52 +64,47 @@ function surrogenerator(x, method::TFTS, rng = Random.default_rng())
 
     init = (forward = forward, inverse = inverse,
         rx = rx, ϕx = ϕx, n = n,
-        x_sorted = x_sorted,
         𝓕new = 𝓕new, 𝓕s = 𝓕s, ϕs = ϕs)
 
-    return SurrogateGenerator(method, x, init, rng)
+    return SurrogateGenerator(method, x, similar(x), init, rng)
 end
 
 function (sg::SurrogateGenerator{<:TFTS})()
-    x = sg.x
+    x, s = sg.x, sg.s
     fϵ = sg.method.fϵ
     L = length(x)
 
     init_fields = (:forward, :inverse,
         :rx, :ϕx, :n,
-        :x_sorted,
         :𝓕new, :𝓕s, :ϕs)
 
     forward, inverse,
         rx, ϕx, n,
-        x_sorted,
         𝓕new, 𝓕s, ϕs = getfield.(Ref(sg.init), init_fields)
 
     # Surrogate starts out as a random permutation of x
-    s = x[StatsBase.sample(sg.rng, 1:L, L; replace = false)]
-    𝓕s .= forward*s
+    s .= x[StatsBase.sample(sg.rng, 1:L, L; replace = false)]
+    𝓕s .= forward * s
     ϕs .= angle.(𝓕s)
 
     # Updated spectrum is the old amplitudes with the mixed phases.
-
     if fϵ > 0
         # Frequencies are ordered from lowest when taking the Fourier
         # transform, so by keeping the 1:n_ni first phases intact,
         # we are only randomizing the high-frequency components of the
         # signal.
         n_preserve = ceil(Int, abs(fϵ * n))
-        #println("Preserving $(n_preserve/n*100) % of the frequencies (randomizing high frequencies)")
         ϕs[1:n_preserve] .= ϕx[1:n_preserve]
     elseif fϵ < 0
         # Do the exact opposite to preserve high-frequencies
         n_preserve = ceil(Int, abs(fϵ * n))
-        #println("Preserving $(n_preserve/n*100) % of the frequencies (randomizing low frequencies)")
         ϕs[end-n_preserve+1:end] .= ϕx[end-n_preserve+1:end]
     end
 
     𝓕new .= rx .* exp.(ϕs .* 1im)
-
-    return inverse*𝓕new
+    s .= inverse * 𝓕new
+    
+    return s
 end
 
 """
@@ -136,13 +129,65 @@ struct TAAFT <: Surrogate
 end
 
 function surrogenerator(x, method::TAAFT, rng = Random.default_rng())
-    init = surrogenerator(x, TFTS(method.fϵ), rng)
-    return SurrogateGenerator(method, x, init, rng)
+    init = (
+        gen = surrogenerator(x, TFTS(method.fϵ), rng),
+        x_sorted = sort(x),
+        idxs = collect(1:length(x)),
+        perm = zeros(Int, length(x)),
+    )
+    
+    s = similar(x)
+    return SurrogateGenerator(method, x, s, init, rng)
 end
 
 function (taaft::SurrogateGenerator{<:TAAFT})()
-    sg = taaft.init
-    s = sg()
-    s[sortperm(s)] .= sg.init.x_sorted
+    sg = taaft.init.gen
+    x_sorted, idxs, perm = taaft.init.x_sorted, taaft.init.idxs, taaft.init.perm
+    
+    x, s = sg.x, sg.s
+    fϵ = sg.method.fϵ
+    L = length(x)
+
+    init_fields = (:forward, :inverse,
+        :rx, :ϕx, :n,
+        :𝓕new, :𝓕s, :ϕs)
+
+    forward, inverse,
+        rx, ϕx, n,
+        𝓕new, 𝓕s, ϕs = getfield.(Ref(sg.init), init_fields)
+
+    # Surrogate starts out as a random permutation of x
+    StatsBase.sample!(sg.rng, idxs, perm, replace = false)
+    permuted_x_into_s!(s, x, perm)
+    𝓕s .= forward * s
+    ϕs .= angle.(𝓕s)
+
+    # Updated spectrum is the old amplitudes with the mixed phases.
+    if fϵ > 0
+        # Frequencies are ordered from lowest when taking the Fourier
+        # transform, so by keeping the 1:n_ni first phases intact,
+        # we are only randomizing the high-frequency components of the
+        # signal.
+        n_preserve = ceil(Int, abs(fϵ * n))
+        ϕs[1:n_preserve] .= @view ϕx[1:n_preserve]
+    elseif fϵ < 0
+        # Do the exact opposite to preserve high-frequencies
+        n_preserve = ceil(Int, abs(fϵ * n))
+        ϕs[end-n_preserve+1:end] .= @view ϕx[end-n_preserve+1:end]
+    end
+
+    𝓕new .= rx .* exp.(ϕs .* 1im)
+    s .= inverse * 𝓕new
+    
+    s[sortperm(s)] .= x_sorted
     return s
+end
+
+
+function permuted_x_into_s!(s, x, perm) 
+    k = 1
+    for i in perm
+        s[k] = x[i]
+        k += 1
+    end
 end

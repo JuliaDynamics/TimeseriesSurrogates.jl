@@ -1,15 +1,14 @@
 cd(@__DIR__)
 using Pkg
 CI = get(ENV, "CI", nothing) == "true" || get(ENV, "GITHUB_TOKEN", nothing) !== nothing
-CI && Pkg.activate(@__DIR__)
+Pkg.activate(@__DIR__)
 CI && Pkg.instantiate()
-CI && (ENV["GKSwstype"] = "100")
 
 using TimeseriesSurrogates
 using DynamicalSystems
 using Random
 using Distributions
-using Plots
+using CairoMakie, Makie
 using Documenter
 using DocumenterTools: Themes
 
@@ -37,23 +36,21 @@ PAGES = [
     "Documentation" => "index.md",
     "What is a surrogate?" => "man/whatisasurrogate.md",
     "Example applications" => [
-        "Shuffle-based" => "constrained/randomshuffle.md",
-        "Fourier-based" => "constrained/fourier_surrogates.md",
-        "Amplitude-adjusted FT" => "constrained/amplitude_adjusted.md",
-        "Truncated FT/AAFT" => "constrained/truncated_fourier_transform.md",
-        "Pseudo-periodic" => "constrained/pps.md",
-        "Wavelet-based" => "constrained/wls.md",
-        "Pseudo-periodic twin" => "constrained/ppts.md",
-        "Wavelet-based" => "constrained/wls.md",
-        "Multidimensional surrogates" => "constrained/multidim.md",
-        "Surrogates for irregular timeseries" => "constrained/irregular_surrogates.md",
+        "Shuffle-based" => "methods/randomshuffle.md",
+        "Fourier-based" => "methods/fourier_surrogates.md",
+        "Wavelet-based" => "methods/wls.md",
+        "Pseudo-periodic" => "methods/pps.md",
+        "Pseudo-periodic twin" => "methods/ppts.md",
+        "Multidimensional surrogates" => "methods/multidim.md",
+        "Surrogates for irregular timeseries" => "collections/irregular_surrogates.md",
+        "Surrogates for nonstationary timeseries" => "collections/nonstationary_surrogates.md"
     ],
     "Utility systems" => "man/exampleprocesses.md",
     "Contributing" => "contributor_guide.md"
 ]
 
 makedocs(
-    modules = [TimeseriesSurrogates],
+    modules = [TimeseriesSurrogates, DynamicalSystems],
     format = Documenter.HTML(
         prettyurls = CI,
         assets = [
@@ -62,7 +59,8 @@ makedocs(
         ),
     sitename = "TimeseriesSurrogates.jl",
     authors = "Kristian Agasøster Haaga, George Datseris",
-    pages = PAGES
+    pages = PAGES,
+    expandfirst = ["index.md"], #  this is the first script that loads plotting function
 )
 
 if CI

@@ -1,4 +1,4 @@
-export NLNS, NSAR2, AR1, randomwalk, SNLST, random_cycles
+export NLNS, NSAR2, AR1, randomwalk, SNLST, random_cycles, colored_noise
 
 """
     AR1(n_steps, x₀, k)
@@ -124,12 +124,12 @@ Make a timeseries that is composed of `period` full sine wave periods, each with
 random frequency in the range given by `frange`, and added noise with std `σ`.
 The sampling time is `dt`.
 """
-function random_cycles(; periods=10, dt=π/20, σ = 0.05, frange = (1.0, 1.6))
+function random_cycles(rng = Random.default_rng(); periods=10, dt=π/20, σ = 0.05, frange = (1.0, 1.6))
     dt = π/20
     x = Float64[]
 
     for i in 1:periods
-        f = (frange[1]-frange[2])*rand() + frange[1]
+        f = (frange[1]-frange[2])*rand(rng) + frange[1]
         T = 2π/f
         t = 0:dt:T
         append!(x, sin.(f .* t))
@@ -139,3 +139,25 @@ function random_cycles(; periods=10, dt=π/20, σ = 0.05, frange = (1.0, 1.6))
     x .+= randn(N)/20
     return x
 end
+
+"""
+     colored_noise(rng = Random.default_rng(); n::Int = 500, ρ, σ = 0.1, transform = true)
+
+ Generate `n` points of colored noise. `ρ` is the desired correlation 
+ between adjacent samples. The noise is drawn from a normal distribution
+ with zero mean and standard deviation `σ`. If `transform  = true`, then 
+ transform data using aquadratic nonlinear static distortion.
+ """
+ function colored_noise(rng = Random.default_rng(); n::Int = 500, ρ = 0.8, σ = 0.1, transform = true)
+     𝒩 = Normal(0, σ)
+     x = zeros(n)
+     x[1] = rand(rng, 𝒩)
+     for i = 2:n
+         x[i] = ρ*x[i-1] + sqrt(1 - ρ^2)*rand(rng, 𝒩)
+     end
+     if transform 
+         x .= x .* sqrt.(x .^ 2)
+     end
+
+     return x .- mean(x)
+ end
