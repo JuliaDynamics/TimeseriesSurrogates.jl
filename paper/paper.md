@@ -22,17 +22,17 @@ affiliations:
     index: 3
   - name:  Max Planck Institute for Meteorology, Hamburg, Germany
     index: 4
-date: 24 May 2020
+date: 9 March 2020
 bibliography: paper.bib
 ---
 
 # Introduction
-The method of surrogate data [@Theiler:1991] is a way to generate data that preserve one or more statistical or dynamical properties of a signal, but is otherwise randomized. One can thus generate synthetic time series that "look like" or behave like the original data in some manner, but are otherwise random. Surrogate time series methods have widespread use in null hypothesis testing in nonlinear dynamics, for null hypothesis testing in causal inference, for the more general case of producing synthetic data with similar statistical properties as an original signal. Originally introduced by [@Theiler:1991] to test for nonlinearity in time series, numerous surrogate methods aimed preserving different properties of the original signal have since emerged (for a review, see [@Lancaster:2018]).
+The method of surrogate data is a way to generate data that preserve one or more statistical or dynamical properties of a given timeseries, but are otherwise randomized. Surrogate time series methods have widespread use in null hypothesis testing in nonlinear dynamics, for null hypothesis testing in causal inference, or for the more general case of producing synthetic data with similar statistical properties as an original signal. Originally introduced by [@Theiler:1991] to test for nonlinearity in time series, numerous surrogate methods aimed preserving different properties of the original signal have since emerged (for a review, see [@Lancaster:2018]).
 
-TimeseriesSurrogates.jl is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a GitHub organization dedicated to creating high quality scientific software for studying dynamical system.
+A simple example of an application of surrogates would be to distinguish whether a given timeseries `x` can be represented via a linear noise process, or not. The latter case can be an indication that the timeseries may represent deterministic nonlinear dynamics with additional noise. A simple way to test for this hypothesis would be to generate fake timeseries from `x` that conserve the power spectrum of `x` (which is a defining feature of linear stochastic processes). Then, a discriminatory statistic, such as the correlation dimension or the auto-mutual-information [@Lancaster:2018] is computed for `x`, but also for thousands of surrogates from `x`. The discriminatory statistic of the surrogates provides a distribution of possible values, and if the value for `x` is well within the distribution spread, then `x` satisfies the null hypothesis (here, that `x` can be approximated as a linear stochastic process).
 
 # Statement of need
-Surrogate data has been used in several thousand publications so far (citation number of [@Theiler:1991] is more than 4,000) and hence the community is in clear need of such methods. Existing software packages for surrogate generation provide much fewer methods than available in the literature, and with less-than optimal performance (see Comparison section below). TimeseriesSurrogates.jl provides more than double the amount of methods given by other packages, with runtimes similar to and up to an order of magnitude faster than existing surrogate packages in other languages.
+Surrogate data has been used in several thousand publications so far (citation number of [@Theiler:1991] is more than 4,000) and hence the community is in clear need of such methods. Existing software packages for surrogate generation provide much fewer methods than available in the literature, with less-than optimal performance (see Comparison section below), and without allowing reproducible generation of surrogates. TimeseriesSurrogates.jl provides more than double the amount of methods given by other packages, with runtimes similar to and up to an order of magnitude faster than existing surrogate packages in other languages. Equally importantly, TimeseriesSurrogates.jl provides a framework that is tested via continuous integration, and is easy to extend via open source contributions.
 
 # Available surrogate methods
 
@@ -59,7 +59,7 @@ Surrogate data has been used in several thousand publications so far (citation n
 | `WIAAFT`  | wavelet-based iterative amplitude adjusted transforms | [@Keylock:2006] |
 | `PseudoPeriodic`  | randomization of phases of Fourier transform of the signal  | [@Small:2001] |
 | `PseudoPeriodicTwin`  | combination of pseudoperiodic and twin surrogates  | [@Miralles2015] |
-| `LS`  | Lomb-Scargle periodogram based surrogates for irregular time grids  | [@Schmitz:1999] 
+| `LS`  | Lomb-Scargle periodogram based surrogates for irregular time grids  | [@Schmitz:1999]
 
 
 Documentation strings for the various methods describe the usage intended by the original authors of the methods.
@@ -70,10 +70,12 @@ TimeseriesSurrogates.jl has been designed to be as performant as possible and as
 
 At a first level, we offer a function
 ```julia
+using TimeseriesSurrogates, Random
 method = RandomShuffle() # can be any valid method
+rng = MersenneTwister(1234) # optional random number generator
 s = surrogate(x, method, rng)
 ```
-which creates a surrogate `s` based on the input `x` and the given method (any of the methods mentioned in the above section). `rng` is an optional random number generation object that establishes reproducibility.
+which creates a surrogate `s` based on the input `x` and the given method (any of the methods mentioned in the above table).
 
 This interface is easily extendable because it uses Julia's multiple dispatch on the given `method`.
 Thus, any new contribution of a new method uses the exact same interface, but introduces a new method type, e.g.
@@ -99,15 +101,13 @@ for i in 1:100
 end
 ```
 
-We have optimized the surrogate generators for most methods in TimeseriesSurrogates.jl to be as performant as possible, while consuming as little memory as possible. Several methods do not allocate memory at all when using the surrogate generator structure.
-
 # Comparison
 
-The average time to generate surrogates in TimeseriesSurrogates.jl is in the best case about an order of magnitude faster than, and in the worst case, roughly equivalent to, the MATLAB surrogate code provided by Lancaster et al. (2018)[@Lancaster:2018], though comparisons are not exact, due to differing implementations and tuning options. 
-Timings for commonly used surrogate methods that are common to both libraries are shown in Figure 1. 
-Because TimeseriesSurrogates.jl provides many more methods not implemented in other packages, a comprehensive comparison of runtimes is not possible, but due to our optimized surrogate generators, we expect good performance relative to future implementations in other languages.
+The average time to generate surrogates in TimeseriesSurrogates.jl is in the best case about an order of magnitude faster than, and in the worst case, roughly equivalent to, the MATLAB surrogate code provided by Lancaster et al. (2018)[@Lancaster:2018], though comparisons are not exact, due to differing implementations and tuning options. Notice further more that the code of Lancaster et al is not an actual package, but rather scripts that have been written and circulated. As such, they lack a test suite tested via continuous integration.
+Timings for commonly used surrogate methods that are common to both libraries are shown in Figure 1.
+Additionally, because TimeseriesSurrogates.jl provides many more methods not implemented in other packages, a comprehensive comparison of runtimes is not possible, but due to our optimized surrogate generators, we expect good performance relative to future implementations in other languages.
 
-![Figure 1: Mean time (in seconds, based on 100 realizations) to generate a single random permutation (rp), Fourier transform (ft), amplitude-adjusted Fourier transform (aaft), iterated aaft (iaaft) and pseudoperiodic (pps) surrogate using a pre-initialized generators with default parameters, and using a maximum of 100 iterations for the IAAFT algorithm. MATLAB timings are generated using the code provided by Lancaster et al. (2018)[@Lancaster:2018], which does not provide standardized initialization tools to speed up surrogate generation. Note: timings for the pseudoperiodic surrogates in MATLAB include embedding lag and dimension finding, which has been included in the preprocessing step in the Julia version. Scripts to reproduce Julia and MATLAB timings are available in the GitHub repo for this paper. ](figs/timings.png)
+![Figure 1: Mean time (in seconds, based on 100 realizations) to generate a random permutation (rp), Fourier transform (ft), amplitude-adjusted Fourier transform (aaft), iterated aaft (iaaft) and pseudoperiodic (pps) surrogate using a pre-initialized generators with default parameters, and using a maximum of 100 iterations for the IAAFT algorithm. MATLAB timings are generated using the code provided by Lancaster et al. (2018)[@Lancaster:2018]. Note: timings for the pseudoperiodic surrogates in MATLAB include embedding lag and dimension finding, which has been included in the preprocessing step in the Julia version. Scripts to reproduce Julia and MATLAB timings are available in the GitHub repo for this paper. ](figs/timings.png)
 
 # Acknowledgements
 
