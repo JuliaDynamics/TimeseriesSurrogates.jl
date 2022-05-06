@@ -38,28 +38,28 @@ Surrogate data has been used in several thousand publications so far (citation n
 
 | Method | Description | Reference |
 |---|---|---|
-| `AutoRegressive`  | Autoregressive model based surrogates | |
-| `RandomShuffling` | random shuffling of individual data points | [@Theiler:1991] |
-| `BlockShuffle`  | random shuffling of blocks of data points  | [@Theiler:1991] |
-| `CircShift`  | circularly shift the signal  | |
-| `RandomFourier`  | randomization of phases of Fourier transform of the signal  | [@Theiler:1991] |
-| `PartialRandomization`  | Fourier randomization, but tuning of the "degree" of randomization| [@Ortega:1998] |
-| `PartialRandomizationAAFT`  | Partial Fourier randomization, but rescaling back to original values | This paper. |
-| `CycleShuffle`  | randomization of phases of Fourier transform of the signal  | [@Theiler:1994] |
-| `ShuffleDimensions`  | circularly shift the signal  | This paper. |
-| `AAFT`  | amplitude adjusted `RandomFourier`  | [@Theiler:1991] |
-| `IAAFT`  | iterative amplitude adjusted `RandomFourier`  | [@SchreiberSchmitz:1996] |
-| `TFTS`  | Truncated Fourier transform surrogates   | [@Miralles2015] |
-| `TAAFT`  | Truncated AAFT surrogates   | [@Nakamura:2006] |
-| `TFTDRandomFourier`  | Detrended and retrended truncated Fourier surrogates   | [@Lucio:2012] |
-| `TFTDAAFT`  | Detrended and retrended truncated AAFT surrogates   | [@Lucio:2012] |
-| `TFTDIAAFT`  | Detrended and retrended truncated AAFT surrogates with iterative adjustment   | [@Lucio:2012] |
-| `WLS`  | flexible wavelet-based methods using maximal overlap discrete wavelet transforms | [@Keylock:2006] |
-| `RandomCascade`  | random cascade multifractal surrogates | [@Palus:2008] |
-| `WIAAFT`  | wavelet-based iterative amplitude adjusted transforms | [@Keylock:2006] |
-| `PseudoPeriodic`  | randomization of phases of Fourier transform of the signal  | [@Small:2001] |
-| `PseudoPeriodicTwin`  | combination of pseudoperiodic and twin surrogates  | [@Miralles2015] |
-| `LS`  | Lomb-Scargle periodogram based surrogates for irregular time grids  | [@Schmitz:1999]
+| `AutoRegressive`  | Autoregressive model based surrogates. | |
+| `RandomShuffling` | Random shuffling of individual data points. | @Theiler:1991 |
+| `BlockShuffle`  | Random shuffling of blocks of data points.  | @Theiler:1991 |
+| `CircShift`  | Circularly shift the signal.  | |
+| `RandomFourier`  | Randomization of phases of Fourier transform of the signal.  | @Theiler:1991 |
+| `PartialRandomization`  | Fourier randomization, but tuning of the "degree" of randomization.| @Ortega:1998 |
+| `PartialRandomizationAAFT`  | Partial Fourier randomization, but rescaling back to original values. | This paper. |
+| `CycleShuffle`  | randomization of phases of Fourier transform of the signal. | @Theiler:1994 |
+| `ShuffleDimensions`  | Circularly shift the signal.  | This paper. |
+| `AAFT`  | Amplitude adjusted `RandomFourier`.  | @Theiler:1991 |
+| `IAAFT`  | iterative amplitude adjusted `RandomFourier`.  | @SchreiberSchmitz:1996 |
+| `TFTS`  | Truncated Fourier transform surrogates.  | @Miralles2015 |
+| `TAAFT`  | Truncated AAFT surrogates.   | @Nakamura:2006 |
+| `TFTDRandomFourier`  | Detrended and retrended truncated Fourier surrogates.  | @Lucio:2012 |
+| `TFTDAAFT`  | Detrended and retrended truncated AAFT surrogates.   | @Lucio:2012 |
+| `TFTDIAAFT`  | Detrended and retrended truncated AAFT surrogates with iterative adjustment.  | @Lucio:2012 |
+| `WLS`  | Flexible wavelet-based methods using maximal overlap discrete wavelet transforms. | @Keylock:2006 |
+| `RandomCascade`  | Random cascade multifractal surrogates. | @Palus:2008 |
+| `WIAAFT`  | Wavelet-based iterative amplitude adjusted transforms. | @Keylock:2006 |
+| `PseudoPeriodic`  | Randomization of phases of Fourier transform of the signal.  | @Small:2001 |
+| `PseudoPeriodicTwin`  | Combination of pseudoperiodic and twin surrogates.  | @Miralles2015 |
+| `LS`  | Lomb-Scargle periodogram based surrogates for irregular time grids  | @Schmitz:1999
 
 
 Documentation strings for the various methods describe the usage intended by the original authors of the methods.
