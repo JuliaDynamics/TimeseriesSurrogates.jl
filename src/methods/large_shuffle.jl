@@ -132,7 +132,7 @@ end
 """
     CycleShuffle(n::Int = 7, σ = 0.5)
 
-Cycle shuffled surrogates[^Theiler1995] that identify successive local peaks in the data and shuffle the
+Cycle shuffled surrogates[^Theiler1994] that identify successive local peaks in the data and shuffle the
 cycles in-between the peaks. Similar to [`BlockShuffle`](@ref), but here
 the "blocks" are defined as follows:
 1. The timeseries is smoothened via convolution with a Gaussian (`DSP.gaussian(n, σ)`).
@@ -148,7 +148,7 @@ i.e. the evolution of cycles is not deterministic.
 
 See also [`PseudoPeriodic`](@ref).
 
-[^Theiler1995]: J. Theiler, On the evidence for low-dimensional chaos in an epileptic electroencephalogram, [Phys. Lett. A 196](https://doi.org/10.1016/0375-9601(94)00856-K)
+[^Theiler1994]: J. Theiler, On the evidence for low-dimensional chaos in an epileptic electroencephalogram, [Phys. Lett. A 196](https://doi.org/10.1016/0375-9601(94)00856-K)
 """
 struct CycleShuffle{T <: AbstractFloat} <: Surrogate
     n::Int
