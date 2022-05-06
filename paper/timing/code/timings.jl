@@ -19,7 +19,7 @@ x = f.(t) .+ rand(rng, Normal(0, 0.3), npts)
 
 # Write to file, to import in matlab
 using DelimitedFiles
-writedlm("data.csv",  x, ',')
+writedlm("./paper/timing/code/data.csv",  x, ',')
 
 # Pre-initialize all different surrogate types
 # Shuffle based surrogates
