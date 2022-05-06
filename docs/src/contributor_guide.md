@@ -7,7 +7,7 @@ please submit an issue at our [GitHub repository](https://github.com/JuliaDynami
 
 ## Feature requests
 
-If you have requests for a new method but can't implement it yourself, you can also report it an an [issue](https://github.com/JuliaDynamics/TimeseriesSurrogates.jl/issues). The package developers or other volunteers might be able to help with the implementation. 
+If you have requests for a new method but can't implement it yourself, you can also report it as an [issue](https://github.com/JuliaDynamics/TimeseriesSurrogates.jl/issues). The package developers or other volunteers might be able to help with the implementation. 
 
 Please mark method requests clearly as "Method request: my new method...", and provide a reference to a scientific publication that outlines the algorithm. 
 
