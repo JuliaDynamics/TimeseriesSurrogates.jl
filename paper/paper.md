@@ -45,10 +45,10 @@ Surrogate data has been used in several thousand publications so far (citation n
 | `RandomFourier`  | Randomization of phases of Fourier transform of the signal.  | @Theiler:1991 |
 | `PartialRandomization`  | Fourier randomization, but tuning of the "degree" of randomization.| @Ortega:1998 |
 | `PartialRandomizationAAFT`  | Partial Fourier randomization, but rescaling back to original values. | This paper. |
-| `CycleShuffle`  | randomization of phases of Fourier transform of the signal. | @Theiler:1994 |
+| `CycleShuffle`  | Randomization of phases of Fourier transform of the signal. | @Theiler:1994 |
 | `ShuffleDimensions`  | Circularly shift the signal.  | This paper. |
 | `AAFT`  | Amplitude adjusted `RandomFourier`.  | @Theiler:1991 |
-| `IAAFT`  | iterative amplitude adjusted `RandomFourier`.  | @SchreiberSchmitz:1996 |
+| `IAAFT`  | Iterative amplitude adjusted `RandomFourier`.  | @SchreiberSchmitz:1996 |
 | `TFTS`  | Truncated Fourier transform surrogates.  | @Miralles2015 |
 | `TAAFT`  | Truncated AAFT surrogates.   | @Nakamura:2006 |
 | `TFTDRandomFourier`  | Detrended and retrended truncated Fourier surrogates.  | @Lucio:2012 |
