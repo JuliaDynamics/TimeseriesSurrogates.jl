@@ -79,7 +79,6 @@ c = repeat(["Black", "Red"], inner = 5)
 
 groupedbar(
     [timings matlab_timings],
-    xlabel = "Number of surrogates",
     group = gp, 
     c = c,
     xrotation = 45,
