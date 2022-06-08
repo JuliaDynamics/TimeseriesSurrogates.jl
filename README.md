@@ -8,3 +8,10 @@
 A Julia library for generating surrogate data. Check out the
 [documentation](https://JuliaDynamics.github.io/TimeseriesSurrogates.jl/dev) for information
 on how to use it.
+
+## Installation
+
+To install the TimeseriesSurrogates.jl package, run the following command in the Julia REPL.
+```
+using Pkg; Pkg.add("TimeseriesSurrogates")
+```
