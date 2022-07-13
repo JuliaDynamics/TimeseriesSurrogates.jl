@@ -1,4 +1,4 @@
-# What is a surrogate?
+# What is a timeseries surrogate?
 
 ## The method of surrogate testing
 

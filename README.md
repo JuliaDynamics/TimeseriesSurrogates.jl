@@ -11,7 +11,7 @@ on how to use it.
 
 ## Installation
 
-To install the TimeseriesSurrogates.jl package, run the following command in the Julia REPL.
+To install the TimeseriesSurrogates.jl package, run the following code:
 ```
 using Pkg; Pkg.add("TimeseriesSurrogates")
 ```
