@@ -1,7 +1,9 @@
-data = readtable("data.csv");
-x = data{:, 1};
-n = 100;
+% note: npts is defined in the 'generate_timeseries.m' script
+run generate_timeseries.m
 
+nsurr = 500;
+
+% Time methods
 tic
 surrogate(x, nsurr, 'RP', 0, 1);
 t_rp = toc / nsurr;
