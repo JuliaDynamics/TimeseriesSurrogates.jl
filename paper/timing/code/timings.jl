@@ -1,6 +1,7 @@
 # Activate the current directory and load packages.
 using Pkg;
 Pkg.activate(@__DIR__)
+Pkg.instantiate()
 using DelimitedFiles, TimeseriesSurrogates, BenchmarkTools, Plots, Distributions, 
     DynamicalSystems, Random, StatsPlots;
 
