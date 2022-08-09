@@ -1,4 +1,3 @@
-% note: npts is defined in the 'generate_timeseries.m' script
 run generate_timeseries.m
 
 nsurr = 500;
