@@ -11,7 +11,7 @@ f = @(t) sin(2*pi*(t + 0.5*sin(2*pi * t/10))/3);
 randomseed = rng(1234,'twister');
 
 % Generate a time series
-npts = 5000;
+npts = 2000;
 t = 1:npts;
 x = f(t);
 
