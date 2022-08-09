@@ -80,9 +80,10 @@ groupedbar(
     xrotation = 45,
     ylabel = "Mean runtime (s)",
     yaxis = :log10, 
-    yticks = [10.0^(i) for i = -6:1],
+    yticks = [10.0^(i) for i = -6:0.5:-1],
+    ylims = (10^-6, 10^-1),
     xticks = (1:5, ["rp", "ft", "aaft", "iaaft", "pps"]),
     legend = :topleft,
 )
 
-savefig("$(@__DIR__)../../figs/timings.png")
+savefig("$(@__DIR__)/../../figs/timings.png")
