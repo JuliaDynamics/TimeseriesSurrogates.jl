@@ -9,7 +9,7 @@ Please note that timeseries surrogates should not be confused with [surrogate mo
 
 ## Installation
 
-TimeseriesSurrogates is a registered Julia package. To install the latest version, run the following in your Julia console.
+TimeseriesSurrogates is a registered Julia package. To install the latest version, run the following code:
 
 ```julia
 import Pkg; Pkg.add("TimeseriesSurrogates")
@@ -68,6 +68,7 @@ TimeseriesSurrogates.jl has defined a simple function `surroplot(x, s)`.
 This comes into scope when `using Makie` (you also need a plotting backend).
 
 To load the function, do:
+
 ```@example MAIN
 using TimeseriesSurrogates
 using CairoMakie, Makie
@@ -77,5 +78,3 @@ s = surrogate(ts, AAFT())
 fig = surroplot(ts, s)
 save("surroplot.png", fig); # hide
 ```
-
-
