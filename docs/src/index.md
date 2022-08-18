@@ -7,6 +7,14 @@
 If you are new to this method of [surrogate time series](https://en.wikipedia.org/wiki/Surrogate_data_testing), feel free to read the [What is a timeseries surrogate?](@ref) page.
 Please note that timeseries surrogates should not be confused with [surrogate models](https://en.wikipedia.org/wiki/Surrogate_model), such as those provided by [Surrogates.jl](https://github.com/SciML/Surrogates.jl).
 
+## Installation
+
+TimeseriesSurrogates is a registered Julia package. To install the latest version, run the following in your Julia console.
+
+```julia
+import Pkg; Pkg.add("TimeseriesSurrogates")
+```
+
 ## API
 
 TimeseriesSurrogates.jl exports two main functions. Both of them dispatch on the chosen method, a subtype of `Surrogate`.
@@ -70,11 +78,4 @@ fig = surroplot(ts, s)
 save("surroplot.png", fig); # hide
 ```
 
-## Installation
-
-TimeseriesSurrogates is a registered Julia package. To install the latest version, run the following in your Julia console.
-
-```julia
-import Pkg; Pkg.add("TimeseriesSurrogates")
-```
 
