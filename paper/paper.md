@@ -47,7 +47,7 @@ Surrogate data has been used in several thousand publications so far (the citati
 | `PartialRandomizationAAFT`  | Partial Fourier randomization, but rescaling back to original values. | This paper. |
 | `CycleShuffle`  | Randomization of phases of Fourier transform of the signal. | @Theiler:1994 |
 | `ShuffleDimensions`  | Circularly shift the signal.  | This paper. |
-| `AAFT`  | Amplitude adjusted `RandomFourier`.  | @Theiler:1991 |
+| `AAFT`  | Amplitude adjusted `RandomFourier`.  | @Theiler:1992 |
 | `IAAFT`  | Iterative amplitude adjusted `RandomFourier`.  | @SchreiberSchmitz:1996 |
 | `TFTS`  | Truncated Fourier transform surrogates.  | @Miralles2015 |
 | `TAAFT`  | Truncated AAFT surrogates.   | @Nakamura:2006 |
