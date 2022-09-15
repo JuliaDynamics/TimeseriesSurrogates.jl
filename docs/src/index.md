@@ -78,3 +78,24 @@ s = surrogate(ts, AAFT())
 fig = surroplot(ts, s)
 save("surroplot.png", fig); # hide
 ```
+
+## Citing
+Please use the following BiBTeX entry, or DOI, to cite TimeseriesSurrogates.jl:
+
+DOI: https://doi.org/10.21105/joss.04414
+
+BiBTeX:
+```latex
+@article{TimeseriesSurrogates.jl,
+    doi = {10.21105/joss.04414},
+    url = {https://doi.org/10.21105/joss.04414},
+    year = {2022},
+    publisher = {The Open Journal},
+    volume = {7},
+    number = {77},
+    pages = {4414},
+    author = {Kristian Agasøster Haaga and George Datseris},
+    title = {TimeseriesSurrogates.jl: a Julia package for generating surrogate data},
+    journal = {Journal of Open Source Software}
+}
+```
