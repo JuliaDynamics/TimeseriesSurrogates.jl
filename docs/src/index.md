@@ -28,30 +28,57 @@ surrogenerator
 ## Surrogate methods
 
 ```@index
-Order   = [:type]
+Order = [:type]
 ```
+
+### Shuffle-based
 
 ```@docs
 RandomShuffle
 BlockShuffle
 CycleShuffle
 CircShift
+```
+
+### Fourier-based
+
+```@docs
 RandomFourier
 TFTDRandomFourier
 PartialRandomization
 PartialRandomizationAAFT
+AAFT
+TAAFT
+IAAFT
+```
+
+### Non-stationary
+
+```@docs
 TFTS
 TFTD
 TFTDAAFT
 TFTDIAAFT
-AAFT
-TAAFT
-IAAFT
-AutoRegressive
+```
+
+### Pseudo-periodic
+
+```@docs
 PseudoPeriodic
 PseudoPeriodicTwin
+```
+
+### Wavelet-based
+
+```@docs
 WLS
 RandomCascade
+```
+
+### Other
+
+```@doc
+AutoRegressive
 ShuffleDimensions
 IrregularLombScargle
 ```
