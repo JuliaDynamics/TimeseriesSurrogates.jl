@@ -1,26 +1,18 @@
 export NLNS, NSAR2, AR1, randomwalk, SNLST, random_cycles, colored_noise
 
 """
-    AR1(n_steps, x₀, k)
+    AR1(; n_steps, x₀, k, rng)
 
-Simple AR(1) model with no static transformation[^1].
-
-## Equations
-
-The system is given by the following map:
+Simple AR(1) model given by the following map:
 ```math
 x(t+1) = k x(t) + a(t),
 ```
 where ``a(t)`` is a draw from a normal distribution with zero mean and unit
 variance. `x₀` sets the initial condition and `k` is the tunable parameter in
-the map.
-
-# References
-
-[^1]: Lucio et al., Phys. Rev. E *85*, 056202 (2012). [https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.85.056202)
+the map. `rng` is a random number generator
 """
-function AR1(n_steps, x₀, k)
-    a = rand(Normal(), n_steps)
+function AR1(n_steps, x₀, k, rng)
+    a = rand(rng, Normal(), n_steps)
     x = Vector{Float64}(undef, n_steps)
     x[1] = x₀
     for i = 2:n_steps
@@ -28,6 +20,8 @@ function AR1(n_steps, x₀, k)
     end
     x
 end
+AR1(;n_steps = 500, x₀ = rand(), k = rand(), rng = Random.default_rng()) = AR1(n_steps, x₀, k, rng)
+
 
 """
     NSAR2(n_steps, x₀, x₁)
@@ -112,7 +106,6 @@ function SNLST(n_steps, x₀, k)
 end
 
 # Keyword versions of the functions
-AR1(;n_steps = 500, x₀ = rand(), k = rand())    = AR1(n_steps, x₀, k)
 SNLST(;n_steps = 500, x₀ = rand(), k = rand())  = SNLST(n_steps, x₀, k)
 randomwalk(;n_steps = 500, x₀ = rand())         = randomwalk(n_steps, x₀)
 NSAR2(;n_steps = 500, x₀ = rand(), x₁ = rand()) = NSAR2(n_steps, x₀, x₁)
@@ -143,9 +136,9 @@ end
 """
      colored_noise(rng = Random.default_rng(); n::Int = 500, ρ, σ = 0.1, transform = true)
 
- Generate `n` points of colored noise. `ρ` is the desired correlation 
+ Generate `n` points of colored noise. `ρ` is the desired correlation
  between adjacent samples. The noise is drawn from a normal distribution
- with zero mean and standard deviation `σ`. If `transform  = true`, then 
+ with zero mean and standard deviation `σ`. If `transform  = true`, then
  transform data using aquadratic nonlinear static distortion.
  """
  function colored_noise(rng = Random.default_rng(); n::Int = 500, ρ = 0.8, σ = 0.1, transform = true)
@@ -155,7 +148,7 @@ end
      for i = 2:n
          x[i] = ρ*x[i-1] + sqrt(1 - ρ^2)*rand(rng, 𝒩)
      end
-     if transform 
+     if transform
          x .= x .* sqrt.(x .^ 2)
      end
 

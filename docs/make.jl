@@ -34,7 +34,7 @@ ENV["JULIA_DEBUG"] = "Documenter"
 
 PAGES = [
     "Documentation" => "index.md",
-    "What is a surrogate?" => "man/whatisasurrogate.md",
+    "man/whatisasurrogate.md",
     "Example applications" => [
         "Shuffle-based" => "methods/randomshuffle.md",
         "Fourier-based" => "methods/fourier_surrogates.md",
@@ -45,8 +45,8 @@ PAGES = [
         "Surrogates for irregular timeseries" => "collections/irregular_surrogates.md",
         "Surrogates for nonstationary timeseries" => "collections/nonstationary_surrogates.md"
     ],
-    "Utility systems" => "man/exampleprocesses.md",
-    "Contributing" => "contributor_guide.md"
+    "man/exampleprocesses.md",
+    "contributor_guide.md"
 ]
 
 makedocs(

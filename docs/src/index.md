@@ -4,7 +4,8 @@
 
 `TimeseriesSurrogates` is a Julia package for generating surrogate timeseries. It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a GitHub organization dedicated to creating high quality scientific software.
 
-If you are new to this method of [surrogate time series](https://en.wikipedia.org/wiki/Surrogate_data_testing), feel free to read the [What is a timeseries surrogate?](@ref) page.
+If you are new to this method of surrogate timeseries, feel free to read the [Crash-course into timeseries surrogate tests](@ref) page.
+
 Please note that timeseries surrogates should not be confused with [surrogate models](https://en.wikipedia.org/wiki/Surrogate_model), such as those provided by [Surrogates.jl](https://github.com/SciML/Surrogates.jl).
 
 ## Installation
@@ -28,30 +29,57 @@ surrogenerator
 ## Surrogate methods
 
 ```@index
-Order   = [:type]
+Order = [:type]
 ```
+
+### Shuffle-based
 
 ```@docs
 RandomShuffle
 BlockShuffle
 CycleShuffle
 CircShift
+```
+
+### Fourier-based
+
+```@docs
 RandomFourier
 TFTDRandomFourier
 PartialRandomization
 PartialRandomizationAAFT
+AAFT
+TAAFT
+IAAFT
+```
+
+### Non-stationary
+
+```@docs
 TFTS
 TFTD
 TFTDAAFT
 TFTDIAAFT
-AAFT
-TAAFT
-IAAFT
-AutoRegressive
+```
+
+### Pseudo-periodic
+
+```@docs
 PseudoPeriodic
 PseudoPeriodicTwin
+```
+
+### Wavelet-based
+
+```@docs
 WLS
 RandomCascade
+```
+
+### Other
+
+```@doc
+AutoRegressive
 ShuffleDimensions
 IrregularLombScargle
 ```
