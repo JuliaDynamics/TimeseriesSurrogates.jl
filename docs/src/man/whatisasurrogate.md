@@ -1,4 +1,4 @@
-# Crash-course into timeseries surrogate tests
+# Crash-course in timeseries surrogate testing
 
 !!! note
     The summary here follows Sect. 7.4 from [Nonlinear Dynamics](https://link.springer.com/book/10.1007/978-3-030-91032-7) by Datseris and Parlitz.
@@ -29,7 +29,7 @@ A surrogate test is a statistical test of whether a given timeseries satisfies o
 
 For example, the first surrogate methods were created to test the hypothesis,
 whether a given timeseries `x` that appears noisy may be the result of a linear
-stochastic process or not. If not, it may be a nonlinear process contaminated with observational noise. For the suitable hypothesis to test for, see the documentation strings of provided `Surrogate` methods or even better the review from Lancaster et al. (2018)[^Lancaster2018].
+stochastic process or not. If not, it may be a nonlinear process contaminated with observational noise. For the suitable hypothesis to test for, see the documentation strings of provided `Surrogate` methods or, even better, the review from Lancaster et al. (2018)[^Lancaster2018].
 
 To perform such a surrogate test, you need to:
 
