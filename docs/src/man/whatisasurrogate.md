@@ -5,14 +5,11 @@
 
 
 ## What is a surrogate timeseries?
-Let's say we have a nontrivial timeseries `x` consisting of `n` observations.
-A surrogate time series for `x` is another timeseries `s` of `n` values which (roughly) preserves
-one or many mathematical/statistical properties of `x`.
+A surrogate of a timeseries `x` is another timeseries `s` of equal length to `x`. This surrogate `s` is generated from `x` so that it roughly preserves
+one or many pre-defined properties of `x`, but is otherwise randomized.
 
 The upper panel in the figure below shows an example of a timeseries and one
-surrogate realization that preserves its autocorrelation. The time series "look
-alike", which is due to the fact the surrogate realization almost exactly preserved the
-power spectrum and autocorrelation of the time series, as shown in the lower panels.
+surrogate realization that preserves its both power spectrum and its amplitude distribution (histogram). Because of this preservation, the time series look similar.
 
 ```@example MAIN
 using TimeseriesSurrogates, CairoMakie, Makie
@@ -35,8 +32,8 @@ To perform such a surrogate test, you need to:
 
 1. Decide what hypothesis to test against
 2. Pick a surrogate generating `method` that satisfies the chosen hypothesis
-3. Pick a suitable discriminatory statistic `q(x) ∈ Real`. It must be a statistic that would obtain sufficiently different values for timeseries satisfying, or not, the chosen hypothesis.
-4. Compute `q(x)` and `q(s)` for thousands of surrogate realizations `s = surrogate(x, method)`
+3. Pick a suitable discriminatory statistic `q` with `q(x) ∈ Real`. It must be a statistic that would obtain sufficiently different values for timeseries satisfying, or not, the chosen hypothesis.
+4. Compute `q(s)` for thousands of surrogate realizations `s = surrogate(x, method)`
 5. Compare `q(x)` with the distribution of `q(s)`. If `q(x)` is significantly outside the e.g., 5-95 confidence interval of the distribution, the hypothesis is rejected.
 
 [^Lancaster2018]: Lancaster, G., Iatsenko, D., Pidde, A., Ticcinelli, V., & Stefanovska, A. (2018). Surrogate data for hypothesis testing of physical systems. Physics Reports, 748, 1–60. doi:10.1016/j.physrep.2018.06.001
