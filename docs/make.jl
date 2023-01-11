@@ -34,7 +34,7 @@ ENV["JULIA_DEBUG"] = "Documenter"
 
 PAGES = [
     "Documentation" => "index.md",
-    "What is a surrogate?" => "man/whatisasurrogate.md",
+    "man/whatisasurrogate.md",
     "Example applications" => [
         "Shuffle-based" => "methods/randomshuffle.md",
         "Fourier-based" => "methods/fourier_surrogates.md",

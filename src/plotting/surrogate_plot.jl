@@ -32,8 +32,8 @@ function surroplot(x, s;
 
     # Histograms
     ax4 = Makie.Axis(fig[3,1])
-    Makie.hist!(ax4, x; label = "original", bins = nbins, color = (cx, 0.5))
-    Makie.hist!(ax4, s; label = "surrogate", bins = nbins, color = (cs, 0.5))
+    Makie.hist!(ax4, x; label = "original", bins = nbins, color = cx)
+    Makie.hist!(ax4, s; label = "surrogate", bins = nbins, color = cs)
     Makie.axislegend(ax4)
 
     ax1.xlabel = "time step"
