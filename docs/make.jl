@@ -45,8 +45,8 @@ PAGES = [
         "Surrogates for irregular timeseries" => "collections/irregular_surrogates.md",
         "Surrogates for nonstationary timeseries" => "collections/nonstationary_surrogates.md"
     ],
-    "Utility systems" => "man/exampleprocesses.md",
-    "Contributing" => "contributor_guide.md"
+    "man/exampleprocesses.md",
+    "contributor_guide.md"
 ]
 
 makedocs(
