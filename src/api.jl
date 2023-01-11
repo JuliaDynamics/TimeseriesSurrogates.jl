@@ -12,22 +12,23 @@ struct SurrogateGenerator{S<:Surrogate, X, Y, A, R<:AbstractRNG}
 end
 
 """
-    surrogenerator(x, method::Surrogate [, rng]) → sg::SurrogateGenerator
+    surrogenerator(x, method::Surrogate [, rng]) → sgen::SurrogateGenerator
 
 Initialize a generator that creates surrogates of `x` on demand, based on the given `method`.
-This is efficient, because for most methods some things can be initialized and reused
+This is more efficient than [`surrogate`](@ref),
+because for most methods some things can be initialized and reused
 for every surrogate. Optionally you can provide an `rng::AbstractRNG` object that will
 control the random number generation and hence establish reproducibility of the
 generated surrogates. By default `Random.default_rng()` is used.
 
-Notice that the generated surrogates overwrite, in-place, a common vector container.
-Use copy if you need to actually store multiple surrogates.
+Tthe generated surrogates overwrite, in-place, a common vector container.
+Use `copy` if you need to actually store multiple surrogates.
 
-To generate a surrogate, call `sg` as a function with no arguments, e.g.:
+To generate a surrogate, call `sgen` as a function with no arguments, e.g.:
 
 ```julia
-sg = surrogenerator(x, method)
-s = sg()
+sgen = surrogenerator(x, method)
+s = sgen()
 ```
 
 Notice that you can use the generator syntax of Julia to map over surrogates
@@ -44,8 +45,8 @@ qx = q(x)
 qs = map(q, siter)
 # compare `qx` with quantiles
 using Statistics: quantile
-q05, q95 = quantile(qs, [0.05, 0.95])
-q05 ≤ qx ≤ q95
+q01, q99 = quantile(qs, [0.01, 0.99])
+q01 ≤ qx ≤ q99 # if false, hypothesis can be rejected!
 ```
 """
 function surrogenerator end
