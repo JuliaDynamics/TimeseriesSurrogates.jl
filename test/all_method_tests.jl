@@ -29,7 +29,7 @@ end
 
     # If rescaling, the surrogate will have the same values as the original
     @test sort(x) ≈ sort(s_rescale)
-    
+
 end
 
 @testset "PartialRandomization" begin
@@ -52,7 +52,7 @@ end
     @test_throws AssertionError PartialRandomizationAAFT(-0.01)
     @test_throws AssertionError PartialRandomizationAAFT(1.01)
 end
-    
+
 @testset "RandomCascade" begin
     randomcascade = RandomCascade()
     s = surrogate(x, randomcascade)
@@ -105,7 +105,7 @@ end
 end
 
 @testset "AutoRegressive" begin
-	y = TimeseriesSurrogates.AR1(2000, 0.1, 0.5)
+	y = TimeseriesSurrogates.AR1(; n_steps = 2000, x₀ = 0.1, k = 0.5)
     sg = surrogenerator(y, AutoRegressive(1))
 	@test 0.4 ≤ abs(sg.init.φ[1]) ≤ 0.6
 	s = sg()
