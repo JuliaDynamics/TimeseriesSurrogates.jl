@@ -58,6 +58,21 @@ end
     s = surrogate(x, randomcascade)
 
     @test length(s) == length(x)
+
+    @testset "Padding modes" begin
+        x̃ = zeros(2^(TimeseriesSurrogates.ndyadicscales(length(x)) + 1))
+        TimeseriesSurrogates.pad!(x̃, x, "zeros")
+        @test all(x̃[length(x)+1:end] .== 0.0)
+        TimeseriesSurrogates.pad!(x̃, x, "constant")
+        @test all(x̃[length(x)+1:end] .== x[end])
+        TimeseriesSurrogates.pad!(x̃, x, "linear")
+        dx = x[end] - x[end-1]
+        for i = length(x)+1:length(x̃)
+            @test x̃[i] - x̃[i-1] ≈ dx
+        end
+
+        @test_throws ArgumentError surrogate(x, RandomCascade(; paddingmode="ones"))
+    end
 end
 
 @testset "Periodic" begin
