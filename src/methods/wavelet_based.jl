@@ -294,11 +294,7 @@ function surrogenerator(x::AbstractVector{T}, method::RandomCascade, rng = Rando
 
     # Pad input so that input to discrete wavelet transform has length which is a power of 2
     x̃ = zeros(2^(nlevels + 1))
-    if mode == "zeros"
-        copyto!(x̃, x)
-    else
-        throw(ArgumentError("""`paddingmode` must be one of ["zeros"]"""))
-    end
+    pad!(x̃, x, mode)
 
     wl = wavelet(method.wt)
 
@@ -361,6 +357,22 @@ function (sg::SurrogateGenerator{<:RandomCascade})()
     # Surrogate length must match length of original signal.
     s .= @view s̃[1:length(s)]
     return s
+end
+
+function pad!(x̃, x, mode)
+    if mode == "zeros"
+        copyto!(x̃, x)
+    elseif mode == "constant"
+        copyto!(x̃, x)
+        x̃[length(x)+1:end] .= x[end]
+    elseif mode == "linear"
+        copyto!(x̃, x)
+        for i = length(x)+1:length(x̃)
+            x̃[i] = 2*x̃[i-1] - x̃[i-2]
+        end
+    else
+        throw(ArgumentError("""`paddingmode` must be one of ["zeros", "constant", "linear"]"""))
+    end
 end
 
 function new_coeffs!(M, cⱼ₋₁)
