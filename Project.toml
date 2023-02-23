@@ -2,7 +2,7 @@ name = "TimeseriesSurrogates"
 uuid = "c804724b-8c18-5caa-8579-6025a0767c70"
 authors = ["Kristian Agasøster Haaga <kahaaga@gmail.com>", "George Datseris"]
 repo = "https://github.com/JuliaDynamics/TimeseriesSurrogates.jl.git"
-version = "2.0.4"
+version = "2.1.0"
 
 [deps]
 AbstractFFTs = "621f4979-c628-5d54-868e-fcf4e3e8185c"
