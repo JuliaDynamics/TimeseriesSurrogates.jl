@@ -1,11 +1,11 @@
-using DelayEmbeddings, Random
+using StateSpaceSets, Random
 export ShuffleDimensions
 
 """
     ShuffleDimensions()
 
-Multidimensional surrogates of input *datasets* (`DelayEmbeddings.Dataset`, which are
-also multidimensional) that have shuffled dimensions in each point.
+Multidimensional surrogates of input `StateSpaceSet`s.
+Each point in the set is individually shuffled.
 
 These surrogates destroy the state space structure of the dataset and are thus
 suited to distinguish deterministic datasets from high dimensional noise.
@@ -13,16 +13,17 @@ suited to distinguish deterministic datasets from high dimensional noise.
 struct ShuffleDimensions <: Surrogate end
 
 function surrogenerator(x, sd::ShuffleDimensions, rng = Random.default_rng())
-    s = copy(x.data)
-    @assert x isa Dataset "input `x` must be `DelayEmbeddings.Dataset` for `ShuffleDimensions`"
+    if !(x isa AbstractStateSpaceSet)
+        error("input `x` must be `AbstractStateSpaceSet` for `ShuffleDimensions`")
+    end
+    s = copy(x)
     return SurrogateGenerator(sd, x, s, nothing, rng)
 end
 
 function (sg::SurrogateGenerator{<:ShuffleDimensions})()
     s = sg.s
-    for i in 1:length(s)
+    for i in eachindex(s)
         @inbounds s[i] = shuffle(sg.rng, s[i])
     end
-    return Dataset(s)
+    return s
 end
-
