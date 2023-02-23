@@ -28,9 +28,9 @@ surroplot(ts, s)
 
  ## Partial randomization
 
- ### Without rescaling 
+ ### Without rescaling
 
- [`PartialRandomization`](@ref) surrogates are similar to random phase surrogates, 
+ [`PartialRandomization`](@ref) surrogates are similar to random phase surrogates,
  but allows for tuning the "degree" of phase randomization.
 
 ```@example MAIN
@@ -45,7 +45,7 @@ surroplot(ts, s)
 
 ### With rescaling
 
-[`PartialRandomizationAAFT`](@ref) adds a rescaling step to the [`PartialRandomization`](@ref) surrogates to obtain surrogates that contain the same values as the original time 
+[`PartialRandomizationAAFT`](@ref) adds a rescaling step to the [`PartialRandomization`](@ref) surrogates to obtain surrogates that contain the same values as the original time
 series.
 
 ```@example MAIN
@@ -62,7 +62,7 @@ surroplot(ts, s)
 
 
 ```@example MAIN
-using TimeseriesSurrogates, CairoMakie, Makie
+using TimeseriesSurrogates, CairoMakie
 ts = AR1() # create a realization of a random AR(1) process
 s = surrogate(ts, AAFT())
 
@@ -75,7 +75,7 @@ The IAAFT surrogates add an iterative step to the AAFT algorithm to improve simi
 of the power spectra of the original time series and the surrogates.
 
 ```@example MAIN
-using TimeseriesSurrogates, CairoMakie, Makie
+using TimeseriesSurrogates, CairoMakie
 ts = AR1() # create a realization of a random AR(1) process
 s = surrogate(ts, IAAFT())
 

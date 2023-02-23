@@ -12,7 +12,7 @@ The upper panel in the figure below shows an example of a timeseries and one
 surrogate realization that preserves its both power spectrum and its amplitude distribution (histogram). Because of this preservation, the time series look similar.
 
 ```@example MAIN
-using TimeseriesSurrogates, CairoMakie, Makie
+using TimeseriesSurrogates, CairoMakie
 x = LinRange(0, 20π, 300) .+ 0.05 .* rand(300)
 ts = sin.(x./rand(20:30, 300) + cos.(x))
 s = surrogate(ts, IAAFT())
