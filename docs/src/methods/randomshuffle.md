@@ -7,7 +7,7 @@ Randomly shuffled surrogates are simply permutations of the original time series
 Thus, they break any correlations in the signal.
 
 ```@example MAIN
-using TimeseriesSurrogates, CairoMakie, Makie
+using TimeseriesSurrogates, CairoMakie
 x = AR1() # create a realization of a random AR(1) process
 s = surrogate(x, RandomShuffle())
 surroplot(x, s)
@@ -24,7 +24,7 @@ Thus, they keep short-term correlations within
 blocks, but destroy any long-term dynamical information in the signal.
 
 ```@example MAIN
-using TimeseriesSurrogates, CairoMakie, Makie
+using TimeseriesSurrogates, CairoMakie
 x = NSAR2(n_steps = 300)
 # We want to divide the signal into 8 blocks.
 s = surrogate(x, BlockShuffle(8))
@@ -33,7 +33,7 @@ p = surroplot(x, s)
 
 ## Cycle shuffle (CSS)
 ```@example MAIN
-using TimeseriesSurrogates, CairoMakie, Makie
+using TimeseriesSurrogates, CairoMakie
 x = random_cycles()
 s = surrogate(x, CycleShuffle())
 p = surroplot(x, s)
@@ -41,7 +41,7 @@ p = surroplot(x, s)
 
 ## Circular shift
 ```@example MAIN
-using TimeseriesSurrogates, CairoMakie, Makie
+using TimeseriesSurrogates, CairoMakie
 x = random_cycles()
 s = surrogate(x, CircShift(1:length(x)))
 p = surroplot(x, s)

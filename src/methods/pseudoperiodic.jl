@@ -11,9 +11,9 @@ Therefore these surrogates are suitable to test the null hypothesis
 that the signal is a periodic orbit with uncorrelated noise[^Small2001].
 
 Arguments `d, τ, ρ` are as in the paper, the embedding dimension, delay time and
-noise radius. The method works by performing a delay coordinates ambedding via the
-library [DynamicalSystems.jl](https://juliadynamics.github.io/DynamicalSystems.jl/dev/embedding/reconstruction/).
-See its documentation for choosing appropriate values for `d, τ`. For `ρ`, we have implemented
+noise radius. The method works by performing a delay coordinates embedding
+from DelayEmbeddings.jl (see that docs for choosing appropriate `d, τ`).
+For `ρ`, we have implemented
 the method proposed in the paper in the function [`noiseradius`](@ref).
 
 The argument `shift` is not discussed in the paper. If `shift=false`
@@ -22,8 +22,9 @@ periodic component of the original and surrogate data.
 
 See also [`CycleShuffle`](@ref).
 
-
-[^Small2001]: Small et al., Surrogate test for pseudoperiodic time series data, [Physical Review Letters, 87(18)](https://doi.org/10.1103/PhysRevLett.87.188101)
+[^Small2001]:
+    Small et al., Surrogate test for pseudoperiodic time series data,
+    [Physical Review Letters, 87(18)](https://doi.org/10.1103/PhysRevLett.87.188101)
 """
 struct PseudoPeriodic{T<:Real} <: Surrogate
     d::Int
@@ -40,7 +41,7 @@ function surrogenerator(x::AbstractVector, pp::PseudoPeriodic, rng = Random.defa
     z = embed(x, d, τ)
     Ñ = length(z)
     w = zeros(eltype(z), Ñ-1) # weights vector
-    y = Dataset([z[1] for i in 1:N])
+    y = StateSpaceSet([z[1] for i in 1:N])
     s = similar(x)
     init = (y = y, w = w, z = z)
     return SurrogateGenerator(pp, x, s, init, rng)
