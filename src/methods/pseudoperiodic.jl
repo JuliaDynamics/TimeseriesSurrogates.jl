@@ -40,7 +40,7 @@ function surrogenerator(x::AbstractVector, pp::PseudoPeriodic, rng = Random.defa
     z = embed(x, d, τ)
     Ñ = length(z)
     w = zeros(eltype(z), Ñ-1) # weights vector
-    y = Dataset([z[1] for i in 1:N])
+    y = StateSpaceSet([z[1] for i in 1:N])
     s = similar(x)
     init = (y = y, w = w, z = z)
     return SurrogateGenerator(pp, x, s, init, rng)

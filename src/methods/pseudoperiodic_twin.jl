@@ -19,7 +19,7 @@ points are "close" (neighbors) or not, and is expressed as a fraction of the
 attractor diameter, as determined by the input data. The authors of the original
 twin surrogate paper recommend `0.05 ≤ δ ≤ 0.2`[^Thiel2006].
 
-If you have pre-embedded your timeseries, and timeseries is already a `::Dataset`, use the
+If you have pre-embedded your timeseries, and timeseries is already a `::StateSpaceSet`, use the
 three-argument constructor (so that no delay reconstruction is performed).
 If you want a surrogate for a scalar-valued timeseries, use the five-argument constructor
 to also provide the embedding delay `τ` and embedding dimension `d`.
@@ -36,7 +36,7 @@ with a quasi-periodic orbit[^Miralles2015].
 
 ## Returns
 
-A `d`-dimensional surrogate orbit (a `Dataset`) is returned. Sample the first
+A `d`-dimensional surrogate orbit (a `StateSpaceSet`) is returned. Sample the first
 column of this dataset if a scalar-valued surrogate is desired.
 
 [^Small2001]: Small et al., Surrogate test for pseudoperiodic timeseries data, [Physical Review Letters, 87(18)](https://doi.org/10.1103/PhysRevLett.87.188101)
@@ -60,8 +60,8 @@ struct PseudoPeriodicTwin{T<:Real, P<:Real, D<:PreMetric} <: Surrogate
 end
 
 """
-    _prepare_embed(x::AbstractVector, d, τ) → Dataset
-    _prepare_embed(x::Dataset, d, τ) → Dataset
+    _prepare_embed(x::AbstractVector, d, τ) → StateSpaceSet
+    _prepare_embed(x::StateSpaceSet, d, τ) → StateSpaceSet
 
 Prepate input data for surrogate generation. If input is a vector, embed it using
 the provided parameters. If input as a dataset, we assume it already represents an
@@ -69,10 +69,10 @@ orbit.
 """
 function _prepare_embed end
 _prepare_embed(x::AbstractVector, d, τ) = embed(x, d, τ)
-_prepare_embed(x::Dataset, d, τ) = x
+_prepare_embed(x::StateSpaceSet, d, τ) = x
 
 
-function surrogenerator(x::Union{AbstractVector, Dataset}, pp::PseudoPeriodicTwin, rng = Random.default_rng())
+function surrogenerator(x::Union{AbstractVector, StateSpaceSet}, pp::PseudoPeriodicTwin, rng = Random.default_rng())
     d, τ, δ, metric = getfield.(Ref(pp), (:d, :τ, :δ, :metric))
     ρ = getfield.(Ref(pp), (:ρ))
 
@@ -121,7 +121,7 @@ function surrogenerator(x::Union{AbstractVector, Dataset}, pp::PseudoPeriodicTwi
     # Sampling weights (exclude the point itself)
     W = [pweights(exp.(-dists[setdiff(1:Npts, i), i] / ρ)) for i = 1:Npts]
 
-    # The surrogate will be a vector of vectors (if pts is a Dataset, then
+    # The surrogate will be a vector of vectors (if pts is a StateSpaceSet, then
     # the eltype is SVector).
     PT = eltype(pts.data)
     s = Vector{PT}(undef, Nx)
@@ -166,5 +166,5 @@ function (sg::SurrogateGenerator{<:PseudoPeriodicTwin})()
 
     s[Nx] = pts[sample(1:Npts, W[i])[1]]
 
-    return Dataset(s)
+    return StateSpaceSet(s)
 end

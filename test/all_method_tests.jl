@@ -240,7 +240,7 @@ end
 
 using DelayEmbeddings
 @testset "ShufleDims" begin
-	X = Dataset(rand(100, 3))
+	X = StateSpaceSet(rand(100, 3))
 	Y = surrogate(X, ShuffleDimensions())
 	for i in 1:100
 		@test sort(X[i]) == sort(Y[i])
