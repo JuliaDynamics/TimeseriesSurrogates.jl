@@ -1,22 +1,22 @@
 # TimeseriesSurrogates.jl
 
-[![CI](https://github.com/juliadynamics/TimeseriesSurrogates.jl/workflows/CI/badge.svg)](https://github.com/JuliaDynamics/TimeseriesSurrogates.jl/actions)
-[![codecov](https://codecov.io/gh/JuliaDynamics/TimeseriesSurrogates.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/JuliaDynamics/TimeseriesSurrogates.jl)
-[![](https://img.shields.io/badge/docs-online-blue.svg)](https://JuliaDynamics.github.io/TimeseriesSurrogates.jl/dev)
-[![DOI](https://joss.theoj.org/papers/10.21105/joss.04414/status.svg)](https://doi.org/10.21105/joss.04414)
+[![](https://img.shields.io/badge/docs-dev-lightblue.svg)](https://JuliaDynamics.github.io/TimeseriesSurrogates.jl/dev)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://JuliaDynamics.github.io/TimeseriesSurrogates.jl/stable)
+[![](https://img.shields.io/badge/DOI-10.21105/joss.04414-purple)](https://doi.org/10.21105/joss.04414)
+[![CI](https://github.com/JuliaDynamics/TimeseriesSurrogates.jl/workflows/CI/badge.svg)](https://github.com/JuliaDynamics/TimeseriesSurrogates.jl/actions?query=workflow%3ACI)
+[![codecov](https://codecov.io/gh/JuliaDynamics/TimeseriesSurrogates.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/JuliaDynamics/TimeseriesSurrogates.jl)
+[![Package Downloads](https://shields.io/endpoint?url=https://pkgs.genieframework.com/api/v1/badge/TimeseriesSurrogates)](https://pkgs.genieframework.com?packages=TimeseriesSurrogates)
 
-A Julia library for generating surrogate data. Check out the
-[documentation](https://JuliaDynamics.github.io/TimeseriesSurrogates.jl/dev) for information
-on how to use it.
+A Julia module that offers various tools for analysing nonlinear dynamics and chaotic behaviour.
+It can be used as a standalone package, or as part of
+[DynamicalSystems.jl](https://juliadynamics.github.io/DynamicalSystems.jl/dev/).
 
-## Installation
+To install it, run `import Pkg; Pkg.add("TimeseriesSurrogates")`.
 
-To install the TimeseriesSurrogates.jl package, run the following code:
-```
-using Pkg; Pkg.add("TimeseriesSurrogates")
-```
+All further information is provided in the documentation, which you can either find [online](https://juliadynamics.github.io/TimeseriesSurrogates.jl/dev/) or build locally by running the `docs/make.jl` file.
 
 ## Citing
+
 Please use the following BiBTeX entry, or DOI, to cite TimeseriesSurrogates.jl:
 
 DOI: https://doi.org/10.21105/joss.04414
