@@ -1,4 +1,5 @@
 export PseudoPeriodicTwin
+export embed
 
 using StatsBase: sample, pweights
 using Distances: Euclidean, PreMetric, pairwise
