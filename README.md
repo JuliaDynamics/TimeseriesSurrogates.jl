@@ -7,7 +7,7 @@
 [![codecov](https://codecov.io/gh/JuliaDynamics/TimeseriesSurrogates.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/JuliaDynamics/TimeseriesSurrogates.jl)
 [![Package Downloads](https://shields.io/endpoint?url=https://pkgs.genieframework.com/api/v1/badge/TimeseriesSurrogates)](https://pkgs.genieframework.com?packages=TimeseriesSurrogates)
 
-A Julia module that offers various tools for analysing nonlinear dynamics and chaotic behaviour.
+A Julia package for generating timeseries surrogates. TimeseriesSurrogates.jl is the fastest and most featureful open source code for generating timeseries surrogates.
 It can be used as a standalone package, or as part of
 [DynamicalSystems.jl](https://juliadynamics.github.io/DynamicalSystems.jl/dev/).
 
