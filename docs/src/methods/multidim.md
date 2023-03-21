@@ -6,7 +6,7 @@ This surrogate was made to distinguish multidimensional data with *structure in 
 
 Here is a simple application that shows that the distinction is successful for a system that we know a-priori is deterministic and has structure in the state space (a chaotic attractor).
 
-```@example  MAIN
+```@example MAIN
 using TimeseriesSurrogates
 using DynamicalSystemsBase
 using FractalDimensions: correlationsum
