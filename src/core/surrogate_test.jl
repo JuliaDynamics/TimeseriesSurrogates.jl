@@ -50,7 +50,11 @@ end
 
 function pvalue(test::SurrogateTest; tail = :right)
     fill_surrogate_test!(test)
-    # estimate pvalue from res.vals
-    p = whatever
+    (; rval, vals) = test
+    if tail == :right
+        p = count(isless(rval, v), vals)
+    else
+        error("?")
+    end
     return p
 end
