@@ -26,7 +26,6 @@ values `vals` of the discriminatory statistic in the fields `rval, vals` respect
 struct SurrogateTest{F<:Function, S<:SurrogateGenerator, X<:Real} <: AbstractSurrogateTest
     f::F
     sgen::S
-    n::Int
     # fields that are filled whenever a function is called
     # for pretty printing or for keeping track of results
     rval::X
@@ -41,13 +40,13 @@ function SurrogateTest(f::F, x, s::Surrogate;
     rval = f(x)
     X = typeof(rval)
     vals = zeros(X, n)
-    return SurrogateTest{F, typeof(sgen), X}(f, sgen, n, rval, vals, Ref(false))
+    return SurrogateTest{F, typeof(sgen), X}(f, sgen, rval, vals, Ref(false))
 end
 
 function fill_surrogate_test!(test::SurrogateTest)
     test.isfilled[] && return
     # TODO: Threading here.
-    for i in 1:test.n
+    for i in eachindex(vals)
         test.vals[i] = test.f(test.sgen())
     end
     test.isfilled[] = true
@@ -75,5 +74,5 @@ function pvalue(test::SurrogateTest; tail = :left)
         pl = count(v -> v ≤ rval, vals)
         p = 2min(pr, pl)
     end
-    return p/test.n
+    return p/length(vals)
 end
