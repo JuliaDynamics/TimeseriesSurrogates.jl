@@ -52,9 +52,13 @@ function pvalue(test::SurrogateTest; tail = :right)
     fill_surrogate_test!(test)
     (; rval, vals) = test
     if tail == :right
-        p = count(isless(rval, v), vals)
+        p = count(v -> isless(rval, v), vals)
+    elseif tail == :left
+        p = count(v -> !isless(rval, v), vals)
     else
-        error("?")
+        pr = count(v -> isless(rval, v), vals)
+        pl = count(v -> !isless(rval, v), vals)
+        p = 2min(pr, pl)
     end
-    return p
+    return p/test.n
 end
