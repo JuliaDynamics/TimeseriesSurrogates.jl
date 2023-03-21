@@ -46,7 +46,7 @@ end
 function fill_surrogate_test!(test::SurrogateTest)
     test.isfilled[] && return
     # TODO: Threading here.
-    for i in eachindex(vals)
+    for i in eachindex(test.vals)
         test.vals[i] = test.f(test.sgen())
     end
     test.isfilled[] = true
@@ -57,10 +57,12 @@ end
     pvalue(test::SurrogateTest; tail = :left)
 
 Return the [p-value](https://en.wikipedia.org/wiki/P-value) corresponding to the given
-[`SurrogateTest`](@ref), optionally specifying what kind of tail test to do.
+[`SurrogateTest`](@ref), optionally specifying what kind of tail test to do
+(one of `:left, :right, :both`).
 
 The default value of `tail` assumes that the surrogate data are expected to have higher
-discriminatory statistic values, which is the case for the majority of statistics used.
+discriminatory statistic values. This is the case for statistics that quantify entropy.
+For statistics that quantify autocorrelation, use `tail = :right` instead.
 """
 function pvalue(test::SurrogateTest; tail = :left)
     fill_surrogate_test!(test)
