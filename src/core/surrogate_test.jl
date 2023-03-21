@@ -12,6 +12,9 @@ The tests requires as input a function `f` that given a timeseries (like `x`) it
 outputs a real number, and a method of how to generate surrogates.
 `f` is the function that computes the discriminatory statistic.
 
+Once called with [`pvalue`](@ref), the test stores the real value `rval` and surrogate
+values `vals` of the discriminatory statistic in the fields `rval, vals` respectively.
+
 `SurrogateTest` automates the process described in the documentation page
 [Performing surrogate hypothesis tests](@ref).
 
