@@ -33,6 +33,31 @@ struct SurrogateTest{F<:Function, S<:SurrogateGenerator, X<:Real} <: AbstractSur
     isfilled::Base.RefValue{Bool}
 end
 
+# Pretty printing
+function Base.show(io::IO, ::MIME"text/plain", test::SurrogateTest)
+    descriptors = [
+        "discr. statistic" => nameof(test.f),
+        "surrogate method" => nameof(typeof(test.sgen.method)),
+        "input timeseries" => summary(test.sgen.x),
+        "# of surrogates" => length(test.vals),
+    ]
+
+    if test.isfilled[]
+        # TODO: I am not sure if it makes sense to alter printing here if test are done.
+        # append!(descriptors, [
+        #     "f(x)" => test.rval,
+        # ])
+    end
+
+    padlen = maximum(length(d[1]) for d in descriptors) + 3
+
+    print(io, "SurrogateTest")
+    for (desc, val) in descriptors
+        print(io, '\n', rpad(" $(desc): ", padlen), val)
+    end
+
+end
+
 function SurrogateTest(f::F, x, s::Surrogate;
         rng = Random.default_rng(), n = 10_000
     ) where {F<:Function}
