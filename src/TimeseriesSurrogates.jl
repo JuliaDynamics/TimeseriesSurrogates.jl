@@ -18,6 +18,7 @@ using Wavelets
 using Requires
 
 include("core/api.jl")
+include("core/surrogate_test.jl")
 
 include("utils/testsystems.jl")
 
