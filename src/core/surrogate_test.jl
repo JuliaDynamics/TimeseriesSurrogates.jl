@@ -55,21 +55,24 @@ function fill_surrogate_test!(test::SurrogateTest)
 end
 
 """
-    pvalue(test::SurrogateTest; tail = :right)
+    pvalue(test::SurrogateTest; tail = :left)
 
 Return the [p-value](https://en.wikipedia.org/wiki/P-value) corresponding to the given
 [`SurrogateTest`](@ref), optionally specifying what kind of tail test to do.
+
+The default value of `tail` assumes that the surrogate data are expected to have higher
+discriminatory statistic values, which is the case for the majority of statistics used.
 """
-function pvalue(test::SurrogateTest; tail = :right)
+function pvalue(test::SurrogateTest; tail = :left)
     fill_surrogate_test!(test)
     (; rval, vals) = test
     if tail == :right
-        p = count(v -> isless(rval, v), vals)
+        p = count(v -> v ≥ rval, vals)
     elseif tail == :left
-        p = count(v -> !isless(rval, v), vals)
+        p = count(v -> v ≤ rval, vals)
     else
-        pr = count(v -> isless(rval, v), vals)
-        pl = count(v -> !isless(rval, v), vals)
+        pr = count(v -> v ≥ rval, vals)
+        pl = count(v -> v ≤ rval, vals)
         p = 2min(pr, pl)
     end
     return p/test.n
