@@ -17,7 +17,7 @@ using Interpolations
 using Wavelets
 using Requires
 
-include("api.jl")
+include("core/api.jl")
 
 include("utils/testsystems.jl")
 
