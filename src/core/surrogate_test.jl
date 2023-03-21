@@ -7,10 +7,13 @@ abstract type AbstractSurrogateTest end
 """
     SurrogateTest(f::Function, x, method::Surrogate; kwargs...)
 
-Initialize a surrogate test to be used in [`pvalue`](@ref).
-The tests requires as input a function `f` that given a timeseries `x` it
+Initialize a surrogate test for input data `x`, which can be used in [`pvalue`](@ref).
+The tests requires as input a function `f` that given a timeseries (like `x`) it
 outputs a real number, and a method of how to generate surrogates.
 `f` is the function that computes the discriminatory statistic.
+
+`SurrogateTest` automates the process described in the documentation page
+[Performing surrogate hypothesis tests](@ref).
 
 ## Keywords
 
@@ -48,6 +51,12 @@ function fill_surrogate_test!(test::SurrogateTest)
     return
 end
 
+"""
+    pvalue(test::SurrogateTest; tail = :right)
+
+Return the [p-value](https://en.wikipedia.org/wiki/P-value) corresponding to the given
+[`SurrogateTest`](@ref), optionally specifying what kind of tail test to do.
+"""
 function pvalue(test::SurrogateTest; tail = :right)
     fill_surrogate_test!(test)
     (; rval, vals) = test
