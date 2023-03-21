@@ -1,8 +1,20 @@
+import StatsAPI: pvalue
+import Random: AbstractRNG
+export SurrogateTest, pvalue
+
 abstract type AbstractSurrogateTest end
 
+
+"""
+    SurrogateTest(f::Ffunction, method::Surrogate; kwargs...)
+
+Initialize a surrogate test to be used in [`pvalue`](@ref).
+The tests requires as input a function `f` that given a timeseries `x` it
+outputs a real number, and a method of how to generate surrogates.
+"""
 struct SurrogateTest{F<:Function, S<:Surrogate, R<:AbstractRNG} <: AbstractSurrogateTest
     f::F
-    s::S
+    method::S
     rng::R
     n::Int
     # fields that are filled whenever a function is called
@@ -10,6 +22,7 @@ struct SurrogateTest{F<:Function, S<:Surrogate, R<:AbstractRNG} <: AbstractSurro
     vals::Vector{X}
     rval::RefValue{X}
 end
+
 
 function SurrogateTest(f::F, s::S; kwargs...) where {F<:Function, S<:Surrogate}
     # code
