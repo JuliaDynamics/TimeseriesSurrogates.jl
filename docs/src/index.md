@@ -26,6 +26,12 @@ surrogate
 surrogenerator
 ```
 
+## Hypothesis testing
+
+```@docs
+SurrogateTest
+```
+
 ## Surrogate methods
 
 ```@index
@@ -108,11 +114,13 @@ save("surroplot.png", fig); # hide
 ```
 
 ## Citing
+
 Please use the following BiBTeX entry, or DOI, to cite TimeseriesSurrogates.jl:
 
 DOI: https://doi.org/10.21105/joss.04414
 
 BiBTeX:
+
 ```latex
 @article{TimeseriesSurrogates.jl,
     doi = {10.21105/joss.04414},
