@@ -26,6 +26,12 @@ surrogate
 surrogenerator
 ```
 
+## Hypothesis testing
+
+```@docs
+SurrogateTest
+```
+
 ## Surrogate methods
 
 ```@index
