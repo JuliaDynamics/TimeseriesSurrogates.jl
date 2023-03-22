@@ -1,8 +1,10 @@
 [deps]
 CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
+ComplexityMeasures = "ab4b797d-85ee-42ba-b621-05d793b346a2"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 DocumenterTools = "35a29f4d-8980-5a13-9543-d66fff28ecb8"
 DynamicalSystemsBase = "6e36e845-645a-534a-86f2-f5d4aa5a06b4"
 FractalDimensions = "4665ce21-e117-4649-aed8-08bbe5ccbead"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 TimeseriesSurrogates = "c804724b-8c18-5caa-8579-6025a0767c70"
