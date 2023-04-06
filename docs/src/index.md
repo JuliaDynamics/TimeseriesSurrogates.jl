@@ -30,6 +30,7 @@ surrogenerator
 
 ```@docs
 SurrogateTest
+pvalue(::SurrogateTest)
 ```
 
 ## Surrogate methods

@@ -1,8 +1,6 @@
-# import StatsAPI: pvalue
-import Random: AbstractRNG
+using Random: AbstractRNG
+import StatsAPI
 export SurrogateTest, pvalue
-
-abstract type AbstractSurrogateTest end
 
 """
     SurrogateTest(f::Function, x, method::Surrogate; kwargs...)
@@ -18,12 +16,14 @@ values `vals` of the discriminatory statistic in the fields `rval, vals` respect
 `SurrogateTest` automates the process described in the documentation page
 [Performing surrogate hypothesis tests](@ref).
 
+`SurrogateTest` subtypes `HypothesisTest` and is part of the StatsAPI.jl interface.
+
 ## Keywords
 
 - `rng = Random.default_rng()`: a random number generator.
 - `n::Int = 10_000`: how many surrogates to generate and compute `f` on.
 """
-struct SurrogateTest{F<:Function, S<:SurrogateGenerator, X<:Real} <: AbstractSurrogateTest
+struct SurrogateTest{F<:Function, S<:SurrogateGenerator, X<:Real} <: StatsAPI.HypothesisTest
     f::F
     sgen::S
     # fields that are filled whenever a function is called
@@ -42,20 +42,13 @@ function Base.show(io::IO, ::MIME"text/plain", test::SurrogateTest)
         "# of surrogates" => length(test.vals),
     ]
 
-    if test.isfilled[]
-        # TODO: I am not sure if it makes sense to alter printing here if test are done.
-        # append!(descriptors, [
-        #     "f(x)" => test.rval,
-        # ])
-    end
-
     padlen = maximum(length(d[1]) for d in descriptors) + 3
 
     print(io, "SurrogateTest")
     for (desc, val) in descriptors
         print(io, '\n', rpad(" $(desc): ", padlen), val)
     end
-
+    return
 end
 
 function SurrogateTest(f::F, x, s::Surrogate;
@@ -88,8 +81,10 @@ Return the [p-value](https://en.wikipedia.org/wiki/P-value) corresponding to the
 The default value of `tail` assumes that the surrogate data are expected to have higher
 discriminatory statistic values. This is the case for statistics that quantify entropy.
 For statistics that quantify autocorrelation, use `tail = :right` instead.
+
+`pvalue` comes from StatsAPI.jl.
 """
-function pvalue(test::SurrogateTest; tail = :left)
+function StatsAPI.pvalue(test::SurrogateTest; tail = :left)
     fill_surrogate_test!(test)
     (; rval, vals) = test
     if tail == :right
