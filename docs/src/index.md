@@ -10,7 +10,7 @@ Please note that timeseries surrogates should not be confused with [surrogate mo
 
 ## Installation
 
-TimeseriesSurrogates is a registered Julia package. To install the latest version, run the following code:
+TimeseriesSurrogates.jl is a registered Julia package. To install the latest version, run the following code:
 
 ```julia
 import Pkg; Pkg.add("TimeseriesSurrogates")
