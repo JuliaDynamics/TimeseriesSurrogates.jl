@@ -1,6 +1,6 @@
 using Random: AbstractRNG
-import StatsAPI
-export SurrogateTest, StatsAPI.pvalue
+import StatsAPI: HypothesisTest, pvalue
+export SurrogateTest, pvalue
 
 """
     SurrogateTest(f::Function, x, method::Surrogate; kwargs...)
@@ -23,7 +23,7 @@ values `vals` of the discriminatory statistic in the fields `rval, vals` respect
 - `rng = Random.default_rng()`: a random number generator.
 - `n::Int = 10_000`: how many surrogates to generate and compute `f` on.
 """
-struct SurrogateTest{F<:Function, S<:SurrogateGenerator, X<:Real} <: StatsAPI.HypothesisTest
+struct SurrogateTest{F<:Function, S<:SurrogateGenerator, X<:Real} <: HypothesisTest
     f::F
     sgen::S
     # fields that are filled whenever a function is called
@@ -84,7 +84,7 @@ For statistics that quantify autocorrelation, use `tail = :right` instead.
 
 `pvalue` comes from StatsAPI.jl.
 """
-function StatsAPI.pvalue(test::SurrogateTest; tail = :left)
+function pvalue(test::SurrogateTest; tail = :left)
     fill_surrogate_test!(test)
     (; rval, vals) = test
     if tail == :right
