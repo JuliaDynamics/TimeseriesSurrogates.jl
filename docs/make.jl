@@ -1,5 +1,5 @@
 cd(@__DIR__)
-using TimeseriesSurrogates
+using TimeseriesSurrogates, StatsAPI
 
 pages = [
     "Documentation" => "index.md",
@@ -25,7 +25,7 @@ Downloads.download(
 )
 include("build_docs_with_style.jl")
 
-build_docs_with_style(pages, TimeseriesSurrogates;
+build_docs_with_style(pages, TimeseriesSurrogates, StatsAPI;
     expandfirst = ["index.md"],
     authors = "Kristian Agasøster Haaga, George Datseris",
 )
