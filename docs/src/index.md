@@ -18,15 +18,18 @@ import Pkg; Pkg.add("TimeseriesSurrogates")
 
 ## API
 
-TimeseriesSurrogates.jl exports two main functions. Both of them dispatch on the chosen method, a subtype of `Surrogate`.
+TimeseriesSurrogates.jl API is composed by four names: [`surrogate`](@ref), [`surrogenerator`](@ref), [`SurrogateTest`](@ref), and [`pvalue`](@ref). They dispatch on the method to generate surrogates, which is a subtype of `Surrogate`.
+
 It is recommended to standardize the signal before using these functions, i.e. subtract mean and divide by standard deviation.
+
+### Generating surrogates
 
 ```@docs
 surrogate
 surrogenerator
 ```
 
-## Hypothesis testing
+### Hypothesis testing
 
 ```@docs
 SurrogateTest
