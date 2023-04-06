@@ -81,8 +81,6 @@ Return the [p-value](https://en.wikipedia.org/wiki/P-value) corresponding to the
 The default value of `tail` assumes that the surrogate data are expected to have higher
 discriminatory statistic values. This is the case for statistics that quantify entropy.
 For statistics that quantify autocorrelation, use `tail = :right` instead.
-
-`pvalue` comes from StatsAPI.jl.
 """
 function pvalue(test::SurrogateTest; tail = :left)
     fill_surrogate_test!(test)
