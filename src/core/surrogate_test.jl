@@ -1,6 +1,6 @@
 using Random: AbstractRNG
 import StatsAPI
-export SurrogateTest, pvalue
+export SurrogateTest, StatsAPI.pvalue
 
 """
     SurrogateTest(f::Function, x, method::Surrogate; kwargs...)
