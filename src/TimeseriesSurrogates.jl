@@ -16,6 +16,8 @@ using DSP
 using Interpolations
 using Wavelets
 using Requires
+using StateSpaceSets
+export standardize
 
 include("core/api.jl")
 include("core/surrogate_test.jl")

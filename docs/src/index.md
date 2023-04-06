@@ -18,9 +18,9 @@ import Pkg; Pkg.add("TimeseriesSurrogates")
 
 ## API
 
-TimeseriesSurrogates.jl API is composed by four names: [`surrogate`](@ref), [`surrogenerator`](@ref), [`SurrogateTest`](@ref), and [`pvalue`](@ref). They dispatch on the method to generate surrogates, which is a subtype of `Surrogate`.
+TimeseriesSurrogates.jl API is composed by four names: [`surrogate`](@ref), [`surrogenerator`](@ref), [`SurrogateTest`](@ref), and [`pvalue`](@ref). They dispatch on the method to generate surrogates, which is a subtype of [`Surrogate`](@ref).
 
-It is recommended to standardize the signal before using these functions, i.e. subtract mean and divide by standard deviation.
+It is recommended to standardize the signal before using these functions, i.e. subtract mean and divide by standard deviation. The function `standardize` does this.
 
 ### Generating surrogates
 
@@ -37,6 +37,10 @@ pvalue(::SurrogateTest)
 ```
 
 ## Surrogate methods
+
+```@docs
+Surrogate
+```
 
 ```@index
 Order = [:type]
