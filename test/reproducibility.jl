@@ -4,6 +4,7 @@ ts = cumsum(randn(N))
 ts_nan = cumsum(randn(N))
 ts_nan[1] = NaN
 x = cos.(range(0, 20π, length = N)) .+ randn(N)*0.05
+xf = x .|> Float32
 t = (0:N-1) + rand(N)
 
 all_conceivable_methods = [
@@ -45,6 +46,17 @@ methodnames = [string(nameof(typeof(x))) for x in all_conceivable_methods]
         y = surrogate(x, method, rng)
         rng = Random.MersenneTwister(1234)
         z = surrogate(x, method, rng)
+        @test y == z
+    end
+end
+
+@testset "Float32 handling" begin
+    @testset "$n" for (i, n) in enumerate(methodnames)
+        method = all_conceivable_methods[i]
+        rng = Random.MersenneTwister(1234)
+        y = surrogate(xf, method, rng)
+        rng = Random.MersenneTwister(1234)
+        z = surrogate(xf, method, rng)
         @test y == z
     end
 end
