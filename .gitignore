@@ -8,3 +8,4 @@ Manifest.toml
 *.css
 .vscode
 *style.jl
+*.code-workspace
