@@ -1,47 +1,71 @@
 using TimeseriesSurrogates.StatsBase
 using TimeseriesSurrogates.DSP
 
+export surroplot!, surroplot
+
 """
     surroplot(x, s; kwargs...) → fig
 
-Plot a timeseries `x` along with its surrogate realization `s`, and compare the
-power spectrum and histogram of the two time series.
+In a new figure, plot a timeseries `x` along with its surrogate realization `s`,
+and compare the power spectrum and histogram of the two time series.
+See [`surroplot!`](@ref).
 
 ## Keyword arguments
 - `cx` and `cs`: Colors of the original and the surrogate time series, respectively.
 - `nbins`: The number of bins for the histograms.
 - `resolution`: A tuple giving the resolution of the figure.
 """
-function surroplot(x, s;
-        cx = "#1B1B1B", cs = ("#2DB9C5", 0.9), resolution = (500, 500),
-        nbins = 50,
-    )
+function surroplot(x, s; resolution = (500, 500), kwargs...)
+    f = Makie.Figure(; resolution)
+    ax = [Makie.Axis(f[i, 1]) for i in 1:3]
+    surroplot!(ax, x, s; kwargs...)
+    return f
+end
+
+"""
+    surroplot!(ax::AbstractVector{<:Axis}, x, s; kwargs...)
+
+Plot a timeseries `x` along with its surrogate realization `s` in a set of axes as follows:
+    - `ax[1]`: The time series, and its surrogate
+    - `ax[2]`: The power spectrum of `x` and `s`
+    - `ax[3]`: The histograms of `x` and `s`
+
+Also see [`surroplot`](@ref).
+
+## Keyword arguments
+- `cx` and `cs`: Colors of the original and the surrogate time series, respectively.
+- `nbins`: The number of bins for the histograms.
+"""
+function surroplot!(ax::AbstractVector{<:Makie.Axis}, x, s;
+        cx = "#1B1B1B", cs = ("#2DB9C5", 0.9), nbins = 50)
 
     t = 1:length(x)
-    fig = Makie.Figure(resolution = resolution)
 
     # Time series
-    ax1, _ = Makie.lines(fig[1,1], t, x; color = cx)
-    Makie.lines!(ax1, t, s; color = cs)
+    if length(ax) > 0
+        Makie.lines!(ax[1], t, x; color = cx)
+        Makie.lines!(ax[1], t, s; color = cs)
+        ax[1].xlabel = "time step"
+        ax[1].ylabel = "value"
+    end
 
     # Binned multitaper periodograms
-    p, psurr = DSP.mt_pgram(x), DSP.mt_pgram(s)
-    ax3 = Makie.Axis(fig[2,1]; yscale = log10)
-    Makie.lines!(ax3, p.freq, p.power; color = cx)
-    Makie.lines!(ax3, psurr.freq, psurr.power; color = cs)
+    if length(ax) > 1
+        p, psurr = DSP.mt_pgram(x), DSP.mt_pgram(s)
+        Makie.lines!(ax[2], p.freq, p.power; color = cx)
+        Makie.lines!(ax[2], psurr.freq, psurr.power; color = cs)
+        ax[2].yscale = log10
+        ax[2].xlabel = "frequency"
+        ax[2].ylabel = "power"
+    end
 
     # Histograms
-    ax4 = Makie.Axis(fig[3,1])
-    Makie.hist!(ax4, x; label = "original", bins = nbins, color = cx)
-    Makie.hist!(ax4, s; label = "surrogate", bins = nbins, color = cs)
-    Makie.axislegend(ax4)
-
-    ax1.xlabel = "time step"
-    ax1.ylabel = "value"
-    ax3.xlabel = "frequency"
-    ax3.ylabel = "power"
-    ax4.xlabel = "binned value"
-    ax4.ylabel = "histogram"
-    return fig
+    if length(ax) > 2
+        Makie.hist!(ax[3], x; label = "original", bins = nbins, color = cx)
+        Makie.hist!(ax[3], s; label = "surrogate", bins = nbins, color = cs)
+        Makie.axislegend(ax[3])
+        ax[3].xlabel = "binned value"
+        ax[3].ylabel = "histogram"
+    end
+    return ax
 end
-export surroplot
