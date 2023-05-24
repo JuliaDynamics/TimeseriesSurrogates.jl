@@ -1,5 +1,8 @@
 using Test
 using TimeseriesSurrogates
+using TimeseriesSurrogates.AbstractFFTs
+using TimeseriesSurrogates.Statistics
+using TimeseriesSurrogates.Random
 ENV["GKSwstype"] = "100"
 
 N = 500
@@ -33,13 +36,43 @@ end
 end
 
 @testset "PartialRandomization" begin
+    Random.seed!(32)
+
+    # Absolute randomization, Ortega
     pr = PartialRandomization(0.2)
     s = surrogate(x, pr)
-
     @test length(s) == length(x)
-
     @test_throws AssertionError PartialRandomization(-0.01)
     @test_throws AssertionError PartialRandomization(1.01)
+
+    pr = PartialRandomization(0.0)
+    s = surrogate(x, pr)
+    @test s |> rfft .|> angle |> std |> ≈(0, atol=1e-9)
+
+    pr = PartialRandomization(1.0)
+    s = surrogate(x, pr)
+    @test s |> rfft .|> angle |> std |> ≈(π/sqrt(3), atol=1e-1)
+
+    # Relative randomization
+    pr = PartialRandomization(0.2, :relative)
+    @test_nowarn s = surrogate(x, pr)
+    @test length(s) == length(x)
+    pr = PartialRandomization(0.0, :relative)
+    @test_nowarn s = surrogate(x, pr)
+    @test s |> ≈(x, rtol=1e-2) # No randomization, so the surrogate should be close to the original
+    pr = PartialRandomization(1.0, :relative)
+    s = surrogate(cos.(0:0.1:1000).^2, pr)
+    @test s |> rfft .|> angle |> std |> ≈(π/sqrt(3), atol=1e-1)
+
+    # Randomization based on the spectrum
+    pr = PartialRandomization(0.2, :spectrum)
+    @test_nowarn s = surrogate(x, pr)
+    pr = PartialRandomization(0.0, :spectrum)
+    @test_nowarn s = surrogate(x, pr)
+    @test s |> ≈(x, rtol=1e-2)
+    pr = PartialRandomization(1.0, :spectrum)
+    s = surrogate(cos.(0:0.1:1000).^2, pr)
+    @test s |> rfft .|> angle |> std |> ≈(π/sqrt(3), atol=1e-1)
 end
 
 @testset "PartialRandomizationAAFT" begin
