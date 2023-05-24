@@ -2,10 +2,10 @@ export PartialRandomization, PartialRandomizationAAFT
 
 """
     PartialRandomization(α = 0.5)
-`PartialRandomization` surrogates[^Ortega1998] are similar to [`RandomFourier`](@ref) phase
-surrogates, but during the phase randomization step, instead of drawing phases from `[0, 2π]`,
-phases are drawn from `[0, 2π]*α`, where `α ∈ [0, 1]`. The authors refers to `α` as the
-"degree" of phase randomization, where `α = 0` means `0 %` randomization and
+`PartialRandomization` surrogates[^Ortega1998] are similar to [`RandomFourier`](@ref)
+phase surrogates, but during the phase randomization step, instead of drawing phases
+from `[0, 2π]`, phases are drawn from `[0, 2π]*α`, where `α ∈ [0, 1]`. The authors refer
+to `α` as the "degree" of phase randomization, where `α = 0` means `0 %` randomization and
 `α = 1` means `100 %` randomization.
 
 [^Ortega1998]: Ortega, Guillermo J.; Louis, Enrique (1998). Smoothness Implies Determinism in Time Series: A Measure Based Approach. Physical Review Letters, 81(20), 4345–4348. doi:10.1103/PhysRevLett.81.4345
@@ -31,16 +31,17 @@ function surrogenerator(x::AbstractVector, rf::PartialRandomization, rng = Rando
     r = abs.(𝓕)
     ϕ = angle.(𝓕)
     coeffs = zero(r)
+    fthresh = rf.alg===:spectrum ? findfirst(cumsum(r.^2 ./ sum(r.^2)).>1-rf.α^2) : nothing
+    isnothing(fthresh) && (fthresh = n+1)
 
-    init = (inverse = inverse, m = m, coeffs = coeffs, n = n, r = r,
-            ϕ = ϕ, shuffled𝓕 = shuffled𝓕)
+    init = (; inverse, m, coeffs, n, r, ϕ, shuffled𝓕, fthresh)
     return SurrogateGenerator(rf, x, s, init, rng)
 end
 
 function (sg::SurrogateGenerator{<:PartialRandomization})()
-    inverse, m, coeffs, n, r, ϕ, shuffled𝓕 =
+    inverse, m, coeffs, n, r, ϕ, shuffled𝓕, fthresh =
         getfield.(Ref(sg.init),
-        (:inverse, :m, :coeffs, :n, :r, :ϕ, :shuffled𝓕))
+        (:inverse, :m, :coeffs, :n, :r, :ϕ, :shuffled𝓕, :fthresh))
     s, rng = sg.s, sg.rng
     α = sg.method.α
     alg = sg.method.alg
@@ -48,14 +49,15 @@ function (sg::SurrogateGenerator{<:PartialRandomization})()
     coeffs .= rand(rng, Uniform(0, 2π), n)
 
     if alg === :absolute
-        ei = exp.(coeffs .* 1im .* α)
+        coeffs .= (coeffs.*α)
     elseif alg === :relative
-        ei = exp.(ϕ .+ coeffs .* 1im .* α)
-    elseif alg === :frequency
-        # ...
+        coeffs .= (ϕ .+ coeffs.*α)
+    elseif alg === :spectrum
+        coeffs[1:fthresh-1] .= 0
+        coeffs .= (ϕ .+ coeffs)
     end
 
-    shuffled𝓕 .= r .* ei
+    shuffled𝓕 .= r .* cis.(coeffs)
     s .= inverse * shuffled𝓕 .+ m
     return s
 end
