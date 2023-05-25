@@ -43,8 +43,8 @@ function surroplot!(ax::AbstractVector{<:Makie.Axis}, x, s;
 
     # Time series
     if length(ax) > 0
-        Makie.lines!(ax[1], t, x; color = cx)
-        Makie.lines!(ax[1], t, s; color = cs)
+        Makie.lines!(ax[1], t, x; color = cx, label = "original")
+        Makie.lines!(ax[1], t, s; color = cs, label = "surrogate")
         ax[1].xlabel = "time step"
         ax[1].ylabel = "value"
     end
@@ -52,8 +52,8 @@ function surroplot!(ax::AbstractVector{<:Makie.Axis}, x, s;
     # Binned multitaper periodograms
     if length(ax) > 1
         p, psurr = DSP.mt_pgram(x), DSP.mt_pgram(s)
-        Makie.lines!(ax[2], p.freq, p.power; color = cx)
-        Makie.lines!(ax[2], psurr.freq, psurr.power; color = cs)
+        Makie.lines!(ax[2], p.freq, p.power; color = cx, label = "original")
+        Makie.lines!(ax[2], psurr.freq, psurr.power; color = cs, label = "surrogate")
         ax[2].yscale = log10
         ax[2].xlabel = "frequency"
         ax[2].ylabel = "power"
