@@ -31,7 +31,10 @@ surroplot(ts, s)
  ### Without rescaling
 
  [`PartialRandomization`](@ref) surrogates are similar to random phase surrogates,
- but allow for tuning the "degree" of phase randomization.
+ but allow for tuning the "degree" of phase randomization. The algorithm introduced by [^Ortega1998] draws random phases from:
+ $$ \phi \to \alpha \xi , \quad \xi \sim \mathcal{U}(0, 2\pi),$$
+ where $\phi$ is a Fourier phase and $\mathcal{U}(0, 2\pi)$ is a uniform distribution.
+Tuning the randomization parameter, $\alpha$, produces a set of time series with varying degrees of randomness in their Fourier phases. 
 
 ```@example MAIN
 using TimeseriesSurrogates, CairoMakie
@@ -43,11 +46,26 @@ s = surrogate(ts, PartialRandomization(0.5))
 surroplot(ts, s)
 ```
 
-We provide three algorithms for partially randomizing the Fourier phases.
-The `PartialRandomizationAAFT` algorithm[^Ortega1998], ..............
+In addition to [`PartialRandomization`](@ref), we provide two other algorithms for producing partial randomization surrogates, outlined below.
 
+### Relative partial randomization
 
-[^Ortega1998]: Ortega, Guillermo J.; Louis, Enrique (1998). Smoothness Implies Determinism in Time Series: A Measure Based Approach. Physical Review Letters, 81(20), 4345–4348. doi:10.1103/PhysRevLett.81.4345
+The [`PartialRandomization`](@ref) algorithm corresponds to assigning entirely new phases to the Fourier spectrum with some degree of randomness, regardless of any deterministic structure in the original phases. As such, even for $\alpha = 0$ the surrogate time series can differ drastically from the original time series.
+
+By contrast, the [`RelativePartialRandomization`](@ref) procedure draws phases from:
+$$ \phi \to \phi + \alpha \xi , \quad \xi \sim \mathcal{U}(0, 2\pi).$$
+As such, phases are progressively corrupted by higher values of $\alpha$.
+Surrogates produced with this algorithm are identical to the original time series for $\alpha = 0$, equivalent to random noise for $\alpha = 1$, and retain some of the structure of the original time series when $0 < \alpha < 1$. This procedure is particularly useful for controlling the degree of chaoticity and non-linearity in surrogates of chaotic systems.
+
+### Spectral partial randomization
+
+Both of the above algorithms randomize phases for components at all frequencies to the same degree.
+To assess the contribution of different frequency components to the structure of a time series, the [`SpectralPartialRandomization`](@ref) algorithm only randomises phases above a frequency threshold.
+The threshold is chosen as the lowest frequency at which the power spectrum of the original time series drops below a fraction $1-\alpha$ of its maximum value (such that the power contained above the frequency threshold is a proportion $\alpha$ of the total power, excluding the zero frequency).
+
+I've made a little comparison between the two methods in the figure below. The most obvious difference is at $\alpha = 0$, for which the 'absolute' Ortega method the surrogate is drastically different from the original (Lorenz) time series. By contrast, for $\alpha = 0$ with the 'relative' method (panel b) the original time series is the same as the surrogate (there has been `0.0` randomization of the original time series). For progressively increasing values of $\alpha$, the 'relative' method gradually erodes the chaoticity of the original time series.
+
+Clicking through the figures below to compare the behaviour of the three partial randomization algorithms for various values of $\alpha$.
 
 ```@raw html
 <!DOCTYPE html>
@@ -123,8 +141,7 @@ The `PartialRandomizationAAFT` algorithm[^Ortega1998], ..............
 
 ### With rescaling
 
-[`PartialRandomizationAAFT`](@ref) adds a rescaling step to the [`PartialRandomization`](@ref) surrogates to obtain surrogates that contain the same values as the original time
-series.
+[`PartialRandomizationAAFT`](@ref) adds a rescaling step to the [`PartialRandomization`](@ref) surrogates to obtain surrogates that contain the same values as the original time series. AAFT versions of [`RelativePartialRandomization`](@ref) and [`SpectralPartialRandomization`](@ref) are also available.
 
 ```@example MAIN
 using TimeseriesSurrogates, CairoMakie
