@@ -43,8 +43,8 @@ s = surrogate(ts, PartialRandomization(0.5))
 surroplot(ts, s)
 ```
 
-We include three algorithms for partial randomization. 
-The `:absolute` algorithm[^Ortega1998], 
+We provide three algorithms for partially randomizing the Fourier phases.
+The `PartialRandomizationAAFT` algorithm[^Ortega1998], ..............
 
 
 [^Ortega1998]: Ortega, Guillermo J.; Louis, Enrique (1998). Smoothness Implies Determinism in Time Series: A Measure Based Approach. Physical Review Letters, 81(20), 4345–4348. doi:10.1103/PhysRevLett.81.4345

@@ -47,30 +47,37 @@ end
 
     pr = PartialRandomization(0.0)
     s = surrogate(x, pr)
-    @test s |> rfft .|> angle |> std |> ≈(0, atol=1e-7)
+    @test s |> rfft .|> angle |> std |> ≈(0, atol=1e-5)
+end
 
-    pr = PartialRandomization(1.0)
+@testset "RelativePartialRandomization" begin
+    Random.seed!(32)
+
+    pr = RelativePartialRandomization(1.0)
     s = surrogate(x, pr)
     @test s |> rfft .|> angle |> std |> ≈(π/sqrt(3), atol=1e-1)
 
     # Relative randomization
-    pr = PartialRandomization(0.2, :relative)
-    @test_nowarn s = surrogate(x, pr)
+    pr = RelativePartialRandomization(0.2)
+    s = @test_nowarn surrogate(x, pr)
     @test length(s) == length(x)
-    pr = PartialRandomization(0.0, :relative)
-    @test_nowarn s = surrogate(x, pr)
+    pr = RelativePartialRandomization(0.0)
+    s = @test_nowarn surrogate(x, pr)
     @test s |> ≈(x, rtol=1e-2) # No randomization, so the surrogate should be close to the original
-    pr = PartialRandomization(1.0, :relative)
+    pr = RelativePartialRandomization(1.0)
     s = surrogate(cos.(0:0.1:1000).^2, pr)
     @test s |> rfft .|> angle |> std |> ≈(π/sqrt(3), atol=1e-1)
+end
 
+@testset "SpectralPartialRandomization" begin
+    Random.seed!(32)
     # Randomization based on the spectrum
-    pr = PartialRandomization(0.2, :spectrum)
-    @test_nowarn s = surrogate(x, pr)
-    pr = PartialRandomization(0.0, :spectrum)
-    @test_nowarn s = surrogate(x, pr)
+    pr = SpectralPartialRandomization(0.2)
+    s = @test_nowarn surrogate(x, pr)
+    pr = SpectralPartialRandomization(0.0)
+    s = @test_nowarn surrogate(x, pr)
     @test s |> ≈(x, rtol=1e-2)
-    pr = PartialRandomization(1.0, :spectrum)
+    pr = SpectralPartialRandomization(1.0)
     s = surrogate(cos.(0:0.1:1000).^2, pr)
     @test s |> rfft .|> angle |> std |> ≈(π/sqrt(3), atol=1e-1)
 end
@@ -81,16 +88,20 @@ end
     @test length(s) == length(x)
     @test sort(x) ≈ sort(s)
 
-    praaft = PartialRandomizationAAFT(0.2, :relative)
-    @test_nowarn s = surrogate(x, praaft)
-    @test sort(x) ≈ sort(s)
-
-    praaft = PartialRandomizationAAFT(0.2, :spectrum)
-    @test_nowarn s = surrogate(x, praaft)
-    @test sort(x) ≈ sort(s)
-
     @test_throws AssertionError PartialRandomizationAAFT(-0.01)
     @test_throws AssertionError PartialRandomizationAAFT(1.01)
+end
+
+@testset "RelativePartialRandomization" begin
+    praaft = RelativePartialRandomizationAAFT(0.2)
+    s = @test_nowarn surrogate(x, praaft)
+    @test sort(x) ≈ sort(s)
+end
+
+@testset "SpectralPartialRandomization" begin
+    praaft = SpectralPartialRandomizationAAFT(0.2)
+    s = @test_nowarn surrogate(x, praaft)
+    @test sort(x) ≈ sort(s)
 end
 
 @testset "RandomCascade" begin

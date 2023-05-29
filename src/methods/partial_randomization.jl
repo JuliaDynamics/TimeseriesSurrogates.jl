@@ -1,28 +1,21 @@
 export PartialRandomization, PartialRandomizationAAFT
 
 """
-    PartialRandomization(α = 0.5, alg = :absolute)
-`PartialRandomization` surrogates[^Ortega1998] are similar to [`RandomFourier`](@ref)
-phase surrogates, but during the phase randomization step, instead of drawing phases
-uniformly from `[0, 2π]`, phases are drawn from a constrained set of random values. We provide three algorithms for partially randomizing the Fourier phases, which can be chosen from using the second, `alg`, argument:
-- `:absolute`   Random phases are drawn from `[0, 2π]*α`, where `α ∈ [0, 1]`[^Ortega1998].
-- `:relative`   Random phases are drawn from `ϕ + [0, 2π]*α`, where `α ∈ [0, 1]` and `ϕ`
-                is the original Fourier phase.
-- `:spectrum`   Phases of the highest frequency components responsible for a proportion `α`
-                of power are replaced by random phases drawn from `[0, 2π]`
-
-See the documentation for a detailed comparison of the three algorithms.
+    PartialRandomization(α = 0.5)
+`PartialRandomization` surrogates[^Ortega1998] are similar to [`RandomFourier`](@ref) phase
+surrogates, but during the phase randomization step, instead of drawing phases from `[0, 2π]`,
+phases are drawn from `[0, 2π]*α`, where `α ∈ [0, 1]`. The authors refers to `α` as the
+"degree" of phase randomization, where `α = 0` means `0 %` randomization and
+`α = 1` means `100 %` randomization.
 
 [^Ortega1998]: Ortega, Guillermo J.; Louis, Enrique (1998). Smoothness Implies Determinism in Time Series: A Measure Based Approach. Physical Review Letters, 81(20), 4345–4348. doi:10.1103/PhysRevLett.81.4345
 """
 struct PartialRandomization{T} <: Surrogate
     α::T
-    alg::Symbol
 
-    function PartialRandomization(α::T=0.5, alg::Symbol=:absolute) where T <: Real
+    function PartialRandomization(α::T) where T <: Real
         @assert 0 <= α <= 1
-        @assert alg ∈ [:absolute, :relative, :spectrum]
-        return new{T}(α, alg)
+        return new{T}(α)
     end
 end
 
@@ -38,65 +31,48 @@ function surrogenerator(x::AbstractVector, rf::PartialRandomization, rng = Rando
     ϕ = angle.(𝓕)
     coeffs = zero(r)
 
-    fthresh = nothing
-    if rf.alg == :spectrum
-        S = r.^2
-        S = S ./ sum(S[2:end]) # Ignore power due to the mean, S[1]
-        fthresh = findfirst(cumsum(S) .> 1 - rf.α)
-    end
-    isnothing(fthresh) && (fthresh = n+1)
-
-    init = (; inverse, m, coeffs, n, r, ϕ, shuffled𝓕, fthresh)
+    init = (inverse = inverse, m = m, coeffs = coeffs, n = n, r = r,
+            ϕ = ϕ, shuffled𝓕 = shuffled𝓕)
     return SurrogateGenerator(rf, x, s, init, rng)
 end
 
 function (sg::SurrogateGenerator{<:PartialRandomization})()
-    inverse, m, coeffs, n, r, ϕ, shuffled𝓕, fthresh =
+    inverse, m, coeffs, n, r, ϕ, shuffled𝓕 =
         getfield.(Ref(sg.init),
-        (:inverse, :m, :coeffs, :n, :r, :ϕ, :shuffled𝓕, :fthresh))
+        (:inverse, :m, :coeffs, :n, :r, :ϕ, :shuffled𝓕))
     s, rng = sg.s, sg.rng
     α = sg.method.α
-    alg = sg.method.alg
 
     coeffs .= rand(rng, Uniform(0, 2π), n)
-
-    if alg === :absolute
-        coeffs .= (coeffs.*α)
-    elseif alg === :relative
-        coeffs .= (ϕ .+ coeffs.*α)
-    elseif alg === :spectrum
-        coeffs[1:fthresh-1] .= 0
-        coeffs .= (ϕ .+ coeffs)
-    end
-
-    shuffled𝓕 .= r .* cis.(coeffs)
+    shuffled𝓕 .= r .* exp.(coeffs .* 1im .* α)
     s .= inverse * shuffled𝓕 .+ m
     return s
 end
 
 """
-    PartialRandomizationAAFT(α = 0.5, alg = :absolute)
+    PartialRandomizationAAFT(α = 0.5)
 
-`PartialRandomizationAAFT` surrogates are similar to [`PartialRandomization`](@ref) surrogates, but adds a rescaling step, so that the surrogate has
+`PartialRandomizationAAFF` surrogates are similar to [`PartialRandomization`](@ref)
+surrogates[^Ortega1998], but adds a rescaling step, so that the surrogate has
 the same values as the original time series (analogous to the rescaling done for
 [`AAFT`](@ref) surrogates).
-Partial randomization surrogates with a rescaling step have, to the package authors'
-knowledge, not been published in scientific literature.
+Partial randomization surrogates have, to the package authors' knowledge, not been
+published in scientific literature.
+
+[^Ortega1998]: Ortega, Guillermo J.; Louis, Enrique (1998). Smoothness Implies Determinism in Time Series: A Measure Based Approach. Physical Review Letters, 81(20), 4345–4348. doi:10.1103/PhysRevLett.81.4345
 """
 struct PartialRandomizationAAFT{T} <: Surrogate
     α::T
-    alg::Symbol
 
-    function PartialRandomizationAAFT(α::T, alg::Symbol=:absolute) where T <: Real
+    function PartialRandomizationAAFT(α::T) where T <: Real
         @assert 0 <= α <= 1
-        @assert alg ∈ [:absolute, :relative, :spectrum]
-        return new{T}(α, alg)
+        return new{T}(α)
     end
 end
 
 function surrogenerator(x::AbstractVector, rf::PartialRandomizationAAFT, rng = Random.default_rng())
     init = (
-        gen = surrogenerator(x, PartialRandomization(rf.α, rf.alg), rng),
+        gen = surrogenerator(x, PartialRandomization(rf.α), rng),
         ix = zeros(Int, length(x)),
         x_sorted = sort(x),
     )
