@@ -31,8 +31,10 @@ surroplot(ts, s)
  ### Without rescaling
 
  [`PartialRandomization`](@ref) surrogates are similar to random phase surrogates,
- but allow for tuning the "degree" of phase randomization. The algorithm introduced by [^Ortega1998] draws random phases from:
+ but allow for tuning the "degree" of phase randomization. The algorithm introduced by [^Ortega1998] draws random phases as:
+
  $$ \phi \to \alpha \xi , \quad \xi \sim \mathcal{U}(0, 2\pi),$$
+
  where $\phi$ is a Fourier phase and $\mathcal{U}(0, 2\pi)$ is a uniform distribution.
 Tuning the randomization parameter, $\alpha$, produces a set of time series with varying degrees of randomness in their Fourier phases. 
 
@@ -52,8 +54,10 @@ In addition to [`PartialRandomization`](@ref), we provide two other algorithms f
 
 The [`PartialRandomization`](@ref) algorithm corresponds to assigning entirely new phases to the Fourier spectrum with some degree of randomness, regardless of any deterministic structure in the original phases. As such, even for $\alpha = 0$ the surrogate time series can differ drastically from the original time series.
 
-By contrast, the [`RelativePartialRandomization`](@ref) procedure draws phases from:
+By contrast, the [`RelativePartialRandomization`](@ref) procedure draws phases as:
+
 $$ \phi \to \phi + \alpha \xi , \quad \xi \sim \mathcal{U}(0, 2\pi).$$
+
 As such, phases are progressively corrupted by higher values of $\alpha$.
 Surrogates produced with this algorithm are identical to the original time series for $\alpha = 0$, equivalent to random noise for $\alpha = 1$, and retain some of the structure of the original time series when $0 < \alpha < 1$. This procedure is particularly useful for controlling the degree of chaoticity and non-linearity in surrogates of chaotic systems.
 
@@ -63,9 +67,7 @@ Both of the above algorithms randomize phases for components at all frequencies 
 To assess the contribution of different frequency components to the structure of a time series, the [`SpectralPartialRandomization`](@ref) algorithm only randomises phases above a frequency threshold.
 The threshold is chosen as the lowest frequency at which the power spectrum of the original time series drops below a fraction $1-\alpha$ of its maximum value (such that the power contained above the frequency threshold is a proportion $\alpha$ of the total power, excluding the zero frequency).
 
-I've made a little comparison between the two methods in the figure below. The most obvious difference is at $\alpha = 0$, for which the 'absolute' Ortega method the surrogate is drastically different from the original (Lorenz) time series. By contrast, for $\alpha = 0$ with the 'relative' method (panel b) the original time series is the same as the surrogate (there has been `0.0` randomization of the original time series). For progressively increasing values of $\alpha$, the 'relative' method gradually erodes the chaoticity of the original time series.
-
-Clicking through the figures below to compare the behaviour of the three partial randomization algorithms for various values of $\alpha$.
+Click through the figures below to compare the three algorithms for various values of $\alpha$.
 
 ```@raw html
 <!DOCTYPE html>
@@ -113,11 +115,11 @@ Clicking through the figures below to compare the behaviour of the three partial
                 <button id="prev-button" class="arrow-button">Previous</button>
                 <button id="next-button" class="arrow-button">Next</button>
             </div>
-            <img id="image-switcher" src="https://user-images.githubusercontent.com/42064608/241539260-e1bae0ef-9be4-4472-b646-b3071d7362ff.png" alt="image" />
+            <img id="image-switcher" src="https://user-images.githubusercontent.com/42064608/241692822-01a6de9e-d78b-4d9c-af58-8a89c68b78fb.png" alt="image" />
         </div>
 
         <script>
-            let images = ['https://user-images.githubusercontent.com/42064608/241539260-e1bae0ef-9be4-4472-b646-b3071d7362ff.png', 'https://user-images.githubusercontent.com/42064608/241539282-8d0e1883-7e8d-4b0e-afb6-1727d553e8a5.png', 'https://user-images.githubusercontent.com/42064608/241539304-b48b7a26-b3ae-4693-ac79-dc32ba000c28.png', 'https://user-images.githubusercontent.com/42064608/241539311-3f460675-c3d9-4519-80d6-d477bf19cd3e.png', 'https://user-images.githubusercontent.com/42064608/241539322-a592154d-7d6f-4a05-83d4-e46fb9b07df9.png', 'https://user-images.githubusercontent.com/42064608/241539331-c3960e4c-8ce1-44cf-a83a-11f7a440a575.png', 'https://user-images.githubusercontent.com/42064608/241539355-2ef11f22-3713-42e3-94d8-b75cc709e12e.png', 'https://user-images.githubusercontent.com/42064608/241539375-211b5ba0-5584-461e-8a95-1167ae9d571c.png', 'https://user-images.githubusercontent.com/42064608/241539394-10f3aa0c-053b-4fc7-a4ac-b30c82f70a14.png'];
+            let images = ['https://user-images.githubusercontent.com/42064608/241692822-01a6de9e-d78b-4d9c-af58-8a89c68b78fb.png', 'https://user-images.githubusercontent.com/42064608/241692835-98279739-a1ba-4536-aa4f-904944a82a12.png', 'https://user-images.githubusercontent.com/42064608/241692845-ce4d197a-9d40-47e3-99be-c5a86b96faf1.png', 'https://user-images.githubusercontent.com/42064608/241692854-d8428ef2-7924-41cc-b911-010eba9e5414.png', 'https://user-images.githubusercontent.com/42064608/241692861-e3d8430b-6c78-425f-ba42-bbe095586073.png', 'https://user-images.githubusercontent.com/42064608/241692869-672415c4-8558-4453-925d-6c0b4a49b754.png', 'https://user-images.githubusercontent.com/42064608/241692882-d26cebff-45ad-4ad8-8aa4-d1e47b992ea8.png', 'https://user-images.githubusercontent.com/42064608/241692891-8db57c85-eee8-442b-a2c6-e09e15f5a0a5.png', 'https://user-images.githubusercontent.com/42064608/241692895-12457e5b-b067-4713-bdf2-7244859692cd.png'];
 
             let currentImageIndex = 0;
 
@@ -152,80 +154,6 @@ s = surrogate(ts, PartialRandomizationAAFT(0.7))
 
 surroplot(ts, s)
 ```
-
-<!-- The figure below shows how each partial-randomization algorithm behaves with an added AAFT rescaling step:
-```@raw html
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Image Switcher</title>
-        <style>
-            #image-container {
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
-                align-items: left;
-                height: auto;
-                width: auto;
-            }
-
-            #button-container {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                width: 500px; /* match the max-width of the image */
-            }
-
-            #image-switcher {
-                max-width: 500px;
-                height: auto;
-            }
-
-            .arrow-button {
-                background-color: #f8f8f8;
-                border: none;
-                cursor: pointer;
-                padding: 10px;
-                border-radius: 15px; /* make the buttons rounded rectangles */
-                margin: 10px;
-                font-size: 18px;
-                width: calc(50% - 20px); /* make the buttons fill up the entire width of the image */
-                text-align: center; /* center the text within the buttons */
-            }
-        </style>
-    </head>
-    <body>
-        <div id="image-container">
-            <div id="button-container">
-                <button id="prev-button" class="arrow-button">Previous</button>
-                <button id="next-button" class="arrow-button">Next</button>
-            </div>
-            <img id="image-switcher" src="https://user-images.githubusercontent.com/42064608/241563410-970283c7-22ad-421e-b480-5d1b29b0c4a4.png" alt="image" />
-        </div>
-
-        <script>
-            let images = ['https://user-images.githubusercontent.com/42064608/241563410-970283c7-22ad-421e-b480-5d1b29b0c4a4.png', 'https://user-images.githubusercontent.com/42064608/241563412-37799912-a437-44ce-8474-a6e703c551ad.png', 'https://user-images.githubusercontent.com/42064608/241563416-500c75cb-3cb9-4492-984e-8519c6588ab4.png', 'https://user-images.githubusercontent.com/42064608/241563419-2c143ed9-24e7-4a01-b987-ddad72a4c043.png', 'https://user-images.githubusercontent.com/42064608/241563422-ef8dbfd4-07e9-416a-a52b-00a9be7799d6.png', 'https://user-images.githubusercontent.com/42064608/241563425-17dd864f-6018-4f54-955e-76b684b0ae6b.png', 'https://user-images.githubusercontent.com/42064608/241563431-e87d2b52-21d4-4941-9927-ed5fd15e069e.png', 'https://user-images.githubusercontent.com/42064608/241563435-a9f826b1-54be-407e-a6d0-648d2b2ce08d.png', 'https://user-images.githubusercontent.com/42064608/241563437-6b2d3dec-5d08-482f-b916-38a8d24e8d06.png']
-
-            let currentImageIndex = 0;
-
-            document.getElementById('next-button').addEventListener('click', function() {
-                currentImageIndex = (currentImageIndex + 1) % images.length;
-                document.getElementById('image-switcher').src = images[currentImageIndex];
-            });
-
-            document.getElementById('prev-button').addEventListener('click', function() {
-                currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-                document.getElementById('image-switcher').src = images[currentImageIndex];
-            });
-            document.getElementById('image-switcher').addEventListener('click', function() {
-            currentImageIndex = (currentImageIndex + 1) % images.length; // this line ensures we loop back to the first image when we've gone through all images
-            this.src = images[currentImageIndex];
-            });
-        </script>
-    </body>
-</html>
-``` -->
-
 ## Amplitude adjusted Fourier transform (AAFT)
 
 
