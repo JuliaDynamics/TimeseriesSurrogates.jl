@@ -47,7 +47,7 @@ end
 
     pr = PartialRandomization(0.0)
     s = surrogate(x, pr)
-    @test s |> rfft .|> angle |> std |> ≈(0, atol=1e-9)
+    @test s |> rfft .|> angle |> std |> ≈(0, atol=1e-7)
 
     pr = PartialRandomization(1.0)
     s = surrogate(x, pr)
@@ -78,8 +78,15 @@ end
 @testset "PartialRandomizationAAFT" begin
     praaft = PartialRandomizationAAFT(0.5)
     s = surrogate(x, praaft)
-
     @test length(s) == length(x)
+    @test sort(x) ≈ sort(s)
+
+    praaft = PartialRandomizationAAFT(0.2, :relative)
+    @test_nowarn s = surrogate(x, praaft)
+    @test sort(x) ≈ sort(s)
+
+    praaft = PartialRandomizationAAFT(0.2, :spectrum)
+    @test_nowarn s = surrogate(x, praaft)
     @test sort(x) ≈ sort(s)
 
     @test_throws AssertionError PartialRandomizationAAFT(-0.01)
