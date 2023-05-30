@@ -26,16 +26,16 @@ surroplot(ts, s)
 ```
 
 
- ## Partial randomization
+## Partial randomization
 
- ### Without rescaling
+### Without rescaling
 
- [`PartialRandomization`](@ref) surrogates are similar to random phase surrogates,
- but allow for tuning the "degree" of phase randomization. The algorithm introduced by [^Ortega1998] draws random phases as:
+[`PartialRandomization`](@ref) surrogates are similar to random phase surrogates,
+but allow for tuning the "degree" of phase randomization. The algorithm introduced by [^Ortega1998] draws random phases as:
 
- $$ \phi \to \alpha \xi , \quad \xi \sim \mathcal{U}(0, 2\pi),$$
+$$\phi \to \alpha \xi , \quad \xi \sim \mathcal{U}(0, 2\pi),$$
 
- where $\phi$ is a Fourier phase and $\mathcal{U}(0, 2\pi)$ is a uniform distribution.
+where $\phi$ is a Fourier phase and $\mathcal{U}(0, 2\pi)$ is a uniform distribution.
 Tuning the randomization parameter, $\alpha$, produces a set of time series with varying degrees of randomness in their Fourier phases. 
 
 ```@example MAIN
@@ -56,10 +56,9 @@ The [`PartialRandomization`](@ref) algorithm corresponds to assigning entirely n
 
 By contrast, the [`RelativePartialRandomization`](@ref) procedure draws phases as:
 
-$$ \phi \to \phi + \alpha \xi , \quad \xi \sim \mathcal{U}(0, 2\pi).$$
+$$\phi \to \phi + \alpha \xi, \quad \xi \sim \mathcal{U}(0, 2\pi).$$
 
-As such, phases are progressively corrupted by higher values of $\alpha$.
-Surrogates produced with this algorithm are identical to the original time series for $\alpha = 0$, equivalent to random noise for $\alpha = 1$, and retain some of the structure of the original time series when $0 < \alpha < 1$. This procedure is particularly useful for controlling the degree of chaoticity and non-linearity in surrogates of chaotic systems.
+With this algorithm, phases are progressively corrupted by higher values of $\alpha$: surrogates are identical to the original time series for $\alpha = 0$, equivalent to random noise for $\alpha = 1$, and retain some of the structure of the original time series when $0 < \alpha < 1$. This procedure is particularly useful for controlling the degree of chaoticity and non-linearity in surrogates of chaotic systems.
 
 ### Spectral partial randomization
 
