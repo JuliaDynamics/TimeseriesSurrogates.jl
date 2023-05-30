@@ -30,8 +30,8 @@ surroplot(ts, s)
 
 ### Without rescaling
 
-[`PartialRandomization`](@ref) surrogates are similar to random phase surrogates,
-but allow for tuning the "degree" of phase randomization. The algorithm introduced by [^Ortega1998] draws random phases as:
+[`PartialRandomization`](@ref) surrogates are similar to random phase surrogates, but allow for tuning the "degree" of phase randomization. 
+[`PartialRandomization`](@ref) use an algorithm introduced by [^Ortega1998], which draws random phases as:
 
 $$\phi \to \alpha \xi , \quad \xi \sim \mathcal{U}(0, 2\pi),$$
 
@@ -48,7 +48,7 @@ s = surrogate(ts, PartialRandomization(0.5))
 surroplot(ts, s)
 ```
 
-In addition to [`PartialRandomization`](@ref), we provide two other algorithms for producing partial randomization surrogates, outlined below.
+In addition to [`PartialRandomization`](@ref), we provide two other algorithms for producing partially randomized surrogates, outlined below.
 
 ### Relative partial randomization
 
@@ -62,8 +62,8 @@ With this algorithm, phases are progressively corrupted by higher values of $\al
 
 ### Spectral partial randomization
 
-Both of the above algorithms randomize phases for components at all frequencies to the same degree.
-To assess the contribution of different frequency components to the structure of a time series, the [`SpectralPartialRandomization`](@ref) algorithm only randomises phases above a frequency threshold.
+Both of the algorithms above randomize phases at all frequency components to the same degree.
+To assess the contribution of different frequency components to the structure of a time series, the [`SpectralPartialRandomization`](@ref) algorithm only randomizes phases above a frequency threshold.
 The threshold is chosen as the lowest frequency at which the power spectrum of the original time series drops below a fraction $1-\alpha$ of its maximum value (such that the power contained above the frequency threshold is a proportion $\alpha$ of the total power, excluding the zero frequency).
 
 Click through the figures below to compare the three algorithms for various values of $\alpha$.
