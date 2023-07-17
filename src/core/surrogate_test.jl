@@ -82,6 +82,7 @@ end
         for i in eachindex(test.vals)
             test.vals[i] = test.f(sgen())
         end
+    end
     return
 end
 
