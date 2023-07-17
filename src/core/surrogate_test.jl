@@ -1,7 +1,7 @@
 using Random: AbstractRNG
 import StatsAPI: HypothesisTest, pvalue
 export SurrogateTest, pvalue
-using Threads
+using Base.Threads
 
 """
     SurrogateTest(f::Function, x, method::Surrogate; kwargs...) → test
@@ -13,8 +13,6 @@ outputs a real number, and a method of how to generate surrogates.
 
 Once called with [`pvalue`](@ref), the `test` stores the real value `rval` and surrogate
 values `vals` of the discriminatory statistic in the fields `rval, vals` respectively.
-Additionally, looping over surrogate computations in [`pvalue`](@ref) is parallelized
-to the available threads (`Threads.nthreads()`).
 
 `SurrogateTest` automates the process described in the documentation page
 [Performing surrogate hypothesis tests](@ref).
@@ -23,9 +21,10 @@ to the available threads (`Threads.nthreads()`).
 
 ## Keywords
 
-- `rng = Random.default_rng()`: a random number generator. Due to internal details,
-  a `Xoshiro` generator is spawned from `rng` for each thread.
+- `rng = Random.default_rng()`: a random number generator.
 - `n::Int = 10_000`: how many surrogates to generate and compute `f` on.
+- `threaded = true`: Whether to parallelize looping over surrogate computations in
+  [`pvalue`](@ref) to the available threads (`Threads.nthreads()`).
 """
 struct SurrogateTest{F<:Function, S<:SurrogateGenerator, X<:Real} <: HypothesisTest
     f::F
@@ -34,27 +33,31 @@ struct SurrogateTest{F<:Function, S<:SurrogateGenerator, X<:Real} <: HypothesisT
     # for pretty printing or for keeping track of results
     rval::X
     vals::Vector{X}
-    isfilled::Base.RefValue{Bool}
+    threaded::Bool
 end
 
 
 function SurrogateTest(f::F, x, s::Surrogate;
-        rng = Random.default_rng(), n = 10_000
+        rng = Random.default_rng(), n = 10_000, threaded = true
     ) where {F<:Function}
 
-    rngs = rand(rng, Int, Threads.nthreads())
-    sgens = [surrogenerator(x, s, rng) for rng in rngs]
+    if threaded
+        seeds = rand(rng, Int, Threads.nthreads())
+        sgens = [surrogenerator(x, s, Random.Xoshiro(seed)) for seed in seeds]
+    else
+        sgens = [surrogenerator(x, s, rng)]
+    end
     rval = f(x)
     X = typeof(rval)
     vals = zeros(X, n)
-    return SurrogateTest{F, typeof(sgen), X}(f, sgens, rval, vals, Ref(false))
+    return SurrogateTest{F, typeof(sgen), X}(f, sgens, rval, vals, threaded)
 end
 
 # Pretty printing
 function Base.show(io::IO, ::MIME"text/plain", test::SurrogateTest)
     descriptors = [
         "discr. statistic" => nameof(test.f),
-        "surrogate method" => nameof(typeof(test.sgens[1].method)),
+        "surrogate method" => nameof(typeof(first(test.sgens).method)),
         "input timeseries" => summary(test.sgens[1].x),
         "# of surrogates" => length(test.vals),
     ]
@@ -68,14 +71,17 @@ function Base.show(io::IO, ::MIME"text/plain", test::SurrogateTest)
     return
 end
 
-
-function fill_surrogate_test!(test::SurrogateTest)
-    test.isfilled[] && return
-    Threads.@threads for i in eachindex(test.vals)
-        sgen = test.sgens[Threads.threadid()]
-        test.vals[i] = test.f(sgen())
-    end
-    test.isfilled[] = true
+@inbounds function fill_surrogate_test!(test::SurrogateTest)
+    if test.threaded
+        Threads.@threads for i in eachindex(test.vals)
+            sgen = test.sgens[Threads.threadid()]
+            test.vals[i] = test.f(sgen())
+        end
+    else
+        sgen = first(sgens)
+        for i in eachindex(test.vals)
+            test.vals[i] = test.f(sgen())
+        end
     return
 end
 
