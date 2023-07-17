@@ -1,5 +1,11 @@
 *Changelog is kept with respect to version 1.0. This software follows SymVer2.0*
 
+# 2.4
+- Calling `pvalue` with `SurrogateTest` is now parallelized over available threads.
+
+# 2.3
+- `pvalue` is now correctly overloaded from StatsAPI.jl.
+
 # 2.2
 - Implemented API for automating surrogate hypothesis tests using the new exported names `SurrogateTest` and `pvalue`.
 - New documentation section with an educative example of surrogate testing.
