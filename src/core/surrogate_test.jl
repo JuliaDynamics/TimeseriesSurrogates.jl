@@ -42,7 +42,7 @@ function SurrogateTest(f::F, x, s::Surrogate;
     ) where {F<:Function}
 
     if threaded
-        seeds = rand(rng, Int, Threads.nthreads())
+        seeds = rand(rng, 1:typemax(Int), Threads.nthreads())
         sgens = [surrogenerator(x, s, Random.Xoshiro(seed)) for seed in seeds]
     else
         sgens = [surrogenerator(x, s, rng)]
@@ -50,7 +50,7 @@ function SurrogateTest(f::F, x, s::Surrogate;
     rval = f(x)
     X = typeof(rval)
     vals = zeros(X, n)
-    return SurrogateTest{F, typeof(sgen), X}(f, sgens, rval, vals, threaded)
+    return SurrogateTest{F, typeof(first(sgens)), X}(f, sgens, rval, vals, threaded)
 end
 
 # Pretty printing
