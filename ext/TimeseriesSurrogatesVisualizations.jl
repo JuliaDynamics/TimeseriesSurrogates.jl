@@ -1,5 +1,6 @@
-using TimeseriesSurrogates.StatsBase
-using TimeseriesSurrogates.DSP
+module TimeseriesSurrogatesVisualizations
+
+using TimeseriesSurrogates, Makie
 
 function TimeseriesSurrogates.surroplot(x, s;
         cx = "#191E44", cs = ("#7143E0", 0.9), resolution = (500, 500),
@@ -14,7 +15,7 @@ function TimeseriesSurrogates.surroplot(x, s;
     Makie.lines!(ax1, t, s; color = cs)
 
     # Binned multitaper periodograms
-    p, psurr = DSP.mt_pgram(x), DSP.mt_pgram(s)
+    p, psurr = TimeseriesSurrogates.DSP.mt_pgram(x), TimeseriesSurrogates.DSP.mt_pgram(s)
     ax3 = Makie.Axis(fig[2,1]; yscale = log10)
     Makie.lines!(ax3, p.freq, p.power; color = cx)
     Makie.lines!(ax3, psurr.freq, psurr.power; color = cs)
@@ -37,4 +38,6 @@ end
 function TimeseriesSurrogates.surroplot(x, method::Surrogate; kwargs...)
     s = surrogate(x, method)
     return surroplot(x, s; kwargs...)
+end
+
 end
