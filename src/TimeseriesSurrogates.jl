@@ -15,7 +15,6 @@ using AbstractFFTs
 using DSP
 using Interpolations
 using Wavelets
-using Requires
 using StateSpaceSets
 export standardize
 
