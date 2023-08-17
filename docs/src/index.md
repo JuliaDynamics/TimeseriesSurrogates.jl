@@ -115,9 +115,8 @@ To load the function, do:
 using TimeseriesSurrogates
 using CairoMakie, Makie
 using TimeseriesSurrogates, CairoMakie, Makie
-ts = AR1() # create a realization of a random AR(1) process
-s = surrogate(ts, AAFT())
-fig = surroplot(ts, s)
+x = AR1() # create a realization of a random AR(1) process
+fig = surroplot(x, AAFT())
 save("surroplot.png", fig); # hide
 ```
 
