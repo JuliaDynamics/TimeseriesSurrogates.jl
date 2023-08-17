@@ -20,6 +20,12 @@ StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 StateSpaceSets = "40b095a5-5852-4c12-98c7-d43bf788e795"
 Wavelets = "29a6e085-ba6d-5f35-a997-948ac2efa89a"
 
+[weakdeps]
+Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
+
+[extensions]
+TimeseriesSurrogatesVisualizations = "Makie"
+
 [compat]
 AbstractFFTs = "1"
 DSP = "^0.5.2, 0.6, ^1, 0.7"
@@ -28,6 +34,7 @@ Distances = "0.10, 1"
 Distributions = "0.21, 1, 0.23, 0.24, 0.25"
 Interpolations = "^0.12, ^1, 0.13, 0.14"
 LombScargle = "1"
+Makie = "≥ 0.19"
 StatsAPI = "1.6"
 StatsBase = "^0.32.0, ^1, 0.33"
 StateSpaceSets = "1"
