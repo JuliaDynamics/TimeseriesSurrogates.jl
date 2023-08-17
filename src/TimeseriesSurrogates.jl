@@ -10,7 +10,6 @@ end TimeseriesSurrogates
 using Random
 using Distributions
 using Distances # Will be used by the LombScargle method
-using StatsBase
 using AbstractFFTs
 using DSP
 using Interpolations
