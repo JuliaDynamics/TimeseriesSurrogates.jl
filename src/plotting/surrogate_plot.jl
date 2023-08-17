@@ -12,4 +12,4 @@ surrogates, create a surrogate from `x` and plot it.
 - `resolution`: A tuple giving the resolution of the figure.
 """
 function surroplot end
-export surroplot end
+export surroplot
