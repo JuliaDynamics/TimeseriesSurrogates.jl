@@ -17,7 +17,6 @@ using Interpolations
 using Wavelets
 using Requires
 using StateSpaceSets
-standardize = StateSpaceSets.standardize
 export standardize
 
 include("core/api.jl")
