@@ -11,14 +11,14 @@ function TimeseriesSurrogates.surroplot(x, s;
     fig = Makie.Figure(resolution = resolution)
 
     # Time series
-    ax1, _ = Makie.lines(fig[1,1], t, x; color = cx)
-    Makie.lines!(ax1, t, s; color = cs)
+    ax1, _ = Makie.lines(fig[1,1], t, x; color = cx, linewidth = 2)
+    Makie.lines!(ax1, t, s; color = cs, linewidth = 2)
 
     # Binned multitaper periodograms
     p, psurr = TimeseriesSurrogates.DSP.mt_pgram(x), TimeseriesSurrogates.DSP.mt_pgram(s)
     ax3 = Makie.Axis(fig[2,1]; yscale = log10)
-    Makie.lines!(ax3, p.freq, p.power; color = cx)
-    Makie.lines!(ax3, psurr.freq, psurr.power; color = cs)
+    Makie.lines!(ax3, p.freq, p.power; color = cx, linewidth = 3)
+    Makie.lines!(ax3, psurr.freq, psurr.power; color = cs, linewidth = 3)
 
     # Histograms
     ax4 = Makie.Axis(fig[3,1])
