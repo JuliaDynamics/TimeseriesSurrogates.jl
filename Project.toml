@@ -18,6 +18,7 @@ Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 StatsAPI = "82ae8749-77ed-4fe6-ae5f-f523153014b0"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
 StateSpaceSets = "40b095a5-5852-4c12-98c7-d43bf788e795"
+UncertainData = "dcd9ba68-c27b-5cea-ae21-829cd07325bf"
 Wavelets = "29a6e085-ba6d-5f35-a997-948ac2efa89a"
 
 [weakdeps]
@@ -25,6 +26,7 @@ Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
 
 [extensions]
 TimeseriesSurrogatesVisualizations = "Makie"
+TimeseriesSurrogatesUncertainData = "UncertainData"
 
 [compat]
 AbstractFFTs = "1"
