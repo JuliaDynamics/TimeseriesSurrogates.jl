@@ -108,16 +108,15 @@ noiseradius
 
 TimeseriesSurrogates.jl has defined a simple function `surroplot(x, s)`.
 This comes into scope when `using Makie` (you also need a plotting backend).
+This functionality requires you to be using Julia 1.9 or later versions.
 
-To load the function, do:
+Example:
 
 ```@example MAIN
 using TimeseriesSurrogates
-using CairoMakie, Makie
-using TimeseriesSurrogates, CairoMakie, Makie
-ts = AR1() # create a realization of a random AR(1) process
-s = surrogate(ts, AAFT())
-fig = surroplot(ts, s)
+using CairoMakie
+x = AR1() # create a realization of a random AR(1) process
+fig = surroplot(x, AAFT())
 save("surroplot.png", fig); # hide
 ```
 
