@@ -35,9 +35,9 @@ function TimeseriesSurrogates.surroplot(x, s;
     return fig
 end
 
-function TimeseriesSurrogates.surroplot(x, method::Surrogate; kwargs...)
-    s = surrogate(x, method)
-    return surroplot(x, s; kwargs...)
-end
+# function TimeseriesSurrogates.surroplot(x, method::Surrogate; kwargs...)
+#     s = surrogate(x, method)
+#     return surroplot(x, s; kwargs...)
+# end
 
 end
