@@ -17,7 +17,7 @@
 
 ## API changes
 - `SurrogateGenerator`s now have a field `s` into which surrogates are generated, avoiding
-    unneccessary memory allocations. The
+    unnecessary memory allocations. The
 - The wavelet (`WLS`) surrogate constructor now uses keywords arguments instead of
     positional arguments for some parameters.
 
