@@ -111,7 +111,7 @@ Additionally, because TimeseriesSurrogates.jl provides many more methods not imp
 
 # Acknowledgements
 
-KAH acknowledges funding by the Trond Mohn Foundation (previously Bergen Research Foundation) (Bergen, Norway) and a fast-track initative grant from Bjerknes Centre for Climate Research (Bergen, Norway).
+KAH acknowledges funding by the Trond Mohn Foundation (previously Bergen Research Foundation) (Bergen, Norway) and a fast-track initiative grant from Bjerknes Centre for Climate Research (Bergen, Norway).
 GD acknowledges continuous support from Bjorn Stevens and the Max Planck Society.
 
 We thank Felix Cremer for the initial pull-request for the simulated annealing based (Lomb-Scargle) surrogate method.

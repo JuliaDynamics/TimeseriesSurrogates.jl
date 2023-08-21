@@ -106,7 +106,7 @@ function (sg::SurrogateGenerator{<:BlockShuffle})()
         ix_into = (npts_sampled + 1):(npts_sampled + 1 + l - 1)
         
         # Do the assignment in-place behind a code barrier. This about
-        # 3x as efficients as doing an elementwise assignment and 
+        # 3x as efficient as doing an elementwise assignment and 
         # doesn't allocate.
         assign_block_to_surrogate!(s, x_rotated, ix_into, ix_from)
 
