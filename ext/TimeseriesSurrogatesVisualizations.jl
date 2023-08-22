@@ -2,13 +2,13 @@ module TimeseriesSurrogatesVisualizations
 
 using TimeseriesSurrogates, Makie
 
-function TimeseriesSurrogates.surroplot(x, s;
-        cx = "#191E44", cs = ("#7143E0", 0.9), resolution = (500, 500),
-        nbins = 50,
+function TimeseriesSurrogates.surroplot!(fig, x, a;
+        cx = "#191E44", cs = ("#7143E0", 0.9), nbins = 50, kwargs...
     )
 
     t = 1:length(x)
-    fig = Makie.Figure(resolution = resolution)
+    # make surrogate timeseries
+    s = a isa Surrogate ? surrogate(x, method) : a
 
     # Time series
     ax1, _ = Makie.lines(fig[1,1], t, x; color = cx, linewidth = 2)
@@ -35,9 +35,10 @@ function TimeseriesSurrogates.surroplot(x, s;
     return fig
 end
 
-function TimeseriesSurrogates.surroplot(x, method::Surrogate; kwargs...)
-    s = surrogate(x, method)
-    return surroplot(x, s; kwargs...)
+function TimeseriesSurrogates.surroplot(x, s;
+    cx = "#191E44", cs = ("#7143E0", 0.9), nbins = 50, kwargs...)
+    fig = Makie.Figure(resolution = (500,500), kwargs...)
+    surroplot!(fig, x, s; cx, cs, nbins)
 end
 
 end
