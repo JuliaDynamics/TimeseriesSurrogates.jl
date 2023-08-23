@@ -12,7 +12,7 @@ struct RelativePartialRandomization{T} <: Surrogate
     α::T
 
     function RelativePartialRandomization(α::T=0.5) where T <: Real
-        @assert 0 <= α <= 1
+        0 <= α <= 1 || throw(ArgumentError("α must be between 0 and 1"))
         return new{T}(α)
     end
 end
@@ -59,7 +59,7 @@ struct RelativePartialRandomizationAAFT{T} <: Surrogate
     α::T
 
     function RelativePartialRandomizationAAFT(α::T=0.5) where T <: Real
-        @assert 0 <= α <= 1
+        0 <= α <= 1 || throw(ArgumentError("α must be between 0 and 1"))
         return new{T}(α)
     end
 end

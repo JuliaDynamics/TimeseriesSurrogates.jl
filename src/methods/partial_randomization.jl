@@ -8,13 +8,15 @@ phases are drawn from `[0, 2π]*α`, where `α ∈ [0, 1]`. The authors refers t
 "degree" of phase randomization, where `α = 0` means `0 %` randomization and
 `α = 1` means `100 %` randomization.
 
+See [`RelativePartialRandomization`](@ref) and [`SpectralPartialRandomization`](@ref) for alternative partial-randomization algorithms.
+
 [^Ortega1998]: Ortega, Guillermo J.; Louis, Enrique (1998). Smoothness Implies Determinism in Time Series: A Measure Based Approach. Physical Review Letters, 81(20), 4345–4348. doi:10.1103/PhysRevLett.81.4345
 """
 struct PartialRandomization{T} <: Surrogate
     α::T
 
     function PartialRandomization(α::T) where T <: Real
-        @assert 0 <= α <= 1
+        0 <= α <= 1 || throw(ArgumentError("α must be between 0 and 1"))
         return new{T}(α)
     end
 end
@@ -65,7 +67,7 @@ struct PartialRandomizationAAFT{T} <: Surrogate
     α::T
 
     function PartialRandomizationAAFT(α::T) where T <: Real
-        @assert 0 <= α <= 1
+        0 <= α <= 1 || throw(ArgumentError("α must be between 0 and 1"))
         return new{T}(α)
     end
 end

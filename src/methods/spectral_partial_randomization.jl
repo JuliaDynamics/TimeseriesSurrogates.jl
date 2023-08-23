@@ -13,7 +13,7 @@ struct SpectralPartialRandomization{T} <: Surrogate
     α::T
 
     function SpectralPartialRandomization(α::T=0.1) where T <: Real
-        @assert 0 <= α <= 1
+        0 <= α <= 1 || throw(ArgumentError("α must be between 0 and 1"))
         return new{T}(α)
     end
 end
@@ -65,7 +65,7 @@ struct SpectralPartialRandomizationAAFT{T} <: Surrogate
     α::T
 
     function SpectralPartialRandomizationAAFT(α::T=0.1) where T <: Real
-        @assert 0 <= α <= 1
+        0 <= α <= 1 || throw(ArgumentError("α must be between 0 and 1"))
         return new{T}(α)
     end
 end

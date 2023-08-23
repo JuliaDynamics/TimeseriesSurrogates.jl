@@ -22,6 +22,7 @@ include("core/surrogate_test.jl")
 
 include("utils/testsystems.jl")
 include("plotting/surrogate_plot.jl")
+include("plotting/surrogate_comparison.jl")
 
 # The different surrogate routines
 include("methods/randomshuffle.jl")

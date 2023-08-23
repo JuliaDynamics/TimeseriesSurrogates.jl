@@ -66,79 +66,17 @@ Both of the algorithms above randomize phases at all frequency components to the
 To assess the contribution of different frequency components to the structure of a time series, the [`SpectralPartialRandomization`](@ref) algorithm only randomizes phases above a frequency threshold.
 The threshold is chosen as the lowest frequency at which the power spectrum of the original time series drops below a fraction $1-\alpha$ of its maximum value (such that the power contained above the frequency threshold is a proportion $\alpha$ of the total power, excluding the zero frequency).
 
-Click through the figures below to compare the three algorithms for various values of $\alpha$.
-
-```@raw html
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Image Switcher</title>
-        <style>
-            #image-container {
-                display: flex;
-                flex-direction: column;
-                justify-content: flex-start;
-                align-items: left;
-                height: auto;
-                width: auto;
-            }
-
-            #button-container {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                width: 500px; /* match the max-width of the image */
-            }
-
-            #image-switcher {
-                max-width: 500px;
-                height: auto;
-            }
-
-            .arrow-button {
-                background-color: #f8f8f8;
-                border: none;
-                cursor: pointer;
-                padding: 10px;
-                border-radius: 15px; /* make the buttons rounded rectangles */
-                margin: 10px;
-                font-size: 18px;
-                width: calc(50% - 20px); /* make the buttons fill up the entire width of the image */
-                text-align: center; /* center the text within the buttons */
-            }
-        </style>
-    </head>
-    <body>
-        <div id="image-container">
-            <div id="button-container">
-                <button id="prev-button" class="arrow-button">Previous</button>
-                <button id="next-button" class="arrow-button">Next</button>
-            </div>
-            <img id="image-switcher" src="https://user-images.githubusercontent.com/42064608/241692822-01a6de9e-d78b-4d9c-af58-8a89c68b78fb.png" alt="image" />
-        </div>
-
-        <script>
-            let images = ['https://user-images.githubusercontent.com/42064608/241692822-01a6de9e-d78b-4d9c-af58-8a89c68b78fb.png', 'https://user-images.githubusercontent.com/42064608/241692835-98279739-a1ba-4536-aa4f-904944a82a12.png', 'https://user-images.githubusercontent.com/42064608/241692845-ce4d197a-9d40-47e3-99be-c5a86b96faf1.png', 'https://user-images.githubusercontent.com/42064608/241692854-d8428ef2-7924-41cc-b911-010eba9e5414.png', 'https://user-images.githubusercontent.com/42064608/241692861-e3d8430b-6c78-425f-ba42-bbe095586073.png', 'https://user-images.githubusercontent.com/42064608/241692869-672415c4-8558-4453-925d-6c0b4a49b754.png', 'https://user-images.githubusercontent.com/42064608/241692882-d26cebff-45ad-4ad8-8aa4-d1e47b992ea8.png', 'https://user-images.githubusercontent.com/42064608/241692891-8db57c85-eee8-442b-a2c6-e09e15f5a0a5.png', 'https://user-images.githubusercontent.com/42064608/241692895-12457e5b-b067-4713-bdf2-7244859692cd.png'];
-
-            let currentImageIndex = 0;
-
-            document.getElementById('next-button').addEventListener('click', function() {
-                currentImageIndex = (currentImageIndex + 1) % images.length;
-                document.getElementById('image-switcher').src = images[currentImageIndex];
-            });
-
-            document.getElementById('prev-button').addEventListener('click', function() {
-                currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-                document.getElementById('image-switcher').src = images[currentImageIndex];
-            });
-            document.getElementById('image-switcher').addEventListener('click', function() {
-            currentImageIndex = (currentImageIndex + 1) % images.length; // this line ensures we loop back to the first image when we've gone through all images
-            this.src = images[currentImageIndex];
-            });
-        </script>
-    </body>
-</html>
+See the figure below for a comparison of the three partial randomization algorithms:
+```@example MAIN
+x = open(joinpath(@__DIR__, "../../../src/plotting/lorenz_timeseries.csv"), "r") do f
+    f |> readlines .|> Meta.parse
+end
+A = [PartialRandomization, RelativePartialRandomization, SpectralPartialRandomization]
+params = [0.0, 0.05, 0.1]
+surrocompare(x, A, params)
+surroplot(x, x)
 ```
+
 
 ### With rescaling
 
