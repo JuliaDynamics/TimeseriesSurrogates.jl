@@ -42,8 +42,8 @@ end
     pr = PartialRandomization(0.2)
     s = surrogate(x, pr)
     @test length(s) == length(x)
-    @test_throws AssertionError PartialRandomization(-0.01)
-    @test_throws AssertionError PartialRandomization(1.01)
+    @test_throws ArgumentError PartialRandomization(-0.01)
+    @test_throws ArgumentError PartialRandomization(1.01)
 
     pr = PartialRandomization(0.0)
     s = surrogate(x, pr)
@@ -88,8 +88,8 @@ end
     @test length(s) == length(x)
     @test sort(x) ≈ sort(s)
 
-    @test_throws AssertionError PartialRandomizationAAFT(-0.01)
-    @test_throws AssertionError PartialRandomizationAAFT(1.01)
+    @test_throws ArgumentError PartialRandomizationAAFT(-0.01)
+    @test_throws ArgumentError PartialRandomizationAAFT(1.01)
 end
 
 @testset "RelativePartialRandomization" begin
