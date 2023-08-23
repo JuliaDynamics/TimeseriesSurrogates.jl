@@ -15,7 +15,7 @@ See [`RelativePartialRandomization`](@ref) and [`SpectralPartialRandomization`](
 struct PartialRandomization{T} <: Surrogate
     α::T
 
-    function PartialRandomization(α::T) where T <: Real
+    function PartialRandomization(α::T=0.5) where T <: Real
         0 <= α <= 1 || throw(ArgumentError("α must be between 0 and 1"))
         return new{T}(α)
     end
@@ -66,7 +66,7 @@ published in scientific literature.
 struct PartialRandomizationAAFT{T} <: Surrogate
     α::T
 
-    function PartialRandomizationAAFT(α::T) where T <: Real
+    function PartialRandomizationAAFT(α::T=0.5) where T <: Real
         0 <= α <= 1 || throw(ArgumentError("α must be between 0 and 1"))
         return new{T}(α)
     end
