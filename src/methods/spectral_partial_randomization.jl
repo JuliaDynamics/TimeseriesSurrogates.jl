@@ -1,7 +1,7 @@
 export SpectralPartialRandomization, SpectralPartialRandomizationAAFT
 
 """
-    SpectralSpectralPartialRandomization(α = 0.1)
+    SpectralSpectralPartialRandomization(α = 0.5)
 `SpectralPartialRandomization` surrogates are similar to [`PartialRandomization`](@ref)
 phase surrogates, but instead of drawing phases uniformly from `[0, 2π]`, phases of the
 highest frequency components responsible for a proportion `α` of power are replaced by
@@ -12,7 +12,7 @@ See the documentation for a detailed comparison between partial randomization al
 struct SpectralPartialRandomization{T} <: Surrogate
     α::T
 
-    function SpectralPartialRandomization(α::T=0.1) where T <: Real
+    function SpectralPartialRandomization(α::T=0.5) where T <: Real
         0 <= α <= 1 || throw(ArgumentError("α must be between 0 and 1"))
         return new{T}(α)
     end
@@ -64,7 +64,7 @@ surrogate has the same values as the original time series (analogous to the resc
 struct SpectralPartialRandomizationAAFT{T} <: Surrogate
     α::T
 
-    function SpectralPartialRandomizationAAFT(α::T=0.1) where T <: Real
+    function SpectralPartialRandomizationAAFT(α::T=0.5) where T <: Real
         0 <= α <= 1 || throw(ArgumentError("α must be between 0 and 1"))
         return new{T}(α)
     end
