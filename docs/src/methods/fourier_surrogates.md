@@ -68,13 +68,12 @@ The threshold is chosen as the lowest frequency at which the power spectrum of t
 
 See the figure below for a comparison of the three partial randomization algorithms:
 ```@example MAIN
-x = open(joinpath(@__DIR__, "../../../src/plotting/lorenz_timeseries.csv"), "r") do f
-    f |> readlines .|> Meta.parse
-end
-A = [PartialRandomization, RelativePartialRandomization, SpectralPartialRandomization]
-params = [0.0, 0.05, 0.1]
-surrocompare(x, A, params)
-surroplot(x, x)
+x = open(joinpath(@__DIR__, "../../../src/plotting/lorenz_timeseries.csv"), "r") do f # hide
+    f |> readlines .|> Meta.parse # hide
+end # hide
+A = [PartialRandomization, RelativePartialRandomization, SpectralPartialRandomization] # hide
+params = [0.0, 0.1, 0.25] # hide
+surrocompare(x, A, params) # hide
 ```
 
 
