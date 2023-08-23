@@ -4,7 +4,7 @@ using TimeseriesSurrogates, Makie
 
 function TimeseriesSurrogates.surroplot!(fig, x, a;
     cx = "#191E44", cs = ("#7143E0", 0.9), nbins = 50, kwargs...
-)
+    )
 
     t = 1:length(x)
     # make surrogate timeseries
