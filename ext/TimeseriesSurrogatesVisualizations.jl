@@ -35,6 +35,12 @@ function TimeseriesSurrogates.surroplot!(fig, x, a;
     return fig
 end
 
+function TimeseriesSurrogates.surroplot(x, s;
+    cx = "#191E44", cs = ("#7143E0", 0.9), nbins = 50, kwargs...)
+    fig = Makie.Figure(resolution = (500,500), kwargs...)
+    surroplot!(fig, x, s; cx, cs, nbins)
+end
+
 function TimeseriesSurrogates.surrocompare(x, A, params; color = ("#7143E0", 0.9), N=1000, linewidth=3, kwargs...)
     fig = Makie.Figure(resolution = (1080, 480), fontsize=22, kwargs...)
 
