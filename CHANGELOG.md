@@ -1,10 +1,5 @@
 *Changelog is kept with respect to version 1.0. This software follows SymVer2.0*
 
-# 2.5.1
-
-- Update package requirements for `StatsBase`; it contains some bug fixes required
-  in upstream packages.
-
 # 2.5.0
 
 - Moved to Julia extensions (requiring julia v1.9).
