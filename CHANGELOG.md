@@ -1,5 +1,9 @@
 *Changelog is kept with respect to version 1.0. This software follows SymVer2.0*
 
+# 2.6
+- Added surrogate methods: `RelativePartialRandomization`, `SpectralPartialRandomization`, `RelativePartialRandomizationAAFT`, and `SpectralPartialRandomizationAAFT`.
+- New function for plotting a comparison between surrogate methods: `surrocompare`. 
+
 # 2.5.0
 
 - Moved to Julia extensions (requiring julia v1.9).
