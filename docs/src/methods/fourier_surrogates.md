@@ -68,10 +68,20 @@ The threshold is chosen as the lowest frequency at which the power spectrum of t
 
 See the figure below for a comparison of the three partial randomization algorithms:
 ```@example MAIN
-x = open(joinpath(@__DIR__, "../../../src/plotting/lorenz_timeseries.csv"), "r") do f # hide
-    f |> readlines .|> Meta.parse # hide
+using DynamicalSystemsBase # hide
+@inbounds function lorenz_rule!(du, u, p, t) # hide
+    σ = p[1]; ρ = p[2]; β = p[3] # hide
+    du[1] = σ*(u[2]-u[1]) # hide
+    du[2] = u[1]*(ρ-u[3]) - u[2] # hide
+    du[3] = u[1]*u[2] - β*u[3] # hide
+    return nothing # hide
 end # hide
-x = TimeseriesSurrogates.DelayEmbeddings.standardize(x)
+u0 = [0, 10.0, 0] # hide
+p0 = [10, 28, 8/3] # hide 
+diffeq = (; abstol = 1e-9, reltol = 1e-9) # hide 
+lorenz = CoupledODEs(lorenz_rule!, u0, p0; diffeq) # hide
+x = trajectory(lorenz, 1000; Ttr=500, Δt=0.025)[1][:, 1] # hide
+x = TimeseriesSurrogates.DelayEmbeddings.standardize(x) # hide
 A = [PartialRandomization, RelativePartialRandomization, SpectralPartialRandomization] # hide
 params = [0.0, 0.1, 0.25] # hide
 surrocompare(x, A, params) # hide
