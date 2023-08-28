@@ -41,7 +41,7 @@ function TimeseriesSurrogates.surroplot(x, s;
     surroplot!(fig, x, s; cx, cs, nbins)
 end
 
-function TimeseriesSurrogates.surrocompare(x, A, params; color = ("#7143E0", 0.9), N=1000, linewidth=3, transient=100, kwargs...)
+function TimeseriesSurrogates.surrocompare(x, A, params; color = ("#7143E0", 0.9), N=1000, linewidth=3, transient=0, kwargs...)
     fig = Makie.Figure(resolution = (1080, 480), fontsize=22, kwargs...)
 
     for (j, a) in enumerate(A)
@@ -49,7 +49,7 @@ function TimeseriesSurrogates.surrocompare(x, A, params; color = ("#7143E0", 0.9
             ax = Makie.Axis(fig[i,j])
             hidedecorations!(ax)
             ax.ylabelvisible = true
-            lines!(ax, surrogate(x, a(p...))[transient:transient+N]; color, linewidth)
+            lines!(ax, surrogate(x, a(p...))[transient+1:transient+N]; color, linewidth)
             j == 1 && (ax.ylabel = "α = $(p)"; ax.ylabelfont = :bold)
             i == 1 && (ax.title = string(a))
         end

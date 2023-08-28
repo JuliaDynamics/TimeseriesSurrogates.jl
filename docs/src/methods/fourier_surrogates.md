@@ -84,7 +84,7 @@ x = trajectory(lorenz, 1000; Ttr=500, Δt=0.025)[1][:, 1] # hide
 x = TimeseriesSurrogates.DelayEmbeddings.standardize(x) # hide
 A = [PartialRandomization, RelativePartialRandomization, SpectralPartialRandomization] # hide
 params = [0.0, 0.1, 0.25] # hide
-surrocompare(x, A, params) # hide
+surrocompare(x, A, params; transient=1000) # hide
 ```
 
 
