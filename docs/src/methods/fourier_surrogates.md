@@ -77,8 +77,8 @@ using DynamicalSystemsBase # hide
     return nothing # hide
 end # hide
 u0 = [0, 10.0, 0] # hide
-p0 = [10, 28, 8/3] # hide 
-diffeq = (; abstol = 1e-9, reltol = 1e-9) # hide 
+p0 = [10, 28, 8/3] # hide
+diffeq = (; abstol = 1e-9, reltol = 1e-9) # hide
 lorenz = CoupledODEs(lorenz_rule!, u0, p0; diffeq) # hide
 x = trajectory(lorenz, 1000; Ttr=500, Δt=0.025)[1][:, 1] # hide
 x = TimeseriesSurrogates.DelayEmbeddings.standardize(x) # hide
