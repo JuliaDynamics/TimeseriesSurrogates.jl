@@ -1,5 +1,9 @@
 *Changelog is kept with respect to version 1.0. This software follows SymVer2.0*
 
+# 2.5.0
+
+- Moved to Julia extensions (requiring julia v1.9).
+
 # 2.4
 - Calling `pvalue` with `SurrogateTest` is now parallelized over available threads.
 
