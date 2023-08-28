@@ -41,10 +41,10 @@ function TimeseriesSurrogates.surroplot(x, s;
     surroplot!(fig, x, s; cx, cs, nbins)
 end
 
-function TimeseriesSurrogates.surrocompare(x, A, params; color = ("#7143E0", 0.9), N=1000, linewidth=3, transient=0, kwargs...)
+function TimeseriesSurrogates.surrocompare(x, surr_types, params; color = ("#7143E0", 0.9), N=1000, linewidth=3, transient=0, kwargs...)
     fig = Makie.Figure(resolution = (1080, 480), fontsize=22, kwargs...)
 
-    for (j, a) in enumerate(A)
+    for (j, a) in enumerate(surr_types)
         for (i, p) in enumerate(params)
             ax = Makie.Axis(fig[i,j])
             hidedecorations!(ax)

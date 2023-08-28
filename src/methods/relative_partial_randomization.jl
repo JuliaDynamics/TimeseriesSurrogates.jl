@@ -2,6 +2,7 @@ export RelativePartialRandomization, RelativePartialRandomizationAAFT
 
 """
     RelativePartialRandomization(α = 0.5)
+
 `RelativePartialRandomization` surrogates are similar to [`PartialRandomization`](@ref)
 phase surrogates, but instead of drawing phases uniformly from `[0, 2π]`, phases are drawn
 from `ϕ + [0, 2π]*α`, where `α ∈ [0, 1]` and `ϕ` is the original Fourier phase.
@@ -51,7 +52,7 @@ end
     RelativePartialRandomizationAAFT(α = 0.5)
 
 `RelativePartialRandomizationAAFT` surrogates are similar to
-`RelativePartialRandomization`](@ref) surrogates, but add a rescaling step, so that the
+[`RelativePartialRandomization`](@ref) surrogates, but add a rescaling step, so that the
 surrogate has the same values as the original time series (analogous to the rescaling done
 for [`AAFT`](@ref) surrogates).
 """

@@ -1,8 +1,8 @@
 """
-    surrocompare(x, surrogates, params; kwargs...) → fig
+    surrocompare(x, surr_types, params; kwargs...) → fig
 
 Plot the surrogates of a timeseries `x` using the Cartesian product of:
-- the algorithms in the iterable collection `surrogates` (`eltype(A) <: Surrogate`),
+- the algorithms in the iterable collection `surr_types` (`eltype(A) <: Surrogate`),
 - a list of parameters passed to each algorithm, in `params`.
 The elements of `params` may be numbers or collections of numbers.
 

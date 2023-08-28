@@ -2,6 +2,7 @@ export SpectralPartialRandomization, SpectralPartialRandomizationAAFT
 
 """
     SpectralSpectralPartialRandomization(α = 0.5)
+
 `SpectralPartialRandomization` surrogates are similar to [`PartialRandomization`](@ref)
 phase surrogates, but instead of drawing phases uniformly from `[0, 2π]`, phases of the
 highest frequency components responsible for a proportion `α` of power are replaced by
@@ -59,7 +60,8 @@ end
 
 `SpectralPartialRandomizationAAFT` surrogates are similar to
 [`PartialRandomization`](@ref) surrogates, but add a rescaling step, so that the
-surrogate has the same values as the original time series (analogous to the rescaling done for [`AAFT`](@ref) surrogates).
+surrogate has the same values as the original time series (analogous to the rescaling done
+for [`AAFT`](@ref) surrogates).
 """
 struct SpectralPartialRandomizationAAFT{T} <: Surrogate
     α::T
