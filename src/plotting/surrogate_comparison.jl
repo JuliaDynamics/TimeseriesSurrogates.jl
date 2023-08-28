@@ -4,6 +4,7 @@
 Plot the surrogates of a timeseries `x` using the Cartesian product of:
 - the algorithms in the iterable collection `surrogates` (`eltype(A) <: Surrogate`),
 - a list of parameters passed to each algorithm, in `params`.
+The elements of `params` may be numbers or collections of numbers.
 
 ## Keyword arguments
 - `color`: Colors surrogate time series.
