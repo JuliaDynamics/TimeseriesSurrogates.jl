@@ -1,7 +1,9 @@
 """
     surrocompare(x, A, params; kwargs...) → fig
 
-Plot the surrogates of a timeseries `x` using the algorithms in `A`, with parameters in `params`.
+Plot the surrogates of a timeseries `x` using the Cartesian product of:
+    - the algorithms in the iterable collection `A` (`eltype(A) <: Surrogate`),
+    - a list of parameters passed to each algorithm, in `params`.
 
 ## Keyword arguments
 - `color`: Colors surrogate time series.

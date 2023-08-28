@@ -49,7 +49,7 @@ function TimeseriesSurrogates.surrocompare(x, A, params; color = ("#7143E0", 0.9
             ax = Makie.Axis(fig[i,j])
             hidedecorations!(ax)
             ax.ylabelvisible = true
-            lines!(ax, surrogate(x, a(p))[end-N-100:end-100]; color, linewidth)
+            lines!(ax, surrogate(x, a(p...))[end-N-100:end-100]; color, linewidth)
             j == 1 && (ax.ylabel = "α = $(p)"; ax.ylabelfont = :bold)
             i == 1 && (ax.title = string(a))
         end
