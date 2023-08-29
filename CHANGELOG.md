@@ -2,7 +2,6 @@
 
 # 2.6
 - Added surrogate methods: `RelativePartialRandomization`, `SpectralPartialRandomization`, `RelativePartialRandomizationAAFT`, and `SpectralPartialRandomizationAAFT`.
-- New function for plotting a comparison between surrogate methods: `surrocompare`. 
 
 # 2.5
 - Moved to Julia extensions (requiring julia v1.9).

@@ -69,6 +69,23 @@ The threshold is chosen as the lowest frequency at which the power spectrum of t
 See the figure below for a comparison of the three partial randomization algorithms:
 ```@example MAIN
 using DynamicalSystemsBase # hide
+function surrocompare(x, surr_types, params; color = ("#7143E0", 0.9), N=1000, linewidth=3, # hide
+                    transient=0, kwargs...) # hide
+    fig = Makie.Figure(resolution = (1080, 480), fontsize=22, kwargs...) # hide
+    for (j, a) in enumerate(surr_types) # hide
+        for (i, p) in enumerate(params) # hide
+            ax = Makie.Axis(fig[i,j]) # hide
+            hidedecorations!(ax) # hide
+            ax.ylabelvisible = true # hide
+            lines!(ax, surrogate(x, a(p...))[transient+1:transient+N]; color, linewidth) # hide
+            j == 1 && (ax.ylabel = "α = $(p)"; ax.ylabelfont = :bold) # hide
+            i == 1 && (ax.title = string(a)) # hide
+        end # hide
+    end # hide
+    colgap!(fig.layout, 30) # hide
+    rowgap!(fig.layout, 30) # hide
+    return fig # hide
+end # hide
 @inbounds function lorenz_rule!(du, u, p, t) # hide
     σ = p[1]; ρ = p[2]; β = p[3] # hide
     du[1] = σ*(u[2]-u[1]) # hide
