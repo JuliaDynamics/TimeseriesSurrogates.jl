@@ -98,7 +98,6 @@ p0 = [10, 28, 8/3] # hide
 diffeq = (; abstol = 1e-9, reltol = 1e-9) # hide
 lorenz = CoupledODEs(lorenz_rule!, u0, p0; diffeq) # hide
 x = trajectory(lorenz, 1000; Ttr=500, Δt=0.025)[1][:, 1] # hide
-x = TimeseriesSurrogates.DelayEmbeddings.standardize(x) # hide
 surr_types = [PartialRandomization, RelativePartialRandomization, SpectralPartialRandomization] # hide
 params = [0.0, 0.1, 0.25] # hide
 surrocompare(x, surr_types, params; transient=1000) # hide
