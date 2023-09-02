@@ -4,7 +4,7 @@
 
 `TimeseriesSurrogates` is a Julia package for generating surrogate timeseries. It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a GitHub organization dedicated to creating high quality scientific software.
 
-If you are new to this method of surrogate timeseries, feel free to read the [Crash-course into timeseries surrogate tests](@ref) page.
+If you are new to this method of surrogate timeseries, feel free to read the [Crash-course in timeseries surrogate testing](@ref) page.
 
 Please note that timeseries surrogates should not be confused with [surrogate models](https://en.wikipedia.org/wiki/Surrogate_model), such as those provided by [Surrogates.jl](https://github.com/SciML/Surrogates.jl).
 
