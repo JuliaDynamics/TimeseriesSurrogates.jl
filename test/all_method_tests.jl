@@ -1,5 +1,8 @@
 using Test
 using TimeseriesSurrogates
+using TimeseriesSurrogates.AbstractFFTs
+using TimeseriesSurrogates.Statistics
+using TimeseriesSurrogates.Random
 ENV["GKSwstype"] = "100"
 
 N = 500
@@ -33,24 +36,72 @@ end
 end
 
 @testset "PartialRandomization" begin
+    Random.seed!(32)
+
+    # Absolute randomization, Ortega
     pr = PartialRandomization(0.2)
     s = surrogate(x, pr)
-
     @test length(s) == length(x)
+    @test_throws ArgumentError PartialRandomization(-0.01)
+    @test_throws ArgumentError PartialRandomization(1.01)
 
-    @test_throws AssertionError PartialRandomization(-0.01)
-    @test_throws AssertionError PartialRandomization(1.01)
+    pr = PartialRandomization(0.0)
+    s = surrogate(x, pr)
+    @test s |> rfft .|> angle |> std |> ≈(0, atol=1e-5)
+end
+
+@testset "RelativePartialRandomization" begin
+    Random.seed!(32)
+
+    pr = RelativePartialRandomization(1.0)
+    s = surrogate(x, pr)
+    @test s |> rfft .|> angle |> std |> ≈(π/sqrt(3), atol=1e-1)
+
+    # Relative randomization
+    pr = RelativePartialRandomization(0.2)
+    s = @test_nowarn surrogate(x, pr)
+    @test length(s) == length(x)
+    pr = RelativePartialRandomization(0.0)
+    s = @test_nowarn surrogate(x, pr)
+    @test s |> ≈(x, rtol=1e-2) # No randomization, so the surrogate should be close to the original
+    pr = RelativePartialRandomization(1.0)
+    s = surrogate(cos.(0:0.1:1000).^2, pr)
+    @test s |> rfft .|> angle |> std |> ≈(π/sqrt(3), atol=1e-1)
+end
+
+@testset "SpectralPartialRandomization" begin
+    Random.seed!(32)
+    # Randomization based on the spectrum
+    pr = SpectralPartialRandomization(0.2)
+    s = @test_nowarn surrogate(x, pr)
+    pr = SpectralPartialRandomization(0.0)
+    s = @test_nowarn surrogate(x, pr)
+    @test s |> ≈(x, rtol=1e-2)
+    pr = SpectralPartialRandomization(1.0)
+    s = surrogate(cos.(0:0.1:1000).^2, pr)
+    @test s |> rfft .|> angle |> std |> ≈(π/sqrt(3), atol=1e-1)
 end
 
 @testset "PartialRandomizationAAFT" begin
     praaft = PartialRandomizationAAFT(0.5)
     s = surrogate(x, praaft)
-
     @test length(s) == length(x)
     @test sort(x) ≈ sort(s)
 
-    @test_throws AssertionError PartialRandomizationAAFT(-0.01)
-    @test_throws AssertionError PartialRandomizationAAFT(1.01)
+    @test_throws ArgumentError PartialRandomizationAAFT(-0.01)
+    @test_throws ArgumentError PartialRandomizationAAFT(1.01)
+end
+
+@testset "RelativePartialRandomization" begin
+    praaft = RelativePartialRandomizationAAFT(0.2)
+    s = @test_nowarn surrogate(x, praaft)
+    @test sort(x) ≈ sort(s)
+end
+
+@testset "SpectralPartialRandomization" begin
+    praaft = SpectralPartialRandomizationAAFT(0.2)
+    s = @test_nowarn surrogate(x, praaft)
+    @test sort(x) ≈ sort(s)
 end
 
 @testset "RandomCascade" begin

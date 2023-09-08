@@ -62,6 +62,10 @@ RandomFourier
 TFTDRandomFourier
 PartialRandomization
 PartialRandomizationAAFT
+RelativePartialRandomization
+RelativePartialRandomizationAAFT
+SpectralPartialRandomization
+SpectralPartialRandomizationAAFT
 AAFT
 TAAFT
 IAAFT
