@@ -1,4 +1,5 @@
 export TFTS, TAAFT
+using StatsBase: sample, sample!
 
 """
     TFTS(fϵ::Real)
@@ -83,7 +84,7 @@ function (sg::SurrogateGenerator{<:TFTS})()
         𝓕new, 𝓕s, ϕs = getfield.(Ref(sg.init), init_fields)
 
     # Surrogate starts out as a random permutation of x
-    s .= x[StatsBase.sample(sg.rng, 1:L, L; replace = false)]
+    s .= x[sample(sg.rng, 1:L, L; replace = false)]
     𝓕s .= forward * s
     ϕs .= angle.(𝓕s)
 
@@ -103,7 +104,7 @@ function (sg::SurrogateGenerator{<:TFTS})()
 
     𝓕new .= rx .* exp.(ϕs .* 1im)
     s .= inverse * 𝓕new
-    
+
     return s
 end
 
@@ -135,7 +136,7 @@ function surrogenerator(x, method::TAAFT, rng = Random.default_rng())
         idxs = collect(1:length(x)),
         perm = zeros(Int, length(x)),
     )
-    
+
     s = similar(x)
     return SurrogateGenerator(method, x, s, init, rng)
 end
@@ -143,7 +144,7 @@ end
 function (taaft::SurrogateGenerator{<:TAAFT})()
     sg = taaft.init.gen
     x_sorted, idxs, perm = taaft.init.x_sorted, taaft.init.idxs, taaft.init.perm
-    
+
     x, s = sg.x, sg.s
     fϵ = sg.method.fϵ
     L = length(x)
@@ -157,7 +158,7 @@ function (taaft::SurrogateGenerator{<:TAAFT})()
         𝓕new, 𝓕s, ϕs = getfield.(Ref(sg.init), init_fields)
 
     # Surrogate starts out as a random permutation of x
-    StatsBase.sample!(sg.rng, idxs, perm, replace = false)
+    sample!(sg.rng, idxs, perm, replace = false)
     permuted_x_into_s!(s, x, perm)
     𝓕s .= forward * s
     ϕs .= angle.(𝓕s)
@@ -178,13 +179,13 @@ function (taaft::SurrogateGenerator{<:TAAFT})()
 
     𝓕new .= rx .* exp.(ϕs .* 1im)
     s .= inverse * 𝓕new
-    
+
     s[sortperm(s)] .= x_sorted
     return s
 end
 
 
-function permuted_x_into_s!(s, x, perm) 
+function permuted_x_into_s!(s, x, perm)
     k = 1
     for i in perm
         s[k] = x[i]
