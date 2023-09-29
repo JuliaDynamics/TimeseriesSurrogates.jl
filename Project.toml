@@ -2,7 +2,7 @@ name = "TimeseriesSurrogates"
 uuid = "c804724b-8c18-5caa-8579-6025a0767c70"
 authors = ["Kristian Agasøster Haaga <kahaaga@gmail.com>", "George Datseris"]
 repo = "https://github.com/JuliaDynamics/TimeseriesSurrogates.jl.git"
-version = "2.6.0"
+version = "2.6.1"
 
 [deps]
 AbstractFFTs = "621f4979-c628-5d54-868e-fcf4e3e8185c"
@@ -40,7 +40,7 @@ Makie = "≥ 0.19"
 StatsAPI = "1.6"
 StatsBase = "^0.32.0, ^1, 0.33, 0.34"
 StateSpaceSets = "1"
-Wavelets = "^0.8.0, 0.9, 1"
+Wavelets = "^0.8.0, 0.9, 0.10"
 julia = "^1.9"
 
 [extras]
