@@ -1,4 +1,4 @@
-using DelayEmbeddings, StatsBase, LinearAlgebra
+using DelayEmbeddings, LinearAlgebra
 export PseudoPeriodic, noiseradius
 
 """
