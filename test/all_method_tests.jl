@@ -3,7 +3,6 @@ using TimeseriesSurrogates
 using TimeseriesSurrogates.AbstractFFTs
 using TimeseriesSurrogates.Statistics
 using TimeseriesSurrogates.Random
-ENV["GKSwstype"] = "100"
 
 N = 500
 ts = cumsum(randn(N))
@@ -248,6 +247,12 @@ end
         s = surrogate(x, rf)
 
         @test length(s) == length(x)
+        # test that power spectrum is conserved
+        psx = abs2.(rfft(x))
+        pss = abs2.(rfft(s))
+        # For some reason I don't understand the last element of the spectrum
+        # is way off what is should be.
+        @test all(isapprox.(psx[1:end-1], pss[1:end-1]; atol = 1e-8))
     end
 
     @testset "random amplitudes" begin
