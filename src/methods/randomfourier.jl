@@ -1,4 +1,8 @@
+using Random
+using LinearAlgebra
+
 export RandomFourier, FT
+
 
 """
     RandomFourier(phases = true)
@@ -36,26 +40,27 @@ function surrogenerator(x::AbstractVector, rf::RandomFourier, rng = Random.defau
     r = abs.(𝓕)
     ϕ = angle.(𝓕)
     coeffs = zero(r)
-    
-    init = (inverse = inverse, m = m, coeffs = coeffs, n = n, r = r, 
+
+    init = (inverse = inverse, m = m, coeffs = coeffs, n = n, r = r,
             ϕ = ϕ, shuffled𝓕 = shuffled𝓕)
     return SurrogateGenerator(rf, x, s, init, rng)
 end
 
 function (sg::SurrogateGenerator{<:RandomFourier})()
-    inverse, m, coeffs, n, r, ϕ, shuffled𝓕 = 
-        getfield.(Ref(sg.init), 
+    inverse, m, coeffs, n, r, ϕ, shuffled𝓕 =
+        getfield.(Ref(sg.init),
         (:inverse, :m, :coeffs, :n, :r, :ϕ, :shuffled𝓕))
     s, rng, phases = sg.s, sg.rng, sg.method.phases
 
     if phases
-        coeffs .= rand(rng, Uniform(0, 2π), n)
+        rand!(rng, Uniform(0, 2π), coeffs)
         shuffled𝓕 .= r .* exp.(coeffs .* 1im)
     else
         coeffs .= r .* rand(rng, Uniform(0, 2π), n)
         shuffled𝓕 .= coeffs .* exp.(ϕ .* 1im)
     end
-    s .= inverse * shuffled𝓕 .+ m
+    mul!(s, inverse, shuffled𝓕)
+    s .+= m
     return s
 end
 
