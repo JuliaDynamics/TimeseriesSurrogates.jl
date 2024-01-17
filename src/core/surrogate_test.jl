@@ -1,6 +1,6 @@
 using Random: AbstractRNG
 import StatsAPI: HypothesisTest, pvalue
-export SurrogateTest, pvalue
+export SurrogateTest, pvalue, fill_surrogate_test!
 using Base.Threads
 
 """
@@ -11,8 +11,11 @@ The tests requires as input a function `f` that given a timeseries (like `x`) it
 outputs a real number, and a method of how to generate surrogates.
 `f` is the function that computes the discriminatory statistic.
 
-Once called with [`pvalue`](@ref), the `test` stores the real value `rval` and surrogate
+Once called with [`pvalue`](@ref), the `test` estimates and then
+stores the real value `rval` and surrogate
 values `vals` of the discriminatory statistic in the fields `rval, vals` respectively.
+Alternatively, you can use [`fill_surrogate_test!`](@ref) directly if you don't care about
+the p-value.
 
 `SurrogateTest` automates the process described in the documentation page
 [Performing surrogate hypothesis tests](@ref).
@@ -24,7 +27,7 @@ values `vals` of the discriminatory statistic in the fields `rval, vals` respect
 - `rng = Random.default_rng()`: a random number generator.
 - `n::Int = 10_000`: how many surrogates to generate and compute `f` on.
 - `threaded = true`: Whether to parallelize looping over surrogate computations in
-  [`pvalue`](@ref) to the available threads (`Threads.nthreads()`).
+   to the available threads (`Threads.nthreads()`).
 """
 struct SurrogateTest{F<:Function, S<:SurrogateGenerator, X<:Real} <: HypothesisTest
     f::F
@@ -71,6 +74,15 @@ function Base.show(io::IO, ::MIME"text/plain", test::SurrogateTest)
     return
 end
 
+"""
+    fill_surrogate_test!(test::SurrgateTest) → rval, vals
+
+Perform the computations foreseen by `test` and return
+the value of the discriminatory statistic for the real data `rval`
+and the distribution of values for the surrogates `vals`.
+
+This function is called by `pvalue`.
+"""
 @inbounds function fill_surrogate_test!(test::SurrogateTest)
     if test.threaded
         Threads.@threads for i in eachindex(test.vals)
@@ -83,7 +95,7 @@ end
             test.vals[i] = test.f(sgen())
         end
     end
-    return
+    return test.rval, vals
 end
 
 """
@@ -102,8 +114,7 @@ discriminatory statistic values. This is the case for statistics that quantify e
 For statistics that quantify autocorrelation, use `tail = :right` instead.
 """
 function pvalue(test::SurrogateTest; tail = :left)
-    fill_surrogate_test!(test)
-    (; rval, vals) = test
+    rval, vals = fill_surrogate_test!(test)
     if tail == :right
         p = count(v -> v ≥ rval, vals)
     elseif tail == :left

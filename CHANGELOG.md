@@ -1,5 +1,8 @@
 *Changelog is kept with respect to version 1.0. This software follows SymVer2.0*
 
+# 2.7
+The function `fill_surrogate_test!` that was already in the source code and used by `pvalue` is now exported, so that if the users just want a parallelized estimation of surrogate discriminatory statistic they can just use this function.
+
 # 2.6
 - Added surrogate methods: `RelativePartialRandomization`, `SpectralPartialRandomization`, `RelativePartialRandomizationAAFT`, and `SpectralPartialRandomizationAAFT`.
 
