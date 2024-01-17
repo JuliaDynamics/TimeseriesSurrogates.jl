@@ -83,15 +83,15 @@ and the distribution of values for the surrogates `vals`.
 
 This function is called by `pvalue`.
 """
-@inbounds function fill_surrogate_test!(test::SurrogateTest)
+function fill_surrogate_test!(test::SurrogateTest)
     if test.threaded
-        Threads.@threads for i in eachindex(test.vals)
+        @inbounds Threads.@threads for i in eachindex(test.vals)
             sgen = test.sgens[Threads.threadid()]
             test.vals[i] = test.f(sgen())
         end
     else
         sgen = first(sgens)
-        for i in eachindex(test.vals)
+        @inbounds for i in eachindex(test.vals)
             test.vals[i] = test.f(sgen())
         end
     end
