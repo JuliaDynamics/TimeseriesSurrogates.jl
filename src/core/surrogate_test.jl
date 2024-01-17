@@ -95,7 +95,7 @@ function fill_surrogate_test!(test::SurrogateTest)
             test.vals[i] = test.f(sgen())
         end
     end
-    return test.rval, vals
+    return test.rval, test.vals
 end
 
 """
