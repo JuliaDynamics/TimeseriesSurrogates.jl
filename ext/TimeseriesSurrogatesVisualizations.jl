@@ -7,8 +7,8 @@ function TimeseriesSurrogates.surroplot!(fig, x, a;
 )
 
     t = 1:length(x)
-    # make surrogate timeseries
-    s = a isa Surrogate ? surrogate(x, method) : a
+    # make surrogate timeseries (allow possibility for `a` to be a timeseries or method)
+    s = a isa Surrogate ? surrogate(x, a) : a
 
     # Time series
     ax1, _ = Makie.lines(fig[1, 1], t, x; color=cx, linewidth=2)
