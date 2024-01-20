@@ -30,13 +30,13 @@ surroplot(ts, s)
 
 ### Without rescaling
 
-[`PartialRandomization`](@ref) surrogates are similar to random phase surrogates, but allow for tuning the "degree" of phase randomization. 
-[`PartialRandomization`](@ref) use an algorithm introduced by [^Ortega1998], which draws random phases as:
+[`PartialRandomization`](@ref) surrogates are similar to random phase surrogates, but allow for tuning the "degree" of phase randomization.
+[`PartialRandomization`](@ref) use an algorithm introduced by Ortega et al., which draws random phases as:
 
 $$\phi \to \alpha \xi , \quad \xi \sim \mathcal{U}(0, 2\pi),$$
 
 where $\phi$ is a Fourier phase and $\mathcal{U}(0, 2\pi)$ is a uniform distribution.
-Tuning the randomization parameter, $\alpha$, produces a set of time series with varying degrees of randomness in their Fourier phases. 
+Tuning the randomization parameter, $\alpha$, produces a set of time series with varying degrees of randomness in their Fourier phases.
 
 ```@example MAIN
 using TimeseriesSurrogates, CairoMakie
