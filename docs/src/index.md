@@ -33,6 +33,7 @@ surrogenerator
 
 ```@docs
 SurrogateTest
+fill_surrogate_test!
 pvalue(::SurrogateTest)
 ```
 

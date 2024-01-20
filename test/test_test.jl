@@ -13,6 +13,10 @@ test = SurrogateTest(q, x, RandomFourier(); n = 1000, rng)
 
 # the AR1 process is much more correlated than its surrogates!
 p = pvalue(test)
-p > 0.9
+@test p > 0.9
 p = pvalue(test; tail = :right)
 @test p < 0.1
+
+test = SurrogateTest(q, x, RandomFourier(); n = 1000, rng)
+rval, vals = fill_surrogate_test!(test)
+@test minimum(vals) ≤ rval ≤ maximum(vals)
