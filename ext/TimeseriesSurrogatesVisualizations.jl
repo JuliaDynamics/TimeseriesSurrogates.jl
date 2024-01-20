@@ -37,7 +37,7 @@ end
 
 function TimeseriesSurrogates.surroplot(x, s;
     cx="#191E44", cs=("#7143E0", 0.9), nbins=50, kwargs...)
-    fig = Makie.Figure(resolution=(500, 500), kwargs...)
+    fig = Makie.Figure(size=(500, 500), kwargs...)
     surroplot!(fig, x, s; cx, cs, nbins)
 end
 
