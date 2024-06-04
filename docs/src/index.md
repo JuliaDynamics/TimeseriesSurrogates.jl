@@ -97,7 +97,7 @@ RandomCascade
 
 ### Other
 
-```@doc
+```@docs
 AutoRegressive
 ShuffleDimensions
 IrregularLombScargle
