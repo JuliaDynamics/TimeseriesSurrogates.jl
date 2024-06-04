@@ -10,12 +10,12 @@ This function uses the simulated annealing algorithm[^SchmitzSchreiber1999] to m
 ```@example MAIN
 using TimeseriesSurrogates, CairoMakie, Random
 
-# Example data: random AR1 process with a time axis with unevenly 
+# Example data: random AR1 process with a time axis with unevenly
 # spaced time steps
 rng = Random.MersenneTwister(1234)
 x = AR1(n_steps = 300)
 N = length(x)
-t = (1:N) - rand(N) 
+t = (1:N) - rand(N)
 
 # Use simulated annealing based on convergence of Lomb-Scargle periodograms
 # The time series is relatively long, so set tolerance a bit higher than default.

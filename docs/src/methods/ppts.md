@@ -18,7 +18,7 @@ method = PseudoPeriodicTwin(d, τ, δ, ρ)
 surr_orbit = surrogate(x, method)
 
 # Get scalar surrogate time series from first and second column.
-s1, s2 = columns(surr_orbit)
+s1, s2 = surr_orbit[:, 1], surr_orbit[:, 2]
 
 # Scalar time series versus surrogate time series
 fig = Figure()

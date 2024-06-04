@@ -33,6 +33,7 @@ surrogenerator
 
 ```@docs
 SurrogateTest
+fill_surrogate_test!
 pvalue(::SurrogateTest)
 ```
 
@@ -96,7 +97,7 @@ RandomCascade
 
 ### Other
 
-```@doc
+```@docs
 AutoRegressive
 ShuffleDimensions
 IrregularLombScargle
