@@ -9,7 +9,7 @@
 
 A Julia package for generating timeseries surrogates.
 TimeseriesSurrogates.jl is the fastest and most featureful open source code for generating timeseries surrogates.
-It can be used as a standalone package, or as part of other projects in JuliaDynamics such as DynamicalSystems.jl or CausalityTools.jl.
+It can be used as a standalone package, or as part of other projects in JuliaDynamics such as DynamicalSystems.jl or Associations.jl.
 
 To install it, run `import Pkg; Pkg.add("TimeseriesSurrogates")`.
 
