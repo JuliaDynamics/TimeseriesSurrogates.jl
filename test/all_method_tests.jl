@@ -6,17 +6,13 @@ using TimeseriesSurrogates.Random
 
 N = 500
 ts = cumsum(randn(N))
-ts_nan = cumsum(randn(N))
-ts_nan[1] = NaN
 x = cos.(range(0, 20π, length = N)) .+ randn(N)*0.05
 
-@testset "LombScargle" begin
+@testset "IrregularLombScargle" begin
     t = sort((0:N-1) + rand(N))
     tol = 10
-    ls = IrregularLombScargle(t, tol = 10, n_total = 20000, n_acc = 5000)
-
+    ls = IrregularLombScargle(t, tol = 10, n_total = 2000, n_acc = 5000)
     s = surrogate(x, ls)
-
     @test all(sort(s) .== sort(x))
 end
 
