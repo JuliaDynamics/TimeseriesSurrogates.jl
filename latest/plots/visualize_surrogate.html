@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Visualising surrogate realizations and creating gifs · TimeseriesSurrogates.jl</title><link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" type="text/css"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link href="../assets/documenter.css" rel="stylesheet" type="text/css"/></head><body><nav class="toc"><h1>TimeseriesSurrogates.jl</h1><select id="version-selector" onChange="window.location.href=this.value" style="visibility: hidden"></select><form class="search" id="search-form" action="../search.html"><input id="search-query" name="q" type="text" placeholder="Search docs"/></form><ul><li><a class="toctext" href="../index.html">Overview</a></li><li><a class="toctext" href="../man/whatisasurrogate.html">What is a surrogate?</a></li><li><span class="toctext">Surrogate algorithms</span><ul><li><a class="toctext" href="../constrained/randomshuffle.html">Random shuffle (RS)</a></li><li><a class="toctext" href="../constrained/fourier_surrogates.html">Fourier transform (FT)</a></li><li><a class="toctext" href="../constrained/amplitude_adjusted.html">Amplitude adjusted Fourier (AAFT)</a></li></ul></li><li class="current"><a class="toctext" href="visualize_surrogate.html">Visualising surrogate realizations and creating gifs</a><ul class="internal"><li><a class="toctext" href="#Autocorrelation-/-periodogram-panels-1">Autocorrelation / periodogram panels</a></li><li><a class="toctext" href="#Animate-panels-(and-export-to-.gif)-1">Animate panels (and export to .gif)</a></li><li><a class="toctext" href="#Plot/animation/gif-docs-1">Plot/animation/gif docs</a></li></ul></li><li><a class="toctext" href="../man/exampleprocesses.html">Example systems</a></li></ul></nav><article id="docs"><header><nav><ul><li><a href="visualize_surrogate.html">Visualising surrogate realizations and creating gifs</a></li></ul><a class="edit-page" href="https://github.com/kahaaga/TimeseriesSurrogates.jl/blob/master/docs/src/plots/visualize_surrogate.md"><span class="fa"></span> Edit on GitHub</a></nav><hr/><div id="topbar"><span>Visualising surrogate realizations and creating gifs</span><a class="fa fa-bars" href="#"></a></div></header><h1><a class="nav-anchor" id="Visualizing-surrogates-1" href="#Visualizing-surrogates-1">Visualizing surrogates</a></h1><h2><a class="nav-anchor" id="Autocorrelation-/-periodogram-panels-1" href="#Autocorrelation-/-periodogram-panels-1">Autocorrelation / periodogram panels</a></h2><p>Visualizing a surrogate realization is easy.</p><p>Let&#39;s say we want to generate an IAAFT surrogate and visualize the time series and surrogate time series, together with the corresponding periodograms,  autocorrelation functions and histograms. This can be done as follows:</p><div><pre><code class="language-julia">using TimeseriesSurrogates
+ts = diff(rand(300))
+iaaft_plot(ts)</code></pre><?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="600" height="400" viewBox="0 0 600 400">
+<defs>
+  <clipPath id="clip0700">
+    <rect x="0" y="0" width="600" height="400"/>
+  </clipPath>
+</defs>
+<polygon clip-path="url(#clip0700)" points="
+0,400 600,400 600,0 0,0 
+  " fill="#ffffff" fill-opacity="1"/>
+<defs>
+  <clipPath id="clip0701">
+    <rect x="120" y="0" width="421" height="400"/>
+  </clipPath>
+</defs>
+<polygon clip-path="url(#clip0700)" points="
+69.8146,69.7826 580.315,69.7826 580.315,11.811 69.8146,11.811 
+  " fill="#ffffff" fill-opacity="1"/>
+<defs>
+  <clipPath id="clip0702">
+    <rect x="69" y="11" width="512" height="59"/>
+  </clipPath>
+</defs>
+<polyline clip-path="url(#clip0702)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  82.6466,69.7826 82.6466,11.811 
+  "/>
+<polyline clip-path="url(#clip0702)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  244.259,69.7826 244.259,11.811 
+  "/>
+<polyline clip-path="url(#clip0702)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  405.871,69.7826 405.871,11.811 
+  "/>
+<polyline clip-path="url(#clip0702)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  567.483,69.7826 567.483,11.811 
+  "/>
+<polyline clip-path="url(#clip0702)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,63.0543 580.315,63.0543 
+  "/>
+<polyline clip-path="url(#clip0702)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,55.7301 580.315,55.7301 
+  "/>
+<polyline clip-path="url(#clip0702)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,48.4059 580.315,48.4059 
+  "/>
+<polyline clip-path="url(#clip0702)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,41.0817 580.315,41.0817 
+  "/>
+<polyline clip-path="url(#clip0702)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,33.7575 580.315,33.7575 
+  "/>
+<polyline clip-path="url(#clip0702)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,26.4334 580.315,26.4334 
+  "/>
+<polyline clip-path="url(#clip0702)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,19.1092 580.315,19.1092 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,69.7826 580.315,69.7826 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,69.7826 69.8146,11.811 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  82.6466,69.7826 82.6466,68.913 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  244.259,69.7826 244.259,68.913 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  405.871,69.7826 405.871,68.913 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  567.483,69.7826 567.483,68.913 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,63.0543 77.4722,63.0543 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,55.7301 77.4722,55.7301 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,48.4059 77.4722,48.4059 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,41.0817 77.4722,41.0817 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,33.7575 77.4722,33.7575 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,26.4334 77.4722,26.4334 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,19.1092 77.4722,19.1092 
+  "/>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 82.6466, 83.5826)" x="82.6466" y="83.5826">0</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 244.259, 83.5826)" x="244.259" y="83.5826">100</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 405.871, 83.5826)" x="405.871" y="83.5826">200</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 567.483, 83.5826)" x="567.483" y="83.5826">300</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 67.5543)" x="63.8146" y="67.5543">-0.75</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 60.2301)" x="63.8146" y="60.2301">-0.50</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 52.9059)" x="63.8146" y="52.9059">-0.25</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 45.5817)" x="63.8146" y="45.5817">0.00</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 38.2575)" x="63.8146" y="38.2575">0.25</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 30.9334)" x="63.8146" y="30.9334">0.50</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 23.6092)" x="63.8146" y="23.6092">0.75</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 325.065, 107.862)" x="325.065" y="107.862">Time step</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(-90, 10.8, 40.7968)" x="10.8" y="40.7968">Value</text>
+</g>
+<polyline clip-path="url(#clip0702)" style="stroke:#009af9; stroke-width:1; stroke-opacity:1; fill:none" points="
+  84.2628,20.4228 85.8789,47.913 87.495,52.6962 89.1111,41.1827 90.7273,22.2892 92.3434,64.9374 93.9595,17.7557 95.5756,67.995 97.1917,36.1173 98.8079,21.4235 
+  100.424,64.8 102.04,19.8892 103.656,45.8785 105.272,32.9062 106.888,58.3215 108.505,36.5827 110.121,29.8998 111.737,43.4367 113.353,55.7391 114.969,25.3811 
+  116.585,59.074 118.201,19.8614 119.817,49.2077 121.434,33.5557 123.05,39.485 124.666,66.1923 126.282,29.5474 127.898,31.0627 129.514,62.2017 131.13,33.2917 
+  132.746,30.0569 134.363,60.9861 135.979,31.0779 137.595,45.6712 139.211,36.9412 140.827,48.7511 142.443,36.2881 144.059,33.1584 145.675,55.2589 147.291,33.5208 
+  148.908,22.4175 150.524,52.8119 152.14,38.6879 153.756,38.4809 155.372,60.2632 156.988,24.8685 158.604,52.8777 160.22,22.9313 161.837,53.7805 163.453,47.8241 
+  165.069,38.1063 166.685,41.3236 168.301,21.9884 169.917,45.5165 171.533,38.8506 173.149,52.3161 174.766,48.2163 176.382,19.6544 177.998,45.6354 179.614,61.678 
+  181.23,41.5472 182.846,43.3516 184.462,18.6429 186.078,49.8384 187.695,34.6534 189.311,44.957 190.927,53.5433 192.543,43.3619 194.159,33.596 195.775,43.8754 
+  197.391,22.1324 199.007,59.4861 200.623,25.9367 202.24,55.9878 203.856,32.3767 205.472,44.3455 207.088,40.0409 208.704,35.921 210.32,33.5228 211.936,66.925 
+  213.552,13.4517 215.169,62.8103 216.785,31.7221 218.401,48.7382 220.017,32.315 221.633,45.2377 223.249,49.5561 224.865,27.0801 226.481,53.6651 228.098,46.4501 
+  229.714,37.0372 231.33,25.5717 232.946,53.0995 234.562,40.0544 236.178,29.2763 237.794,39.1619 239.41,50.4267 241.027,29.4538 242.643,51.358 244.259,43.7826 
+  245.875,47.9503 247.491,46.3437 249.107,31.6758 250.723,21.9395 252.339,57.5986 253.955,31.2158 255.572,46.0697 257.188,31.8011 258.804,65.0915 260.42,36.6542 
+  262.036,47.4364 263.652,14.7418 265.268,67.2536 266.884,28.3093 268.501,52.2463 270.117,42.7297 271.733,21.3081 273.349,59.8388 274.965,14.3879 276.581,64.3296 
+  278.197,31.7781 279.813,28.3109 281.43,49.4193 283.046,49.0742 284.662,42.7983 286.278,25.5889 287.894,48.862 289.51,42.6866 291.126,30.6678 292.742,42.6338 
+  294.359,39.846 295.975,53.2779 297.591,27.3674 299.207,67.314 300.823,35.7785 302.439,41.4096 304.055,39.4737 305.671,27.5062 307.287,59.9181 308.904,17.2912 
+  310.52,51.8936 312.136,55.6398 313.752,39.0988 315.368,40.4014 316.984,19.5874 318.6,57.46 320.216,41.3686 321.833,24.4224 323.449,38.2184 325.065,51.8821 
+  326.681,32.4942 328.297,47.5424 329.913,40.8829 331.529,58.5295 333.145,21.2531 334.762,58.498 336.378,24.4141 337.994,37.1973 339.61,38.7359 341.226,43.0188 
+  342.842,46.5724 344.458,44.0451 346.074,43.1909 347.69,32.3471 349.307,63.3363 350.923,19.4228 352.539,56.7277 354.155,24.845 355.771,35.1932 357.387,68.1419 
+  359.003,22.968 360.619,59.6161 362.236,37.0807 363.852,45.1406 365.468,39.8576 367.084,29.4704 368.7,39.0869 370.316,49.1649 371.932,43.414 373.548,37.1329 
+  375.165,38.2497 376.781,52.8323 378.397,33.1004 380.013,44.5224 381.629,43.7489 383.245,21.0283 384.861,62.512 386.477,38.6846 388.094,24.8775 389.71,31.7206 
+  391.326,44.8713 392.942,37.2373 394.558,47.0611 396.174,62.6061 397.79,19.9691 399.406,61.9511 401.022,23.6606 402.639,48.3214 404.255,52.5351 405.871,38.9375 
+  407.487,22.0673 409.103,50.7044 410.719,47.5756 412.335,36.1844 413.951,45.2532 415.568,41.0436 417.184,41.7817 418.8,35.8506 420.416,43.3447 422.032,20.5303 
+  423.648,53.3181 425.264,46.9152 426.88,36.1001 428.497,35.1632 430.113,45.5198 431.729,52.4442 433.345,23.0676 434.961,40.6435 436.577,62.5546 438.193,38.764 
+  439.809,34.9215 441.426,26.643 443.042,42.1349 444.658,52.6995 446.274,53.3891 447.89,21.9963 449.506,46.6166 451.122,42.0361 452.738,42.5784 454.354,24.7233 
+  455.971,49.393 457.587,39.1747 459.203,39.9188 460.819,42.0422 462.435,62.877 464.051,25.1904 465.667,50.0811 467.283,47.7777 468.9,26.9341 470.516,44.2789 
+  472.132,43.1117 473.748,23.0357 475.364,41.6682 476.98,41.5333 478.596,42.904 480.212,53.9926 481.829,32.1186 483.445,53.6301 485.061,30.7032 486.677,37.8753 
+  488.293,47.4497 489.909,40.1058 491.525,51.2127 493.141,37.232 494.758,43.0461 496.374,28.532 497.99,36.2891 499.606,61.9473 501.222,30.9515 502.838,28.7826 
+  504.454,44.7801 506.07,37.5429 507.686,54.9392 509.303,29.7879 510.919,53.3272 512.535,52.3614 514.151,36.1366 515.767,46.5573 517.383,27.1946 518.999,47.4271 
+  520.615,24.4671 522.232,49.4604 523.848,53.6585 525.464,16.9773 527.08,63.7592 528.696,36.9485 530.312,25.8742 531.928,59.4825 533.544,42.3062 535.161,36.5432 
+  536.777,31.724 538.393,52.39 540.009,23.7671 541.625,65.1247 543.241,37.0426 544.857,35.6586 546.473,29.2002 548.09,44.3457 549.706,53.6108 551.322,41.6139 
+  552.938,34.6197 554.554,43.7816 556.17,37.8933 557.786,36.7541 559.402,38.5587 561.018,36.9778 562.635,41.8179 564.251,50.3877 565.867,27.2605 
+  "/>
+<polyline clip-path="url(#clip0702)" style="stroke:#e26f46; stroke-width:1; stroke-opacity:1; fill:none" points="
+  84.2628,40.8829 85.8789,24.845 87.495,53.6651 89.1111,42.0361 90.7273,50.3877 92.3434,21.2531 93.9595,48.862 95.5756,36.1173 97.1917,49.0742 98.8079,38.2497 
+  100.424,36.5827 102.04,55.7391 103.656,21.4235 105.272,27.1946 106.888,47.4364 108.505,64.8 110.121,28.7826 111.737,53.6301 113.353,50.7044 114.969,39.0988 
+  116.585,19.8892 118.201,44.0451 119.817,47.4497 121.434,40.4014 123.05,37.5429 124.666,40.0544 126.282,36.5432 127.898,57.5986 129.514,38.1063 131.13,53.6108 
+  132.746,19.6544 134.363,38.5587 135.979,51.8821 137.595,29.7879 139.211,67.2536 140.827,27.5062 142.443,25.5717 144.059,59.9181 145.675,21.3081 147.291,56.7277 
+  148.908,38.6846 150.524,50.0811 152.14,20.5303 153.756,42.904 155.372,46.0697 156.988,52.3161 158.604,22.4175 160.22,37.8933 161.837,36.9412 163.453,53.2779 
+  165.069,53.3891 166.685,28.3093 168.301,38.4809 169.917,44.2789 171.533,37.1329 173.149,38.7359 174.766,62.8103 176.382,16.9773 177.998,62.512 179.614,43.1117 
+  181.23,52.2463 182.846,24.4671 184.462,30.6678 186.078,49.8384 187.695,37.232 189.311,29.4538 190.927,44.8713 192.543,51.2127 194.159,51.358 195.775,38.8506 
+  197.391,31.7221 199.007,53.3272 200.623,18.6429 202.24,52.5351 203.856,37.8753 205.472,44.3457 207.088,47.7777 208.704,20.4228 210.32,43.8754 211.936,39.1747 
+  213.552,24.8685 215.169,67.314 216.785,45.5165 218.401,17.7557 220.017,62.2017 221.633,33.5208 223.249,59.4825 224.865,26.643 226.481,61.9473 228.098,29.5474 
+  229.714,28.3109 231.33,52.6962 232.946,44.957 234.562,24.7233 236.178,59.8388 237.794,26.9341 239.41,53.3181 241.027,37.2373 242.643,29.4704 244.259,58.5295 
+  245.875,23.0357 247.491,48.7511 249.107,52.8119 250.723,14.3879 252.339,55.6398 253.955,43.7826 255.572,33.5557 257.188,47.913 258.804,45.2377 260.42,52.39 
+  262.036,31.0779 263.652,37.0426 265.268,31.6758 266.884,53.0995 268.501,52.6995 270.117,39.485 271.733,19.5874 273.349,49.4604 274.965,35.7785 276.581,41.3236 
+  278.197,34.9215 279.813,37.0807 281.43,68.1419 283.046,19.9691 284.662,30.7032 286.278,48.2163 287.894,41.7817 289.51,47.9503 291.126,36.9485 292.742,25.8742 
+  294.359,53.6585 295.975,41.1827 297.591,58.498 299.207,13.4517 300.823,67.995 302.439,42.7297 304.055,19.4228 305.671,64.9374 307.287,32.9062 308.904,45.5198 
+  310.52,21.0283 312.136,66.925 313.752,31.7781 315.368,38.9375 316.984,39.0869 318.6,35.8506 320.216,43.3447 321.833,36.1844 323.449,46.5573 325.065,52.8323 
+  326.681,19.8614 328.297,63.7592 329.913,33.5228 331.529,42.6866 333.145,43.0188 334.762,41.8179 336.378,25.3811 337.994,47.4271 339.61,36.7541 341.226,58.3215 
+  342.842,22.9313 344.458,62.5546 346.074,28.532 347.69,47.0611 349.307,23.7671 350.923,59.6161 352.539,36.1366 354.155,32.3767 355.771,43.4367 357.387,35.6586 
+  359.003,61.678 360.619,23.6606 362.236,55.2589 363.852,34.6197 365.468,32.3471 367.084,57.46 368.7,25.1904 370.316,44.3455 371.932,46.6166 373.548,48.7382 
+  375.165,31.2158 376.781,33.1584 378.397,53.9926 380.013,22.968 381.629,49.393 383.245,33.596 384.861,41.4096 386.477,36.1001 388.094,51.8936 389.71,36.6542 
+  391.326,43.3619 392.942,43.1909 394.558,35.921 396.174,43.414 397.79,41.5472 399.406,43.7816 401.022,33.1004 402.639,36.2881 404.255,45.2532 405.871,35.1632 
+  407.487,49.1649 409.103,33.2917 410.719,53.5433 412.335,39.8576 413.951,47.8241 415.568,42.1349 417.184,36.2891 418.8,39.1619 420.416,62.877 422.032,14.7418 
+  423.648,39.9188 425.264,60.9861 426.88,24.8775 428.497,59.4861 430.113,24.4141 431.729,49.4193 433.345,41.6682 434.961,42.7983 436.577,31.7206 438.193,45.6354 
+  439.809,45.6712 441.426,29.8998 443.042,38.764 444.658,65.1247 446.274,37.0372 447.89,32.1186 449.506,40.0409 451.122,45.8785 452.738,25.9367 454.354,42.5784 
+  455.971,42.6338 457.587,24.4224 459.203,59.074 460.819,42.3062 462.435,31.724 464.051,61.9511 465.667,21.9963 467.283,54.9392 468.9,30.9515 470.516,47.5756 
+  472.132,30.0569 473.748,43.3516 475.364,49.2077 476.98,31.8011 478.596,66.1923 480.212,27.2605 481.829,40.6435 483.445,27.3674 485.061,65.0915 486.677,22.1324 
+  488.293,39.4737 489.909,22.2892 491.525,52.8777 493.141,43.0461 494.758,46.4501 496.374,41.0436 497.99,41.6139 499.606,55.9878 501.222,27.0801 502.838,25.5889 
+  504.454,41.5333 506.07,45.1406 507.686,63.3363 509.303,32.4942 510.919,34.6534 512.535,46.3437 514.151,22.0673 515.767,60.2632 517.383,23.0676 518.999,52.4442 
+  520.615,39.846 522.232,21.9395 523.848,52.3614 525.464,43.7489 527.08,44.7801 528.696,48.3214 530.312,40.1058 531.928,29.2763 533.544,41.3686 535.161,53.7805 
+  536.777,21.9884 538.393,38.2184 540.009,37.1973 541.625,38.6879 543.241,46.9152 544.857,46.5724 546.473,35.1932 548.09,49.5561 549.706,36.9778 551.322,47.5424 
+  552.938,31.0627 554.554,42.0422 556.17,29.2002 557.786,50.4267 559.402,32.315 561.018,44.5224 562.635,62.6061 564.251,17.2912 565.867,64.3296 
+  "/>
+<polygon clip-path="url(#clip0700)" points="
+69.8146,169.783 580.315,169.783 580.315,121.473 69.8146,121.473 
+  " fill="#ffffff" fill-opacity="1"/>
+<defs>
+  <clipPath id="clip0703">
+    <rect x="69" y="121" width="512" height="49"/>
+  </clipPath>
+</defs>
+<polyline clip-path="url(#clip0703)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  161.319,169.783 161.319,121.473 
+  "/>
+<polyline clip-path="url(#clip0703)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  257.64,169.783 257.64,121.473 
+  "/>
+<polyline clip-path="url(#clip0703)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  353.961,169.783 353.961,121.473 
+  "/>
+<polyline clip-path="url(#clip0703)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  450.282,169.783 450.282,121.473 
+  "/>
+<polyline clip-path="url(#clip0703)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  546.603,169.783 546.603,121.473 
+  "/>
+<polyline clip-path="url(#clip0703)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,161.087 580.315,161.087 
+  "/>
+<polyline clip-path="url(#clip0703)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,152.261 580.315,152.261 
+  "/>
+<polyline clip-path="url(#clip0703)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,143.435 580.315,143.435 
+  "/>
+<polyline clip-path="url(#clip0703)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,134.609 580.315,134.609 
+  "/>
+<polyline clip-path="url(#clip0703)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,125.782 580.315,125.782 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,169.783 580.315,169.783 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,169.783 69.8146,121.473 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  161.319,169.783 161.319,169.058 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  257.64,169.783 257.64,169.058 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  353.961,169.783 353.961,169.058 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  450.282,169.783 450.282,169.058 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  546.603,169.783 546.603,169.058 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,161.087 77.4722,161.087 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,152.261 77.4722,152.261 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,143.435 77.4722,143.435 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,134.609 77.4722,134.609 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,125.782 77.4722,125.782 
+  "/>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 161.319, 183.583)" x="161.319" y="183.583">5</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 257.64, 183.583)" x="257.64" y="183.583">10</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 353.961, 183.583)" x="353.961" y="183.583">15</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 450.282, 183.583)" x="450.282" y="183.583">20</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 546.603, 183.583)" x="546.603" y="183.583">25</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 165.587)" x="63.8146" y="165.587">-0.3</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 156.761)" x="63.8146" y="156.761">0.0</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 147.935)" x="63.8146" y="147.935">0.3</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 139.109)" x="63.8146" y="139.109">0.6</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 130.282)" x="63.8146" y="130.282">0.9</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 325.065, 207.862)" x="325.065" y="207.862">Lag</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(-90, 10.8, 145.628)" x="10.8" y="145.628">Autocorrelation</text>
+</g>
+<polyline clip-path="url(#clip0703)" style="stroke:#009af9; stroke-width:1; stroke-opacity:1; fill:none" points="
+  84.2628,122.84 103.527,168.415 122.791,149.603 142.055,152.405 161.319,153.992 180.584,149.941 199.848,155.36 219.112,150.215 238.376,152.625 257.64,153.815 
+  276.904,149.849 296.169,153.785 315.433,151.445 334.697,150.741 353.961,155.128 373.225,150.632 392.489,153.853 411.754,151.779 431.018,151.349 450.282,153.056 
+  469.546,152.082 488.81,151.072 508.074,153.714 527.339,151.116 546.603,152.643 565.867,154.088 
+  "/>
+<polyline clip-path="url(#clip0703)" style="stroke:#e26f46; stroke-width:1; stroke-opacity:1; fill:none" points="
+  84.2628,122.84 103.527,168.225 122.791,149.472 142.055,152.94 161.319,153.503 180.584,149.999 199.848,155.37 219.112,150.282 238.376,152.778 257.64,153.684 
+  276.904,149.713 296.169,154.02 315.433,151.749 334.697,149.586 353.961,155.886 373.225,150.615 392.489,154.127 411.754,151.024 431.018,152.042 450.282,152.85 
+  469.546,152.418 488.81,150.647 508.074,154.525 527.339,150.232 546.603,152.795 565.867,154.25 
+  "/>
+<polygon clip-path="url(#clip0700)" points="
+69.8146,269.783 580.315,269.783 580.315,221.473 69.8146,221.473 
+  " fill="#ffffff" fill-opacity="1"/>
+<defs>
+  <clipPath id="clip0704">
+    <rect x="69" y="221" width="512" height="49"/>
+  </clipPath>
+</defs>
+<polyline clip-path="url(#clip0704)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  84.2628,269.783 84.2628,221.473 
+  "/>
+<polyline clip-path="url(#clip0704)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  180.584,269.783 180.584,221.473 
+  "/>
+<polyline clip-path="url(#clip0704)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  276.904,269.783 276.904,221.473 
+  "/>
+<polyline clip-path="url(#clip0704)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  373.225,269.783 373.225,221.473 
+  "/>
+<polyline clip-path="url(#clip0704)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  469.546,269.783 469.546,221.473 
+  "/>
+<polyline clip-path="url(#clip0704)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  565.867,269.783 565.867,221.473 
+  "/>
+<polyline clip-path="url(#clip0704)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,268.428 580.315,268.428 
+  "/>
+<polyline clip-path="url(#clip0704)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,261.257 580.315,261.257 
+  "/>
+<polyline clip-path="url(#clip0704)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,254.087 580.315,254.087 
+  "/>
+<polyline clip-path="url(#clip0704)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,246.917 580.315,246.917 
+  "/>
+<polyline clip-path="url(#clip0704)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,239.747 580.315,239.747 
+  "/>
+<polyline clip-path="url(#clip0704)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,232.577 580.315,232.577 
+  "/>
+<polyline clip-path="url(#clip0704)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,225.407 580.315,225.407 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,269.783 580.315,269.783 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,269.783 69.8146,221.473 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  84.2628,269.783 84.2628,269.058 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  180.584,269.783 180.584,269.058 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  276.904,269.783 276.904,269.058 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  373.225,269.783 373.225,269.058 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  469.546,269.783 469.546,269.058 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  565.867,269.783 565.867,269.058 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,268.428 77.4722,268.428 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,261.257 77.4722,261.257 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,254.087 77.4722,254.087 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,246.917 77.4722,246.917 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,239.747 77.4722,239.747 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,232.577 77.4722,232.577 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,225.407 77.4722,225.407 
+  "/>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 84.2628, 283.583)" x="84.2628" y="283.583">0.0</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 180.584, 283.583)" x="180.584" y="283.583">0.1</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 276.904, 283.583)" x="276.904" y="283.583">0.2</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 373.225, 283.583)" x="373.225" y="283.583">0.3</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 469.546, 283.583)" x="469.546" y="283.583">0.4</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 565.867, 283.583)" x="565.867" y="283.583">0.5</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 272.928)" x="63.8146" y="272.928">0.0</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 265.757)" x="63.8146" y="265.757">0.2</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 258.587)" x="63.8146" y="258.587">0.4</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 251.417)" x="63.8146" y="251.417">0.6</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 244.247)" x="63.8146" y="244.247">0.8</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 237.077)" x="63.8146" y="237.077">1.0</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 229.907)" x="63.8146" y="229.907">1.2</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 325.065, 307.862)" x="325.065" y="307.862">Binned frequency</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(-90, 10.8, 245.628)" x="10.8" y="245.628">Power</text>
+</g>
+<polyline clip-path="url(#clip0704)" style="stroke:#009af9; stroke-width:1; stroke-opacity:1; fill:none" points="
+  84.2628,268.415 89.1275,268.396 93.9921,268.354 98.8568,268.3 103.722,268.222 108.586,268.092 113.451,268 118.316,267.875 123.18,267.844 128.045,267.631 
+  132.91,267.591 137.774,267.554 142.639,267.371 147.504,266.913 152.368,266.887 157.233,267.015 162.098,266.844 166.962,265.134 171.827,264.686 176.692,264.253 
+  181.557,263.727 186.421,263.084 191.286,265.354 196.151,264.931 201.015,265.445 205.88,265.726 210.745,266.23 215.609,266.084 220.474,265.199 225.339,264.401 
+  230.203,264.169 235.068,263.227 239.933,261.15 244.797,263.163 249.662,262.677 254.527,261.914 259.392,262.178 264.256,263.016 269.121,261.255 273.986,261.771 
+  278.85,263.727 283.715,262.126 288.58,261.585 293.444,262.509 298.309,260.387 303.174,257.946 308.038,258.538 312.903,258.433 317.768,258.827 322.632,259.214 
+  327.497,259.052 332.362,255.973 337.227,257.298 342.091,256.635 346.956,253.933 351.821,255.111 356.685,256.962 361.55,253.012 366.415,250.599 371.279,253.307 
+  376.144,252.202 381.009,250.67 385.873,254.537 390.738,254.752 395.603,253.319 400.467,250.695 405.332,252.853 410.197,251.867 415.062,253.454 419.926,253.686 
+  424.791,256.199 429.656,256.732 434.52,255.896 439.385,259.011 444.25,248.221 449.114,239.202 453.979,234.593 458.844,228.44 463.708,227.791 468.573,230.567 
+  473.438,239.021 478.302,235.443 483.167,229.1 488.032,228.159 492.897,238.477 497.761,236.275 502.626,246.128 507.491,248.777 512.355,245.363 517.22,238.936 
+  522.085,239.068 526.949,243.078 531.814,239.671 536.679,242.029 541.543,246.94 546.408,237.882 551.273,238.952 556.137,246.735 561.002,245.696 565.867,259.884 
+  
+  "/>
+<polyline clip-path="url(#clip0704)" style="stroke:#e26f46; stroke-width:1; stroke-opacity:1; fill:none" points="
+  84.2628,268.358 89.1275,268.264 93.9921,268.213 98.8568,268.152 103.722,268.131 108.586,267.981 113.451,267.909 118.316,267.768 123.18,267.807 128.045,267.623 
+  132.91,267.511 137.774,267.571 142.639,267.53 147.504,266.785 152.368,266.78 157.233,267.103 162.098,266.843 166.962,265.457 171.827,264.437 176.692,264.231 
+  181.557,263.921 186.421,264.463 191.286,265.7 196.151,265.139 201.015,265.466 205.88,265.825 210.745,266.086 215.609,266.548 220.474,265.659 225.339,264.452 
+  230.203,264.391 235.068,263.82 239.933,261.229 244.797,261.256 249.662,261.232 254.527,261.372 259.392,261.018 264.256,260.925 269.121,261.695 273.986,262.532 
+  278.85,263.363 283.715,262.558 288.58,261.791 293.444,260.947 298.309,258.736 303.174,256.692 308.038,254.354 312.903,256.703 317.768,256.249 322.632,258.189 
+  327.497,258.638 332.362,258.792 337.227,257.378 342.091,258.294 346.956,257.593 351.821,257.067 356.685,260.221 361.55,255.354 366.415,250.759 371.279,253.819 
+  376.144,252.242 381.009,245.542 385.873,252.955 390.738,252.982 395.603,253.946 400.467,253.5 405.332,252.445 410.197,253.299 415.062,254.573 419.926,253.576 
+  424.791,260.35 429.656,257.309 434.52,258.787 439.385,259.611 444.25,250.6 449.114,237.19 453.979,233.868 458.844,226.541 463.708,222.84 468.573,229.583 
+  473.438,238.381 478.302,232.26 483.167,232.158 488.032,231.798 492.897,237.174 497.761,236.333 502.626,248.701 507.491,245.475 512.355,248.96 517.22,245.681 
+  522.085,239.033 526.949,237.615 531.814,238.709 536.679,238.028 541.543,240.581 546.408,239.607 551.273,238.148 556.137,247.113 561.002,248.726 565.867,259.916 
+  
+  "/>
+<polygon clip-path="url(#clip0700)" points="
+69.8146,360.121 580.315,360.121 580.315,321.473 69.8146,321.473 
+  " fill="#ffffff" fill-opacity="1"/>
+<defs>
+  <clipPath id="clip0705">
+    <rect x="69" y="321" width="512" height="40"/>
+  </clipPath>
+</defs>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  97.8931,360.121 97.8931,321.473 
+  "/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  211.479,360.121 211.479,321.473 
+  "/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  325.065,360.121 325.065,321.473 
+  "/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  438.651,360.121 438.651,321.473 
+  "/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  552.237,360.121 552.237,321.473 
+  "/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,359.027 580.315,359.027 
+  "/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,352.516 580.315,352.516 
+  "/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,346.005 580.315,346.005 
+  "/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,339.495 580.315,339.495 
+  "/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,332.984 580.315,332.984 
+  "/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:0.5; stroke-opacity:0.1; fill:none" points="
+  69.8146,326.473 580.315,326.473 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,360.121 580.315,360.121 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,360.121 69.8146,321.473 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  97.8931,360.121 97.8931,359.541 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  211.479,360.121 211.479,359.541 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  325.065,360.121 325.065,359.541 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  438.651,360.121 438.651,359.541 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  552.237,360.121 552.237,359.541 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,359.027 77.4722,359.027 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,352.516 77.4722,352.516 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,346.005 77.4722,346.005 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,339.495 77.4722,339.495 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,332.984 77.4722,332.984 
+  "/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  69.8146,326.473 77.4722,326.473 
+  "/>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 97.8931, 373.921)" x="97.8931" y="373.921">-1.0</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 211.479, 373.921)" x="211.479" y="373.921">-0.5</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 325.065, 373.921)" x="325.065" y="373.921">0.0</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 438.651, 373.921)" x="438.651" y="373.921">0.5</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 552.237, 373.921)" x="552.237" y="373.921">1.0</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 363.527)" x="63.8146" y="363.527">0</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 357.016)" x="63.8146" y="357.016">10</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 350.505)" x="63.8146" y="350.505">20</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 343.995)" x="63.8146" y="343.995">30</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 337.484)" x="63.8146" y="337.484">40</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:end;" transform="rotate(0, 63.8146, 330.973)" x="63.8146" y="330.973">50</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(0, 325.065, 398.2)" x="325.065" y="398.2">Binned value</text>
+</g>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:12; text-anchor:middle;" transform="rotate(-90, 10.8, 340.797)" x="10.8" y="340.797">Frequency</text>
+</g>
+<polygon clip-path="url(#clip0705)" points="
+97.8931,352.516 97.8931,359.027 143.327,359.027 143.327,352.516 97.8931,352.516 97.8931,352.516 
+  " fill="#009af9" fill-opacity="1"/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  97.8931,352.516 97.8931,359.027 143.327,359.027 143.327,352.516 97.8931,352.516 
+  "/>
+<polygon clip-path="url(#clip0705)" points="
+143.327,346.005 143.327,359.027 188.762,359.027 188.762,346.005 143.327,346.005 143.327,346.005 
+  " fill="#009af9" fill-opacity="1"/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  143.327,346.005 143.327,359.027 188.762,359.027 188.762,346.005 143.327,346.005 
+  "/>
+<polygon clip-path="url(#clip0705)" points="
+188.762,342.099 188.762,359.027 234.196,359.027 234.196,342.099 188.762,342.099 188.762,342.099 
+  " fill="#009af9" fill-opacity="1"/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  188.762,342.099 188.762,359.027 234.196,359.027 234.196,342.099 188.762,342.099 
+  "/>
+<polygon clip-path="url(#clip0705)" points="
+234.196,333.635 234.196,359.027 279.63,359.027 279.63,333.635 234.196,333.635 234.196,333.635 
+  " fill="#009af9" fill-opacity="1"/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  234.196,333.635 234.196,359.027 279.63,359.027 279.63,333.635 234.196,333.635 
+  "/>
+<polygon clip-path="url(#clip0705)" points="
+279.63,322.567 279.63,359.027 325.065,359.027 325.065,322.567 279.63,322.567 279.63,322.567 
+  " fill="#009af9" fill-opacity="1"/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  279.63,322.567 279.63,359.027 325.065,359.027 325.065,322.567 279.63,322.567 
+  "/>
+<polygon clip-path="url(#clip0705)" points="
+325.065,323.869 325.065,359.027 370.499,359.027 370.499,323.869 325.065,323.869 325.065,323.869 
+  " fill="#009af9" fill-opacity="1"/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  325.065,323.869 325.065,359.027 370.499,359.027 370.499,323.869 325.065,323.869 
+  "/>
+<polygon clip-path="url(#clip0705)" points="
+370.499,335.588 370.499,359.027 415.933,359.027 415.933,335.588 370.499,335.588 370.499,335.588 
+  " fill="#009af9" fill-opacity="1"/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  370.499,335.588 370.499,359.027 415.933,359.027 415.933,335.588 370.499,335.588 
+  "/>
+<polygon clip-path="url(#clip0705)" points="
+415.933,340.797 415.933,359.027 461.368,359.027 461.368,340.797 415.933,340.797 415.933,340.797 
+  " fill="#009af9" fill-opacity="1"/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  415.933,340.797 415.933,359.027 461.368,359.027 461.368,340.797 415.933,340.797 
+  "/>
+<polygon clip-path="url(#clip0705)" points="
+461.368,342.75 461.368,359.027 506.802,359.027 506.802,342.75 461.368,342.75 461.368,342.75 
+  " fill="#009af9" fill-opacity="1"/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  461.368,342.75 461.368,359.027 506.802,359.027 506.802,342.75 461.368,342.75 
+  "/>
+<polygon clip-path="url(#clip0705)" points="
+506.802,355.771 506.802,359.027 552.237,359.027 552.237,355.771 506.802,355.771 506.802,355.771 
+  " fill="#009af9" fill-opacity="1"/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  506.802,355.771 506.802,359.027 552.237,359.027 552.237,355.771 506.802,355.771 
+  "/>
+<polygon clip-path="url(#clip0705)" points="
+97.8931,352.516 97.8931,359.027 143.327,359.027 143.327,352.516 97.8931,352.516 97.8931,352.516 
+  " fill="#e26f46" fill-opacity="1"/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  97.8931,352.516 97.8931,359.027 143.327,359.027 143.327,352.516 97.8931,352.516 
+  "/>
+<polygon clip-path="url(#clip0705)" points="
+143.327,346.005 143.327,359.027 188.762,359.027 188.762,346.005 143.327,346.005 143.327,346.005 
+  " fill="#e26f46" fill-opacity="1"/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  143.327,346.005 143.327,359.027 188.762,359.027 188.762,346.005 143.327,346.005 
+  "/>
+<polygon clip-path="url(#clip0705)" points="
+188.762,342.099 188.762,359.027 234.196,359.027 234.196,342.099 188.762,342.099 188.762,342.099 
+  " fill="#e26f46" fill-opacity="1"/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  188.762,342.099 188.762,359.027 234.196,359.027 234.196,342.099 188.762,342.099 
+  "/>
+<polygon clip-path="url(#clip0705)" points="
+234.196,333.635 234.196,359.027 279.63,359.027 279.63,333.635 234.196,333.635 234.196,333.635 
+  " fill="#e26f46" fill-opacity="1"/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  234.196,333.635 234.196,359.027 279.63,359.027 279.63,333.635 234.196,333.635 
+  "/>
+<polygon clip-path="url(#clip0705)" points="
+279.63,322.567 279.63,359.027 325.065,359.027 325.065,322.567 279.63,322.567 279.63,322.567 
+  " fill="#e26f46" fill-opacity="1"/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  279.63,322.567 279.63,359.027 325.065,359.027 325.065,322.567 279.63,322.567 
+  "/>
+<polygon clip-path="url(#clip0705)" points="
+325.065,323.869 325.065,359.027 370.499,359.027 370.499,323.869 325.065,323.869 325.065,323.869 
+  " fill="#e26f46" fill-opacity="1"/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  325.065,323.869 325.065,359.027 370.499,359.027 370.499,323.869 325.065,323.869 
+  "/>
+<polygon clip-path="url(#clip0705)" points="
+370.499,335.588 370.499,359.027 415.933,359.027 415.933,335.588 370.499,335.588 370.499,335.588 
+  " fill="#e26f46" fill-opacity="1"/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  370.499,335.588 370.499,359.027 415.933,359.027 415.933,335.588 370.499,335.588 
+  "/>
+<polygon clip-path="url(#clip0705)" points="
+415.933,340.797 415.933,359.027 461.368,359.027 461.368,340.797 415.933,340.797 415.933,340.797 
+  " fill="#e26f46" fill-opacity="1"/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  415.933,340.797 415.933,359.027 461.368,359.027 461.368,340.797 415.933,340.797 
+  "/>
+<polygon clip-path="url(#clip0705)" points="
+461.368,342.75 461.368,359.027 506.802,359.027 506.802,342.75 461.368,342.75 461.368,342.75 
+  " fill="#e26f46" fill-opacity="1"/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  461.368,342.75 461.368,359.027 506.802,359.027 506.802,342.75 461.368,342.75 
+  "/>
+<polygon clip-path="url(#clip0705)" points="
+506.802,355.771 506.802,359.027 552.237,359.027 552.237,355.771 506.802,355.771 506.802,355.771 
+  " fill="#e26f46" fill-opacity="1"/>
+<polyline clip-path="url(#clip0705)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  506.802,355.771 506.802,359.027 552.237,359.027 552.237,355.771 506.802,355.771 
+  "/>
+<polygon clip-path="url(#clip0700)" points="
+462.686,380.153 562.315,380.153 562.315,346.133 462.686,346.133 
+  " fill="#ffffff" fill-opacity="1"/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  462.686,380.153 562.315,380.153 562.315,346.133 462.686,346.133 462.686,380.153 
+  "/>
+<polygon clip-path="url(#clip0700)" points="
+468.686,362.009 504.686,362.009 504.686,352.937 468.686,352.937 468.686,362.009 
+  " fill="#009af9" fill-opacity="1"/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  468.686,362.009 504.686,362.009 504.686,352.937 468.686,352.937 468.686,362.009 
+  "/>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:8; text-anchor:start;" transform="rotate(0, 510.686, 360.473)" x="510.686" y="360.473">Original</text>
+</g>
+<polygon clip-path="url(#clip0700)" points="
+468.686,373.349 504.686,373.349 504.686,364.277 468.686,364.277 468.686,373.349 
+  " fill="#e26f46" fill-opacity="1"/>
+<polyline clip-path="url(#clip0700)" style="stroke:#000000; stroke-width:1; stroke-opacity:1; fill:none" points="
+  468.686,373.349 504.686,373.349 504.686,364.277 468.686,364.277 468.686,373.349 
+  "/>
+<g clip-path="url(#clip0700)">
+<text style="fill:#000000; fill-opacity:1; font-family:Arial,Helvetica Neue,Helvetica,sans-serif; font-size:8; text-anchor:start;" transform="rotate(0, 510.686, 371.813)" x="510.686" y="371.813">Surrogate</text>
+</g>
+</svg>
+</div><p>Here, the blue lines correspond to the original time series, while orange lines correspond to the surrogate time series. In this particular case, it seems that the IAAFT surrogate well reproduced the autocorrelation of the original time series.</p><p>All surrogate functions come have a complementary functions that also plots a panel showing the autocorrelation function and periodogram of the time series and its surrogate realization:</p><ul><li><p><code>randomphases</code> has <code>randomphases_plot</code></p></li><li><p><code>randomamplitudes</code> has <code>randomamplitudes_plot</code></p></li><li><p><code>aaft</code> has <code>aaft_plot</code></p></li><li><p><code>iaaft</code> has <code>iaaft_plot</code></p></li></ul><h2><a class="nav-anchor" id="Animate-panels-(and-export-to-.gif)-1" href="#Animate-panels-(and-export-to-.gif)-1">Animate panels (and export to .gif)</a></h2><p>Say you want to examine which surrogate method is suited for a particular dataset. It would then be useful to visualize multiple surrogate realizations for that time series.</p><p>For this purpose, each surrogate function comes with a corresponding animation functions (<code>randomphases_anim</code>, <code>randomamplitudes_anim</code>, <code>aaft_anim</code>, <code>iaaft_anim</code>) and gif creation functions (<code>randomphases_gif</code>, <code>randomamplitudes_gif</code>, <code>aaft_gif</code>, <code>iaaft_gif</code>).</p><p>You can either generate the gif file directly, or create a <code>Plots.animation</code> instance containing the animation.</p><p>Here&#39;s some examples:</p><pre><code class="language-julia">using TimeseriesSurrogates
+ts = diff(rand(300))
+
+# Creating a gif directly
+
+# Create a gif using the default number (15) surrogates
+iaaft_gif(ts)
+iaaft_gif(ts, fps = 3) # specify frame rate
+
+# Specify that we want 100 different surrogate realizations
+iaaft_gif(ts, n_iters = 100)
+iaaft_gif(ts, n_iters = 100, fps = 1) # specify frame rate</code></pre><p>If you for some reason don&#39;t want a gif directly, then you could do</p><pre><code class="language-julia"># Use the `gif` function from `Plots.jl` to create a gif
+anim = iaaft_anim(ts, n_iters = 50) # create an animation
+gif(anim)
+gif(anim, fps = 3) # specifying frame rate</code></pre><h3><a class="nav-anchor" id="Examples-1" href="#Examples-1">Examples</a></h3><h4><a class="nav-anchor" id="IAAFT-realizations-of-an-AR1-process-1" href="#IAAFT-realizations-of-an-AR1-process-1">IAAFT realizations of an AR1 process</a></h4><pre><code class="language-julia">iaaft_AR1_gif(n_iters = 20, fps = 2)</code></pre><p><img src="../examples/iaaft_AR1.gif" alt="20 IAAFT surrogate realizations for an AR(1) process."/></p><h4><a class="nav-anchor" id="IAAFT-realizations-of-a-NSAR2-process-1" href="#IAAFT-realizations-of-a-NSAR2-process-1">IAAFT realizations of a NSAR2 process</a></h4><pre><code class="language-julia">iaaft_NSAR2_gif(n_iters = 100, fps = 10)</code></pre><p><img src="../examples/iaaft_NSAR.gif" alt="100 IAAFT surrogate realizations for a cyclostationary AR(2) process."/></p><h4><a class="nav-anchor" id="Random-phase-realizations-of-a-random-walk-1" href="#Random-phase-realizations-of-a-random-walk-1">Random phase realizations of a random walk</a></h4><pre><code class="language-julia">randomphases_randomwalk_gif(n_iters = 10, fps = 1, new_realization_every_iter = true)</code></pre><p><img src="../examples/randomphases_randomwalk.gif" alt="10 random phase surrogate realizations for a random walk."/></p><h2><a class="nav-anchor" id="Plot/animation/gif-docs-1" href="#Plot/animation/gif-docs-1">Plot/animation/gif docs</a></h2><p>You can use any of the following functions to generate plots, animations and the animations as gif files.</p><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="TimeseriesSurrogates.randomshuffle_plot" href="#TimeseriesSurrogates.randomshuffle_plot"><code>TimeseriesSurrogates.randomshuffle_plot</code></a> — <span class="docstring-category">Function</span>.</div><div><pre><code class="language-none">    `TimeseriesSurrogates.randomshuffle_plot(ts)`
+
+Visualize a `TimeseriesSurrogates.randomshuffle` surrogate.</code></pre></div><a class="source-link" target="_blank" href="https://github.com/kahaaga/TimeseriesSurrogates.jl/blob/f6f2d386a6d3bc957839fbcef38e6dcc14b6c217/src/plots_and_anim.jl#L2-L6">source</a></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="TimeseriesSurrogates.randomamplitudes_plot" href="#TimeseriesSurrogates.randomamplitudes_plot"><code>TimeseriesSurrogates.randomamplitudes_plot</code></a> — <span class="docstring-category">Function</span>.</div><div><pre><code class="language-none">    `TimeseriesSurrogates.randomamplitudes_plot(ts)`
+
+Visualize a `TimeseriesSurrogates.randomamplitudes` surrogate.</code></pre></div><a class="source-link" target="_blank" href="https://github.com/kahaaga/TimeseriesSurrogates.jl/blob/f6f2d386a6d3bc957839fbcef38e6dcc14b6c217/src/plots_and_anim.jl#L2-L6">source</a></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="TimeseriesSurrogates.randomphases_plot" href="#TimeseriesSurrogates.randomphases_plot"><code>TimeseriesSurrogates.randomphases_plot</code></a> — <span class="docstring-category">Function</span>.</div><div><pre><code class="language-none">    `TimeseriesSurrogates.randomphases_plot(ts)`
+
+Visualize a `TimeseriesSurrogates.randomphases` surrogate.</code></pre></div><a class="source-link" target="_blank" href="https://github.com/kahaaga/TimeseriesSurrogates.jl/blob/f6f2d386a6d3bc957839fbcef38e6dcc14b6c217/src/plots_and_anim.jl#L2-L6">source</a></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="TimeseriesSurrogates.aaft_plot" href="#TimeseriesSurrogates.aaft_plot"><code>TimeseriesSurrogates.aaft_plot</code></a> — <span class="docstring-category">Function</span>.</div><div><pre><code class="language-none">    `TimeseriesSurrogates.aaft_plot(ts)`
+
+Visualize a `TimeseriesSurrogates.aaft` surrogate.</code></pre></div><a class="source-link" target="_blank" href="https://github.com/kahaaga/TimeseriesSurrogates.jl/blob/f6f2d386a6d3bc957839fbcef38e6dcc14b6c217/src/plots_and_anim.jl#L2-L6">source</a></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="TimeseriesSurrogates.iaaft_plot" href="#TimeseriesSurrogates.iaaft_plot"><code>TimeseriesSurrogates.iaaft_plot</code></a> — <span class="docstring-category">Function</span>.</div><div><pre><code class="language-none">    `TimeseriesSurrogates.iaaft_plot(ts)`
+
+Visualize a `TimeseriesSurrogates.iaaft` surrogate.</code></pre></div><a class="source-link" target="_blank" href="https://github.com/kahaaga/TimeseriesSurrogates.jl/blob/f6f2d386a6d3bc957839fbcef38e6dcc14b6c217/src/plots_and_anim.jl#L2-L6">source</a></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="TimeseriesSurrogates.randomshuffle_anim" href="#TimeseriesSurrogates.randomshuffle_anim"><code>TimeseriesSurrogates.randomshuffle_anim</code></a> — <span class="docstring-category">Function</span>.</div><div><pre><code class="language-none">    `TimeseriesSurrogates.randomshuffle_anim(ts; [n_iters::Int])`
+
+Create `n_iters` `TimeseriesSurrogates.randomshuffle` surrogates for `ts` and animate them. Returns a `Plots.Animation` instance.</code></pre></div><a class="source-link" target="_blank" href="https://github.com/kahaaga/TimeseriesSurrogates.jl/blob/f6f2d386a6d3bc957839fbcef38e6dcc14b6c217/src/plots_and_anim.jl#L2-L6">source</a></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="TimeseriesSurrogates.randomamplitudes_anim" href="#TimeseriesSurrogates.randomamplitudes_anim"><code>TimeseriesSurrogates.randomamplitudes_anim</code></a> — <span class="docstring-category">Function</span>.</div><div><pre><code class="language-none">    `TimeseriesSurrogates.randomamplitudes_anim(ts; [n_iters::Int])`
+
+Create `n_iters` `TimeseriesSurrogates.randomamplitudes` surrogates for `ts` and animate them. Returns a `Plots.Animation` instance.</code></pre></div><a class="source-link" target="_blank" href="https://github.com/kahaaga/TimeseriesSurrogates.jl/blob/f6f2d386a6d3bc957839fbcef38e6dcc14b6c217/src/plots_and_anim.jl#L2-L6">source</a></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="TimeseriesSurrogates.randomphases_anim" href="#TimeseriesSurrogates.randomphases_anim"><code>TimeseriesSurrogates.randomphases_anim</code></a> — <span class="docstring-category">Function</span>.</div><div><pre><code class="language-none">    `TimeseriesSurrogates.randomphases_anim(ts; [n_iters::Int])`
+
+Create `n_iters` `TimeseriesSurrogates.randomphases` surrogates for `ts` and animate them. Returns a `Plots.Animation` instance.</code></pre></div><a class="source-link" target="_blank" href="https://github.com/kahaaga/TimeseriesSurrogates.jl/blob/f6f2d386a6d3bc957839fbcef38e6dcc14b6c217/src/plots_and_anim.jl#L2-L6">source</a></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="TimeseriesSurrogates.aaft_anim" href="#TimeseriesSurrogates.aaft_anim"><code>TimeseriesSurrogates.aaft_anim</code></a> — <span class="docstring-category">Function</span>.</div><div><pre><code class="language-none">    `TimeseriesSurrogates.aaft_anim(ts; [n_iters::Int])`
+
+Create `n_iters` `TimeseriesSurrogates.aaft` surrogates for `ts` and animate them. Returns a `Plots.Animation` instance.</code></pre></div><a class="source-link" target="_blank" href="https://github.com/kahaaga/TimeseriesSurrogates.jl/blob/f6f2d386a6d3bc957839fbcef38e6dcc14b6c217/src/plots_and_anim.jl#L2-L6">source</a></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="TimeseriesSurrogates.iaaft_anim" href="#TimeseriesSurrogates.iaaft_anim"><code>TimeseriesSurrogates.iaaft_anim</code></a> — <span class="docstring-category">Function</span>.</div><div><pre><code class="language-none">    `TimeseriesSurrogates.iaaft_anim(ts; [n_iters::Int])`
+
+Create `n_iters` `TimeseriesSurrogates.iaaft` surrogates for `ts` and animate them. Returns a `Plots.Animation` instance.</code></pre></div><a class="source-link" target="_blank" href="https://github.com/kahaaga/TimeseriesSurrogates.jl/blob/f6f2d386a6d3bc957839fbcef38e6dcc14b6c217/src/plots_and_anim.jl#L2-L6">source</a></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="TimeseriesSurrogates.randomshuffle_gif" href="#TimeseriesSurrogates.randomshuffle_gif"><code>TimeseriesSurrogates.randomshuffle_gif</code></a> — <span class="docstring-category">Function</span>.</div><div><pre><code class="language-none">    `TimeseriesSurrogates.randomshuffle_gif(ts; [n_iters::Int])`
+
+Create `n_iters` `TimeseriesSurrogates.randomshuffle` surrogates for `ts`, animate them and create
+a gif from the animation.</code></pre></div><a class="source-link" target="_blank" href="https://github.com/kahaaga/TimeseriesSurrogates.jl/blob/f6f2d386a6d3bc957839fbcef38e6dcc14b6c217/src/plots_and_anim.jl#L2-L7">source</a></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="TimeseriesSurrogates.randomamplitudes_gif" href="#TimeseriesSurrogates.randomamplitudes_gif"><code>TimeseriesSurrogates.randomamplitudes_gif</code></a> — <span class="docstring-category">Function</span>.</div><div><pre><code class="language-none">    `TimeseriesSurrogates.randomamplitudes_gif(ts; [n_iters::Int])`
+
+Create `n_iters` `TimeseriesSurrogates.randomamplitudes` surrogates for `ts`, animate them and create
+a gif from the animation.</code></pre></div><a class="source-link" target="_blank" href="https://github.com/kahaaga/TimeseriesSurrogates.jl/blob/f6f2d386a6d3bc957839fbcef38e6dcc14b6c217/src/plots_and_anim.jl#L2-L7">source</a></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="TimeseriesSurrogates.randomphases_gif" href="#TimeseriesSurrogates.randomphases_gif"><code>TimeseriesSurrogates.randomphases_gif</code></a> — <span class="docstring-category">Function</span>.</div><div><pre><code class="language-none">    `TimeseriesSurrogates.randomphases_gif(ts; [n_iters::Int])`
+
+Create `n_iters` `TimeseriesSurrogates.randomphases` surrogates for `ts`, animate them and create
+a gif from the animation.</code></pre></div><a class="source-link" target="_blank" href="https://github.com/kahaaga/TimeseriesSurrogates.jl/blob/f6f2d386a6d3bc957839fbcef38e6dcc14b6c217/src/plots_and_anim.jl#L2-L7">source</a></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="TimeseriesSurrogates.aaft_gif" href="#TimeseriesSurrogates.aaft_gif"><code>TimeseriesSurrogates.aaft_gif</code></a> — <span class="docstring-category">Function</span>.</div><div><pre><code class="language-none">    `TimeseriesSurrogates.aaft_gif(ts; [n_iters::Int])`
+
+Create `n_iters` `TimeseriesSurrogates.aaft` surrogates for `ts`, animate them and create
+a gif from the animation.</code></pre></div><a class="source-link" target="_blank" href="https://github.com/kahaaga/TimeseriesSurrogates.jl/blob/f6f2d386a6d3bc957839fbcef38e6dcc14b6c217/src/plots_and_anim.jl#L2-L7">source</a></section><section class="docstring"><div class="docstring-header"><a class="docstring-binding" id="TimeseriesSurrogates.iaaft_gif" href="#TimeseriesSurrogates.iaaft_gif"><code>TimeseriesSurrogates.iaaft_gif</code></a> — <span class="docstring-category">Function</span>.</div><div><pre><code class="language-none">    `TimeseriesSurrogates.iaaft_gif(ts; [n_iters::Int])`
+
+Create `n_iters` `TimeseriesSurrogates.iaaft` surrogates for `ts`, animate them and create
+a gif from the animation.</code></pre></div><a class="source-link" target="_blank" href="https://github.com/kahaaga/TimeseriesSurrogates.jl/blob/f6f2d386a6d3bc957839fbcef38e6dcc14b6c217/src/plots_and_anim.jl#L2-L7">source</a></section><footer><hr/><a class="previous" href="../constrained/amplitude_adjusted.html"><span class="direction">Previous</span><span class="title">Amplitude adjusted Fourier (AAFT)</span></a><a class="next" href="../man/exampleprocesses.html"><span class="direction">Next</span><span class="title">Example systems</span></a></footer></article></body></html>

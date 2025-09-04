@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Wavelet-based · TimeseriesSurrogates.jl</title><meta name="title" content="Wavelet-based · TimeseriesSurrogates.jl"/><meta property="og:title" content="Wavelet-based · TimeseriesSurrogates.jl"/><meta property="twitter:title" content="Wavelet-based · TimeseriesSurrogates.jl"/><meta name="description" content="Documentation for TimeseriesSurrogates.jl."/><meta property="og:description" content="Documentation for TimeseriesSurrogates.jl."/><meta property="twitter:description" content="Documentation for TimeseriesSurrogates.jl."/><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../search_index.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script><link href="https://fonts.googleapis.com/css?family=Montserrat|Source+Code+Pro&amp;display=swap" rel="stylesheet" type="text/css"/></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">TimeseriesSurrogates.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../">Documentation</a></li><li><a class="tocitem" href="../../man/whatisasurrogate/">Crash-course in timeseries surrogate testing</a></li><li><span class="tocitem">Example applications</span><ul><li><a class="tocitem" href="../randomshuffle/">Shuffle-based</a></li><li><a class="tocitem" href="../fourier_surrogates/">Fourier-based</a></li><li class="is-active"><a class="tocitem" href>Wavelet-based</a><ul class="internal"><li><a class="tocitem" href="#WLS"><span><code>WLS</code></span></a></li><li><a class="tocitem" href="#RandomCascade"><span><code>RandomCascade</code></span></a></li></ul></li><li><a class="tocitem" href="../pps/">Pseudo-periodic</a></li><li><a class="tocitem" href="../ppts/">Pseudo-periodic twin</a></li><li><a class="tocitem" href="../multidim/">Multidimensional surrogates</a></li><li><a class="tocitem" href="../../collections/irregular_surrogates/">Surrogates for irregular timeseries</a></li><li><a class="tocitem" href="../../collections/nonstationary_surrogates/">Surrogates for nonstationary timeseries</a></li></ul></li><li><a class="tocitem" href="../../man/exampleprocesses/">Utility systems</a></li><li><a class="tocitem" href="../../contributor_guide/">Contributing</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Example applications</a></li><li class="is-active"><a href>Wavelet-based</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Wavelet-based</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/JuliaDynamics/TimeseriesSurrogates.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/JuliaDynamics/TimeseriesSurrogates.jl/blob/main/docs/src/methods/wls.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Wavelet-surrogates"><a class="docs-heading-anchor" href="#Wavelet-surrogates">Wavelet surrogates</a><a id="Wavelet-surrogates-1"></a><a class="docs-heading-anchor-permalink" href="#Wavelet-surrogates" title="Permalink"></a></h1><h2 id="WLS"><a class="docs-heading-anchor" href="#WLS"><code>WLS</code></a><a id="WLS-1"></a><a class="docs-heading-anchor-permalink" href="#WLS" title="Permalink"></a></h2><p><a href="#WLS"><code>WLS</code></a> surrogates are constructed by taking the maximal overlap  discrete wavelet transform (MODWT) of the signal, shuffling detail  coefficients across dyadic scales, then inverting the transform to  obtain the surrogate. </p><h3 id="Wavelet-IAAFT-(WIAAFT)-surrogates"><a class="docs-heading-anchor" href="#Wavelet-IAAFT-(WIAAFT)-surrogates">Wavelet-IAAFT (WIAAFT) surrogates</a><a id="Wavelet-IAAFT-(WIAAFT)-surrogates-1"></a><a class="docs-heading-anchor-permalink" href="#Wavelet-IAAFT-(WIAAFT)-surrogates" title="Permalink"></a></h3><p>In <a href="https://journals.aps.org/pre/abstract/10.1103/PhysRevE.73.036707">Keylock (2006)</a>,  IAAFT shuffling is used, yielding surrogates that preserve the local mean and  variance of the original signal, but randomizes nonlinear properties of the signal. This also preserves nonstationarities in the signal. To construct WIAAFT surrogates, rescaling must be enabled. </p><p><em>Note: the final iterative procedure of the WIAAFT surrogate method, after the rescaling step,  is not performed in our current implementation, so surrogates might differ a bit from results in Keylock (2006). For now, you have to do the iterative rescaling manually if desired.</em>. </p><pre><code class="language-julia hljs">using TimeseriesSurrogates, Random
+Random.seed!(5040)
+n = 500
+σ = 30
+x = cumsum(randn(n)) .+
+    [20*sin(2π/30*i) for i = 1:n] .+
+    [20*cos(2π/90*i) for i = 1:n] .+
+    [50*sin(2π/2*i + π) for i = 1:n] .+
+    σ .* rand(n).^2 .+
+    [0.5*t for t = 1:n];
+
+# Rescale surrogate back to original values
+method = WLS(IAAFT(), rescale = true)
+s = surrogate(x, method);
+p = surroplot(x, s)</code></pre><img src="e144a1ec.png" alt="Example block output"/><p>Even without rescaling, IAAFT shuffling also yields surrogates with local properties  very similar to the original signal.</p><pre><code class="language-julia hljs">using TimeseriesSurrogates, Random
+Random.seed!(5040)
+n = 500
+σ = 30
+x = cumsum(randn(n)) .+
+    [20*sin(2π/30*i) for i = 1:n] .+
+    [20*cos(2π/90*i) for i = 1:n] .+
+    [50*sin(2π/2*i + π) for i = 1:n] .+
+    σ .* rand(n).^2 .+
+    [0.5*t for t = 1:n];
+
+# Don&#39;t rescale back to original time series.
+method = WLS(IAAFT(), rescale = false)
+s = surrogate(x, method);
+p = surroplot(x, s)</code></pre><img src="412c5194.png" alt="Example block output"/><h3 id="Other-shuffling-methods"><a class="docs-heading-anchor" href="#Other-shuffling-methods">Other shuffling methods</a><a id="Other-shuffling-methods-1"></a><a class="docs-heading-anchor-permalink" href="#Other-shuffling-methods" title="Permalink"></a></h3><p>The choice of coefficient shuffling method determines how well and  which properties of the original signal are retained by the surrogates.  There might be use cases where surrogates do not need to perfectly preserve the  autocorrelation of the original signal, so additional shuffling  methods are provided for convenience.</p><p>Using random shuffling of the detail coefficients does not preserve the  autocorrelation structure of the original signal. </p><pre><code class="language-julia hljs">using TimeseriesSurrogates, Random
+Random.seed!(5040)
+n = 500
+σ = 30
+x = cumsum(randn(n)) .+
+    [20*sin(2π/30*i) for i = 1:n] .+
+    [20*cos(2π/90*i) for i = 1:n] .+
+    [50*sin(2π/2*i + π) for i = 1:n] .+
+    σ .* rand(n).^2 .+
+    [0.5*t for t = 1:n];
+
+method = WLS(RandomShuffle(), rescale = false)
+s = surrogate(x, method);
+p = surroplot(x, s)</code></pre><img src="4003e456.png" alt="Example block output"/><p>Block shuffling the detail coefficients better preserve local properties because the shuffling is not completely random, but still does not  preserve the autocorrelation of the original signal.</p><pre><code class="language-julia hljs">using TimeseriesSurrogates, Random
+Random.seed!(5040)
+n = 500
+σ = 30
+x = cumsum(randn(n)) .+
+    [20*sin(2π/30*i) for i = 1:n] .+
+    [20*cos(2π/90*i) for i = 1:n] .+
+    [50*sin(2π/2*i + π) for i = 1:n] .+
+    σ .* rand(n).^2 .+
+    [0.5*t for t = 1:n];
+
+s = surrogate(x, WLS(BlockShuffle(10), rescale = false));
+p = surroplot(x, s)</code></pre><img src="cca049d3.png" alt="Example block output"/><p>Random Fourier phase shuffling the detail coefficients does a decent job at preserving the autocorrelation.</p><pre><code class="language-julia hljs">using TimeseriesSurrogates, Random
+Random.seed!(5040)
+n = 500
+σ = 30
+x = cumsum(randn(n)) .+
+    [20*sin(2π/30*i) for i = 1:n] .+
+    [20*cos(2π/90*i) for i = 1:n] .+
+    [50*sin(2π/2*i + π) for i = 1:n] .+
+    σ .* rand(n).^2 .+
+    [0.5*t for t = 1:n];
+
+s = surrogate(x, WLS(RandomFourier(), rescale = false));
+surroplot(x, s)</code></pre><img src="8dc32c57.png" alt="Example block output"/><p>To generate surrogates that preserve linear properties of the original signal, AAFT or IAAFT shuffling is required.</p><h2 id="RandomCascade"><a class="docs-heading-anchor" href="#RandomCascade"><code>RandomCascade</code></a><a id="RandomCascade-1"></a><a class="docs-heading-anchor-permalink" href="#RandomCascade" title="Permalink"></a></h2><p><a href="#RandomCascade"><code>RandomCascade</code></a> surrogates is another wavelet-based method that uses the regular discrete wavelet transform to generate surrogates.</p><pre><code class="language-julia hljs">using TimeseriesSurrogates, Random
+Random.seed!(5040)
+n = 500
+σ = 30
+x = cumsum(randn(n)) .+
+     [20*sin(2π/30*i) for i = 1:n] .+
+     [20*cos(2π/90*i) for i = 1:n] .+
+     [50*sin(2π/2*i + π) for i = 1:n] .+
+     σ .* rand(n).^2 .+
+     [0.2*t for t = 1:n];
+
+s = surrogate(x, RandomCascade());
+surroplot(x, s)</code></pre><img src="038313f4.png" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../fourier_surrogates/">« Fourier-based</a><a class="docs-footer-nextpage" href="../pps/">Pseudo-periodic »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.4.1 on <span class="colophon-date" title="Tuesday 4 June 2024 10:44">Tuesday 4 June 2024</span>. Using Julia version 1.10.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
