@@ -65,7 +65,7 @@ end
     _prepare_embed(x::StateSpaceSet, d, τ) → StateSpaceSet
 
 Prepate input data for surrogate generation. If input is a vector, embed it using
-the provided parameters. If input as a dataset, we assume it already represents an
+the provided parameters. If input as a state space set, we assume it already represents an
 orbit.
 """
 function _prepare_embed end
@@ -85,7 +85,7 @@ function surrogenerator(x::Union{AbstractVector, StateSpaceSet}, pp::PseudoPerio
     dists = pairwise(metric, Matrix(pts), dims = 1)
     normalisedδ = δ*maximum(dists)
 
-    T = eltype(pts)
+    T = eltype(eltype(pts))
     R = zeros(T, Npts, Npts)
 
     # Recurrence matrix
@@ -124,7 +124,7 @@ function surrogenerator(x::Union{AbstractVector, StateSpaceSet}, pp::PseudoPerio
 
     # The surrogate will be a vector of vectors (if pts is a StateSpaceSet, then
     # the eltype is SVector).
-    PT = eltype(pts.data)
+    PT = eltype(pts)
     s = Vector{PT}(undef, Nx)
 
     init = (pts = pts, Nx = Nx, Npts = Npts, dists = dists, R = R, twins = twins, W = W)
@@ -134,7 +134,6 @@ end
 
 function (sg::SurrogateGenerator{<:PseudoPeriodicTwin})()
     pts, Nx, Npts, twins, W = getfield.(Ref(sg.init), (:pts, :Nx, :Npts, :twins, :W))
-    ρ = getfield.(Ref(sg.method), (:ρ))
     s = sg.s
 
     # Randomly pick a point from the state space as the starting point for the surrogate.
