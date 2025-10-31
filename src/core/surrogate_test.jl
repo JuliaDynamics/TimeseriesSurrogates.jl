@@ -1,7 +1,7 @@
 using Random: AbstractRNG
 import StatsAPI: HypothesisTest, pvalue
 export SurrogateTest, pvalue, fill_surrogate_test!
-using Base.Threads
+using OhMyThreads: @tasks, @local
 
 """
     SurrogateTest(f::Function, x, method::Surrogate; kwargs...) → test
@@ -31,7 +31,7 @@ the p-value.
 """
 struct SurrogateTest{F<:Function, S<:SurrogateGenerator, X<:Real} <: HypothesisTest
     f::F
-    sgens::Vector{S}
+    sgen::S
     # fields that are filled whenever a function is called
     # for pretty printing or for keeping track of results
     rval::X
@@ -39,28 +39,21 @@ struct SurrogateTest{F<:Function, S<:SurrogateGenerator, X<:Real} <: HypothesisT
     threaded::Bool
 end
 
-
 function SurrogateTest(f::F, x, s::Surrogate;
         rng = Random.default_rng(), n = 10_000, threaded = true
     ) where {F<:Function}
-
-    if threaded
-        seeds = rand(rng, 1:typemax(Int), Threads.nthreads())
-        sgens = [surrogenerator(x, s, Random.Xoshiro(seed)) for seed in seeds]
-    else
-        sgens = [surrogenerator(x, s, rng)]
-    end
+    sgen = surrogenerator(x, s, rng)
     rval = f(x)
     X = typeof(rval)
     vals = zeros(X, n)
-    return SurrogateTest{F, typeof(first(sgens)), X}(f, sgens, rval, vals, threaded)
+    return SurrogateTest{F, typeof(first(sgens)), X}(f, sgen, rval, vals, threaded)
 end
 
 # Pretty printing
 function Base.show(io::IO, ::MIME"text/plain", test::SurrogateTest)
     descriptors = [
         "discr. statistic" => nameof(test.f),
-        "surrogate method" => nameof(typeof(first(test.sgens).method)),
+        "surrogate method" => nameof(typeof(sgen.method)),
         "input timeseries" => summary(test.sgens[1].x),
         "# of surrogates" => length(test.vals),
     ]
@@ -85,14 +78,13 @@ This function is called by `pvalue`.
 """
 function fill_surrogate_test!(test::SurrogateTest)
     if test.threaded
-        @inbounds Threads.@threads for i in eachindex(test.vals)
-            sgen = test.sgens[Threads.threadid()]
-            test.vals[i] = test.f(sgen())
+        @tasks for i in eachindex(test.vals)
+            @local sgen = deepcopy(test.sgen)
+            @inbounds test.vals[i] = test.f(sgen())
         end
     else
-        sgen = first(sgens)
         @inbounds for i in eachindex(test.vals)
-            test.vals[i] = test.f(sgen())
+            test.vals[i] = test.f(test.sgen())
         end
     end
     return test.rval, test.vals
