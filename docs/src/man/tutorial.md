@@ -40,11 +40,14 @@ surroplot(y, method)
 
 We will use timeseries surrogates to highlight how one can distinguish deterministic chaos contaminated with noise from actual stochastic timeseries, using the permutation entropy as a discriminatory statistic. If you're not sure what a "discriminatory statistic" means, you should read the crash-course below.
 
-Essentially, we will compute surrogate distributions for both timeseries using the permutation entropy as the discriminatory statistic and [`RandomFourier`](@ref) as the surrogate generation method. We will also utilize the [`surrogenerator`](@ref) API function which allows us to more efficiently generate many surrogate realizations.
+To do this, we will compute surrogate distributions for both timeseries using the permutation entropy as the discriminatory statistic and [`RandomFourier`](@ref) as the surrogate generation method. We will also utilize the [`surrogenerator`](@ref) API function which allows us to more efficiently generate many surrogate realizations.
+Essentially, the construct `sgen = surrogenerator(signal, method)` allows us to call `s = sgen()` to make a surrogate `s` in the fastest way possible.
+
+Here's the code:
 
 ```@example MAIN
 using ComplexityMeasures # to calculate permutation entropy
-perment(x) = entropy_normalized(SymbolicPermutation(; m = 3), x)
+perment(x) = entropy_normalized(OrdinalPatterns(; m = 3), x)
 method = RandomFourier()
 
 fig = Figure()
