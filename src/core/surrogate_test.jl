@@ -79,7 +79,7 @@ This function is called by `pvalue`.
 function fill_surrogate_test!(test::SurrogateTest)
     if test.threaded
         @tasks for i in eachindex(test.vals)
-            @local sgen = deepcopy(test.sgen)
+            @local sgen = surrogenerator(test.sgen.x, test.sgen.method, Random.Xoshiro(rand(rng, 1:typemax(Int))))
             @inbounds test.vals[i] = test.f(sgen())
         end
     else
