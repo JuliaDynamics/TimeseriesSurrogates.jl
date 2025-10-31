@@ -18,6 +18,7 @@ StateSpaceSets = "40b095a5-5852-4c12-98c7-d43bf788e795"
 Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 StatsAPI = "82ae8749-77ed-4fe6-ae5f-f523153014b0"
 StatsBase = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
+OhMyThreads = "67456a42-1dca-4109-a031-0a68de7e3ad5"
 Wavelets = "29a6e085-ba6d-5f35-a997-948ac2efa89a"
 
 [weakdeps]
@@ -39,6 +40,7 @@ StateSpaceSets = "2"
 Statistics = "1"
 StatsAPI = "1.6"
 StatsBase = "^0.32.0, ^1, 0.33, 0.34"
+OhMyThreads = "0.8"
 Wavelets = "0.9, 0.10"
 julia = "^1.9"
 
