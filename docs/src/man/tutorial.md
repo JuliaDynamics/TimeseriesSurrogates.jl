@@ -34,11 +34,11 @@ It's difficult to tell whether either timeseries has signatures of deterministic
 For these timeseries, we will make Fourier-transformed surrogates using [`RandomFourier`](@ref). For example, for the logistic map timeseries we can create a surrogate with [`surrogate`](@ref) or create and visualize one at the same time using [`surroplot`](@ref)
 
 ```@example MAIN
+method = RandomFourier()
 surrogate(y, method)
 ```
 
 ```@example MAIN
-method = RandomFourier()
 surroplot(y, method)
 ```
 
@@ -52,7 +52,6 @@ Here's the code:
 ```@example MAIN
 using ComplexityMeasures # to calculate permutation entropy
 perment(x) = entropy_normalized(OrdinalPatterns(; m = 3), x)
-method = RandomFourier()
 
 fig = Figure()
 axs = [Axis(fig[1, i]) for i in 1:2]
