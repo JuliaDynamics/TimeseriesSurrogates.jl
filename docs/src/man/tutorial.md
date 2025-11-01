@@ -1,5 +1,7 @@
 # Tutorial
 
+![](surroplot.png)
+
 TimeseriesSurrogates.jl provides a simple interface for surrogate timeseries.
 To use it, one must first choose one of the many surrogate generation algorithms, which are listed in the [API](@ref) page. Most of them have instructions for what scenario they are suitable for.
 
@@ -104,6 +106,7 @@ ts = sin.(x./rand(20:30, 300) + cos.(x))
 s = surrogate(ts, IAAFT())
 
 surroplot(ts, s)
+save("surroplot.png", fig); # hide
 ```
 
 ### Performing surrogate hypothesis tests

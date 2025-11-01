@@ -1,7 +1,5 @@
 # TimeseriesSurrogates.jl
 
-![](surroplot.png)
-
 `TimeseriesSurrogates` is a Julia package for generating surrogate timeseries. It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a GitHub organization dedicated to creating high quality scientific software.
 
 To learn how to use the package, please follow the [Tutorial](@ref) page.
