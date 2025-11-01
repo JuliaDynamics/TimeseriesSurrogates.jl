@@ -1,9 +1,10 @@
 cd(@__DIR__)
-using TimeseriesSurrogates, StatsAPI
+using TimeseriesSurrogates, StatsAPI, CairoMakie
 
 pages = [
     "Documentation" => "index.md",
-    "man/whatisasurrogate.md",
+    "man/tutorial.md",
+    "man/api.md",
     "Example applications" => [
         "Shuffle-based" => "methods/randomshuffle.md",
         "Fourier-based" => "methods/fourier_surrogates.md",

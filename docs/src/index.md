@@ -1,10 +1,10 @@
 # TimeseriesSurrogates.jl
 
-![](surroplot.png)
-
 `TimeseriesSurrogates` is a Julia package for generating surrogate timeseries. It is part of [JuliaDynamics](https://juliadynamics.github.io/JuliaDynamics/), a GitHub organization dedicated to creating high quality scientific software.
 
-If you are new to this method of surrogate timeseries, feel free to read the [Crash-course in timeseries surrogate testing](@ref) page.
+To learn how to use the package, please follow the [Tutorial](@ref) page.
+If you are new to this method of surrogate timeseries, the tutorial also includes a [crash-course in timeseries surrogate testing](@ref crash-course) section.
+To see all available surrogate methods, see the [API](@ref) page.
 
 Please note that timeseries surrogates should not be confused with [surrogate models](https://en.wikipedia.org/wiki/Surrogate_model), such as those provided by [Surrogates.jl](https://github.com/SciML/Surrogates.jl).
 
@@ -14,115 +14,6 @@ TimeseriesSurrogates.jl is a registered Julia package. To install the latest ver
 
 ```julia
 import Pkg; Pkg.add("TimeseriesSurrogates")
-```
-
-## API
-
-TimeseriesSurrogates.jl API is composed by four names: [`surrogate`](@ref), [`surrogenerator`](@ref), [`SurrogateTest`](@ref), and [`pvalue`](@ref). They dispatch on the method to generate surrogates, which is a subtype of [`Surrogate`](@ref).
-
-It is recommended to standardize the signal before using these functions, i.e. subtract mean and divide by standard deviation. The function `standardize` does this.
-
-### Generating surrogates
-
-```@docs
-surrogate
-surrogenerator
-```
-
-### Hypothesis testing
-
-```@docs
-SurrogateTest
-fill_surrogate_test!
-pvalue(::SurrogateTest)
-```
-
-## Surrogate methods
-
-```@docs
-Surrogate
-```
-
-```@index
-Order = [:type]
-```
-
-### Shuffle-based
-
-```@docs
-RandomShuffle
-BlockShuffle
-CycleShuffle
-CircShift
-```
-
-### Fourier-based
-
-```@docs
-RandomFourier
-TFTDRandomFourier
-PartialRandomization
-PartialRandomizationAAFT
-RelativePartialRandomization
-RelativePartialRandomizationAAFT
-SpectralPartialRandomization
-SpectralPartialRandomizationAAFT
-AAFT
-TAAFT
-IAAFT
-```
-
-### Non-stationary
-
-```@docs
-TFTS
-TFTD
-TFTDAAFT
-TFTDIAAFT
-```
-
-### Pseudo-periodic
-
-```@docs
-PseudoPeriodic
-PseudoPeriodicTwin
-```
-
-### Wavelet-based
-
-```@docs
-WLS
-RandomCascade
-```
-
-### Other
-
-```@docs
-AutoRegressive
-ShuffleDimensions
-IrregularLombScargle
-```
-
-### Utilities
-
-```@docs
-noiseradius
-```
-
-## Visualization
-
-TimeseriesSurrogates.jl has defined a simple function `surroplot(x, s)`.
-This comes into scope when `using Makie` (you also need a plotting backend).
-This functionality requires you to be using Julia 1.9 or later versions.
-
-Example:
-
-```@example MAIN
-using TimeseriesSurrogates
-using CairoMakie
-x = AR1() # create a realization of a random AR(1) process
-fig = surroplot(x, AAFT())
-save("surroplot.png", fig); # hide
 ```
 
 ## Citing
